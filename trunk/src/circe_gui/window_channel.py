@@ -2,7 +2,8 @@ import wx
 from panel_window import panel_window
 
 class window_channel(panel_window):
-    def OnCreate(self):
+    def __init__(self,parent,windowID):
+        panel_window.__init__(self,parent,windowID)
         print "Channel window created"
         self.CreateControls()
         self.CreateSizers()

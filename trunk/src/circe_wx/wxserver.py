@@ -63,11 +63,16 @@ class WXServer(CirceIRCClient):
 
     def NewChannelWindow(self,channelname):
         """Opens a new channel window, sets the caption and stores it."""
-        caption = "%s(%s)" % (channelname, self.connection.get_nickname())
+        if self.connection.connected:
+            nick = self.connection.get_nickname()
+        else:   # for debug window
+            nick = "not connected"
+        caption = "%s(%s)" % (channelname, nick)
         new = window_channel(self.windowarea,self,channelname)
         new.SetCaption(caption)
         self.windowarea.AddWindow(new)
         self.channels.append(new)
+        return new
 
     def getWindowChannelRef(self, channelname):
         """Returns the window_channel object binded to channelname or False if
@@ -86,6 +91,12 @@ class WXServer(CirceIRCClient):
         if cmdstring[0] == "/":
             cmdstring = cmdstring[1:]
         else:
+            # if it is not a command send the message to the channel
+            if hasattr(window, "getChannelname"):
+                target = window.getChannelname()
+                self.connection.privmsg(target, cmdstring)
+                mynick = self.connection.get_nickname()
+                window.addMessage(cmdstring, mynick)
             return
         # Create a list
         cmdlist = cmdstring.split()
@@ -200,6 +211,10 @@ class WXServer(CirceIRCClient):
         elif cmd == "nodebug":
             self.setDebug(False)
 
+        elif cmd == "joindebug":
+            window = self.NewChannelWindow("Debug window")
+#            window.setUsers(["test", "toto"])
+
         elif cmd =="check": # for testing
 
             print "- " * 30
@@ -261,10 +276,11 @@ class WXServer(CirceIRCClient):
 
                 elif etype == "namereply":
                     chan = e.arguments()[1]
-                    window = self.getWindowChannelRed(chan)
+                    window = self.getWindowChannelRef(chan)
                     if window:
-                        pass
-                        # TODO update channel users list
+                        users = e.arguments()[2].split()
+                        # TODO add users to user list (see window_channel.py)
+#                        window.setUsers(users)
 
                 elif etype == "pubmsg":
                     chan = e.target()

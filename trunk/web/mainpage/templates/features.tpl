@@ -2,7 +2,7 @@
 <ul class="featurelist">
 <li>circe_wx - <i>A {$acronyms.GUI} powered by <a href="http://www.wxpython.org">wxPython</a></i></li>
 <li>circe_cli - <i>A {$acronyms.CLI} (not being worked on right now)</i></li>
-<li>circe_shell - <i>The {$acronyms.IRC} network code and some non-{$acronyms.UI} functionality</i></li>
+<li>circelib - <i>The {$acronyms.IRC} library</i></li>
 </ul>
 <br/>
 Some projected features:

@@ -17,16 +17,14 @@
 
 import wx
 import lorem
-#import commandparser
-from panel_window import panel_window
 from window_server import window_server
 
 ID_TXT_EDIT = wx.NewId()
 ID_LST_USERS = wx.NewId()
 
 class window_channel(window_server):
-    def __init__(self,windowarea,id,server):
-        window_server.__init__(self,windowarea,id,server,"Channel")
+    def __init__(self,windowarea,server,channelname,id=-1):
+        window_server.__init__(self,windowarea,id,server,channelname)
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
@@ -54,6 +52,7 @@ class window_channel(window_server):
             # Enter pressed
             #self.TextCommand(self.txtEdit.GetValue())
             #commandparser.TextCommand(self.server,self.windowarea,self.txtEdit.GetValue())
+            self.server.TextCommand(self.txtEdit.GetValue(),self)
             self.txtEdit.SetValue("")
         else:
             event.Skip()

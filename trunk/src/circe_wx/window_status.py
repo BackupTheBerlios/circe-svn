@@ -16,9 +16,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import wx
-import servermanager
-import commandparser
-#from panel_window import panel_window
 from window_server import window_server
 
 ID_TXT_EDIT = wx.NewId()
@@ -57,7 +54,7 @@ class window_status(window_server):
         if(key == 13):
             # Enter pressed
             #self.TextCommand(self.txtEdit.GetValue())
-            commandparser.TextCommand(self.server,self.windowarea,self.txtEdit.GetValue())
+            self.server.TextCommand(self.txtEdit.GetValue(),self)
             self.txtEdit.SetValue("")
         else:
             event.Skip()

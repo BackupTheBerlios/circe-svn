@@ -15,12 +15,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-from circelib.circelib import Server
+#from circelib.circelib import Server
+import wxserver
 
 servers = []
         
 def AddServer(*options):
-    s = Server(*options)
+    s = wxserver.WXServer(*options)
     servers.append(s)
     return s
 

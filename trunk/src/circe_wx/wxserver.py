@@ -4,12 +4,25 @@ import irclib
 
 
 class CirceIRCClient(irclib.SimpleIRCClient):
+    """Simple IRC client inspired from SimpleIRCClient from python-irclib."""
     def __init__(self):
-        irclib.SimpleIRCClient.__init__(self)
+        self.ircobj = irclib.IRC()
+        self.connection = self.ircobj.server()
+        self.ircobj.add_global_handler("all_events", self._processEvents)
         # Here are stored Events objects to be processed (use Event's methods
         # eventtype(), source(), target(), arguments() to have all info about
         # the event)
         self.new_events = []
+
+    def _processEvents(self, c, e):
+        """Add events to self.new_events."""
+        self.new_events.append(e)
+
+    def connect(self, server, port, nickname, password=None, username=None,
+            ircname=None, localaddress="", localport=0):
+        """Connect/reconnect to a server."""
+        self.connection.connect(server, port, nickname, password, username,
+                ircname, localaddress, localport)
 
     def setDebug(self, flag):
         """Turn on/off the debug mode."""
@@ -24,12 +37,6 @@ class CirceIRCClient(irclib.SimpleIRCClient):
         self.ircobj.process_once()
         return self.new_events
 
-    def on_welcome(self, c, e):
-        self.new_events.append(e)
-
-    def on_privmsg(self, c, e):
-        self.new_events.append(e)
-    
     
 class WXServer(CirceIRCClient):
     def __init__(self,windowarea):
@@ -66,6 +73,7 @@ class WXServer(CirceIRCClient):
             nick = params[1]
             self.connection.connect(server=server, port=port, nickname=nick)
             self.host = server
+            # XXX TEST
             print "Server: %s %s" % (server,
                     self.connection.get_server_name())
         elif cmd =="check": # for testing

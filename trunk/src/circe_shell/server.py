@@ -3,6 +3,7 @@ import ircreactor
 
 class Server:
     def __init__(self,host=None,port=None):
+        """The Server class, interfaces between de UI and the IRC code"""
         self.channels = None
         self.host = host
         self.port = port

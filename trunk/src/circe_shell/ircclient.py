@@ -20,7 +20,6 @@ class Client(irc.IRCClient):
 
     # IRC events
     def signedOn(self):
-        """Called when bot has succesfully signed on to server."""
         irc.IRCClient.signedOn(self)
         self.server.SignedOn()
 
@@ -41,6 +40,7 @@ class ClientFactory(protocol.ClientFactory):
         print "Connection failed:", reason
 
     def buildProtocol(self,addr):
+        """Builds the protocol, with custom __init__"""
         p = self.protocol(self.server)
         p.factory = self
         return p

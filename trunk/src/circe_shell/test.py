@@ -1,9 +1,6 @@
 import server
 import ircreactor
 
-print "Connecting to infi..."
-#newserver = server.Server()
-#newserver.Connect("localhost")
 class testserver(server.Server):
     def __init__(self):
         server.Server.__init__(self)

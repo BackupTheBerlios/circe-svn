@@ -22,7 +22,6 @@ class switchsection:
     
     def RemoveAll(self):
         for button_id,button in self.buttons.iteritems():
-            print "Remove %s" % button.text
             button.Destroy()
 
 class switchbutton(genbuttons.GenBitmapTextToggleButton):
@@ -42,7 +41,6 @@ class panel_switchbar(wx.Panel):
         wx.Panel.__init__(self,parent,panelID,wx.DefaultPosition,self.barsize)
         
         self.CreateSizers()
-        self.AddControls()
         
         self.AddSection(0)
         self.AddButton(0,0,"Section 0 Button 0")

@@ -9,6 +9,7 @@ $acronyms = array(
 "UI" => "User Interface",
 "SVN" => "Subversion (A Concurrent Versioning System)",
 "GPL" => "GNU General Public License",
-"SSL" => "Secure Socket Layer"
+"SSL" => "Secure Socket Layer",
+"GPG" => "Gnu Privacy Guard"
 );
 ?>

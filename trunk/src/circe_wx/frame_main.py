@@ -66,10 +66,13 @@ class frame_main(wx.Frame):
         #self.panel_WindowArea.AddWindow(self.testWindow3,self.testWindow3.GetCaption())
         #self.panel_WindowArea.ShowWindow(self.testWindow)
 
-        # Create empty server + status window
+        # Create two servers + status windows
         s = servermanager.AddServer()
         w = window_status(self.panel_WindowArea,s,-1)
+        s2 = servermanager.AddServer()
+        w2 = window_status(self.panel_WindowArea,s2,-1)
         self.panel_WindowArea.AddWindow(w)
+        self.panel_WindowArea.AddWindow(w2)
         self.panel_WindowArea.ShowWindow(w)
         
     def CreateMenu(self):

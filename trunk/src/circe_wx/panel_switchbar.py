@@ -64,11 +64,19 @@ class switchbutton(genbuttons.GenBitmapTextToggleButton):
         self.SetUseFocusIndicator(False)
 
         # Here begins code to change button behaviour
-        # The button will instantly trigger a click when left_down
-        #self.Bind(wx.EVT_LEFT_DOWN,self.OnLeftDown_Override)
+        # The button will instantly trigger when the it is depressed
         wx.EVT_LEFT_DOWN(self,self.OnLeftDown_Override)
+        wx.EVT_LEFT_UP(self,self.OnLeftUp_Override)
+        wx.EVT_LEFT_DCLICK(self,self.OnDClick_Override)
 
     def OnLeftDown_Override(self,event):
+        self.OnLeftDown(event)
+        self.OnLeftUp(event)
+
+    def OnLeftUp_Override(self,event):
+        pass
+
+    def OnDClick_Override(self,event):
         self.OnLeftDown(event)
         self.OnLeftUp(event)
     

@@ -23,6 +23,7 @@ div#header h1#appname {
 	margin: 0;
 	font-weight: bold;
 	font-size: 18px;
+	display: inline;
 	color: #000000;
 }
 
@@ -87,23 +88,32 @@ div#footer {
 	clear: left;
 	font-size: 12px;
 	padding-top: 1px;
-	padding-left: 90px;
+	margin-left: 90px;
+}
+
+div#footer img#berlioslogo {
+	margin-top: 3px;
+	border-width: 0px;
 }
 
 /* http://www.sovavsiti.cz/css/w3c_buttons.html */
 .w3cbutton3 {
-	float: left; /* the two 'buttons' are now on the same line */
-	margin: 1px 3px 0 0;
+	/* float: left; */ /* the two 'buttons' are now on the same line */
+	/* margin: 1px 3px 0 0; */
+	margin: 0px;
+	margin-right: 5px;
 	width: 9em;
 	border: 1px solid #ccc;
 	font-family: helvetica,arial,sans-serif;
-	font-size: 70%;
+	font-size: 9px;
 	font-weight: bold;
 }
 
 .w3cbutton3 a {
+	/*
 	display: block;
 	width: 100%;
+	*/
 }
 
 .w3cbutton3 a:link,

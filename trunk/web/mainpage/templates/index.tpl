@@ -36,20 +36,21 @@
 <div id="footer">
 
 <span id="leftsection">Generated on {$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"} by <a href="http://smarty.php.net">Smarty</a> v{$smarty.version}</span>
-
-<div class="w3cbutton3">
+<br/>
+<span class="w3cbutton3">
 <a href="http://validator.w3.org/check/referer">
 <span class="w3c">W3C</span>
 <span>XHTML 1.0</span>
 </a>
-</div>
-<div class="w3cbutton3">
+</span>
+<span class="w3cbutton3">
 <a href="http://jigsaw.w3.org/css-validator/check/referer">
 <span class="w3c">W3C</span>
 <span>CSS2</span>
 </a>
-</div>
-
+</span>
+<br/>
+<a href="https://developer.berlios.de/projects/circe/"><img src="http://developer.berlios.de/sflogo.php?group_id=1863&amp;type=1" alt="Hosted by Berlios" title="Hosted by Berlios" id="berlioslogo"/></a>
 </div>
 
 </body>

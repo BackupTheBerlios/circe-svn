@@ -13,6 +13,13 @@ class switchsection:
         else:
             self.buttons[button_id] = switchbutton(button_id,parent,text,icon)
     
+    def RemoveButton(self,button_id):
+        if(button_id in self.buttons):
+            self.buttons[button_id].Destroy()
+            del self.buttons[button_id]
+        else:
+            raise "Button %d does not exist in section %d" % (button_id, self.section_id)
+    
     def RemoveAll(self):
         for button_id,button in self.buttons.iteritems():
             print "Remove %s" % button.text
@@ -31,6 +38,7 @@ class panel_switchbar(wx.Panel):
         self.barsize = barsize
         self.baralign = baralign
         self.sections = {}
+        self.button_id_list = {} # We need a unique ID for every button
         wx.Panel.__init__(self,parent,panelID,wx.DefaultPosition,self.barsize)
         
         self.CreateSizers()
@@ -40,12 +48,13 @@ class panel_switchbar(wx.Panel):
         self.AddButton(0,0,"Section 0 Button 0")
         self.AddButton(0,1,"Section 0 Button 1")
         self.AddSection(1)
-        self.AddButton(1,0,"Section 1 Button 0")
-        self.AddButton(1,1,"Section 1 Button 1")
+        self.AddButton(1,2,"Section 1 Button 2")
+        self.AddButton(1,3,"Section 1 Button 3")
         self.AddSection(2)
-        self.AddButton(2,0,"Section 2 Button 0")
-        self.AddButton(2,1,"Section 2 Button 1")
+        self.AddButton(2,4,"Section 2 Button 4")
+        self.AddButton(2,5,"Section 2 Button 5")
         self.RemoveSection(1)
+        self.RemoveButton(2,4)
         self.Realize()
     
     def Realize(self):
@@ -68,8 +77,19 @@ class panel_switchbar(wx.Panel):
             raise "Section %d does not exist" % section_id
     
     def AddButton(self,section_id,button_id,text,icon=None):
+        if(button_id in self.button_id_list):
+            raise "Duplicate button_id: %d" % button_id
+        else:
+            if(section_id in self.sections):
+                self.sections[section_id].AddButton(button_id,self,text,icon)
+                self.button_id_list[button_id] = self.sections[section_id].buttons[button_id]
+            else:
+                raise "Section %d does not exist" % section_id
+    
+    def RemoveButton(self,section_id,button_id):
         if(section_id in self.sections):
-            self.sections[section_id].AddButton(button_id,self,text,icon)
+            self.sections[section_id].RemoveButton(button_id)
+            del self.button_id_list[button_id]
         else:
             raise "Section %d does not exist" % section_id
     
@@ -87,12 +107,9 @@ class panel_switchbar(wx.Panel):
         self.SetSizer(self.sizer_Top)
     
     def AddControls(self):
-        #self.sizer_Top.Add(self.switchbar,1,wx.EXPAND)
         for section_id,section in self.sections.iteritems():
             for button_id,button in section.buttons.iteritems():
-                print "Add button: %s" % button.text
                 self.sizer_Top.Add(button,0,wx.EXPAND)
-            print "Add 10!"
             self.sizer_Top.Add((10,10))
     
     def RemoveControls(self):

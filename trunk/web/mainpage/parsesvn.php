@@ -74,6 +74,7 @@ function writesvn() {
         $svndata["timestamp"] = $svnarray["recentmessages"]["message"][0]["timestamp"];
         //$svndata["ago"] = time() - $svndata["timestamp"];
         //$svndata["ago_format"] = Duration::toString($svndata["ago"]);
+        print "Revision: " . $svndata["revision"] . "<br/>";
         print "Writing SVN data to file $svntmpfile<br/>";
         return saveArray($svndata);
     }

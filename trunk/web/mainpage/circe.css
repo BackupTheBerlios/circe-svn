@@ -1,14 +1,20 @@
 body {
-	margin-left: 5px;
+	margin: 0px;
+	/* margin-left: 5px;
 	margin-top: 6px;
-	margin-left: 6px;
+	margin-left: 6px; */
 	font-family: verdana,helvetica,arial,sans-serif;
 	font-size: 14px;
 	/* background-color: #E0E0EB; */
 }
 
 acronym {
+	/*
 	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #AAAAAA;
+	*/
+	border-bottom-style: dashed;
 	border-bottom-width: 1px;
 	border-bottom-color: #AAAAAA;
 }
@@ -22,7 +28,9 @@ a:hover {
 }
 
 div#header {
-	text-align: center;
+	/* text-align: center; */
+	background: #9E1414;
+	padding: 0px;
 }
 
 div#header h1#appname {
@@ -32,11 +40,14 @@ div#header h1#appname {
 
 div#menu {
 	font-size: 14px;
-	text-align: center;
+	/* text-align: center; */
+	margin: 0px;
+	padding-left: 20px;
 	border-top: solid;
 	border-bottom: solid;
 	border-bottom-width: 1px;
-	border-top-width: 1px;
+	/* border-top-width: 1px; */
+	border-top-width: 0px;
 	border-color: #8888B0;
 	background-color: #E0E0EB;
 }
@@ -58,7 +69,8 @@ div#menu span#menulist span a:hover {
 div#menu span#menulist span#active a {
 	text-decoration: none;
 	color: #FFFFFF;
-	background-color: #CC2222;
+	/* background-color: #CC2222; */
+	background-color: #9E1414;
 }
 
 div#menu span#menulist span#active a:hover {

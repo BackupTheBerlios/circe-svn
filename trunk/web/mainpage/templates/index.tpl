@@ -11,9 +11,7 @@
 <body>
 
 <div id="header">
-<h1 id="appname">
-{$appname}
-</h1>
+{$htmlimages.circebig}
 </div>
 
 <div id="menu">

@@ -46,10 +46,10 @@ class frame_main(wx.Frame):
         
         wx.EVT_MENU(self, ID_MENU_FILE_ABOUT, self.evt_menu_About)
         wx.EVT_MENU(self, ID_MENU_FILE_EXIT, self.evt_menu_Exit)
-        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ALEFT, self.evt_menu_switchbar_align)
-        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ARIGHT, self.evt_menu_switchbar_align)
-        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ATOP, self.evt_menu_switchbar_align)
-        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ABOTTOM, self.evt_menu_switchbar_align)
+        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ALEFT, self.evt_menu_switchbar_align_left)
+        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ARIGHT, self.evt_menu_switchbar_align_right)
+        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ATOP, self.evt_menu_switchbar_align_top)
+        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ABOTTOM, self.evt_menu_switchbar_align_bottom)
 
     def CreateControls(self):
         self.TopPanel = wx.Panel(self,-1)
@@ -84,5 +84,14 @@ class frame_main(wx.Frame):
     def evt_menu_Exit(self,event):
         self.Close()
     
-    def evt_menu_switchbar_align(self,event):
+    def evt_menu_switchbar_align_left(self,event):
+        pass
+
+    def evt_menu_switchbar_align_right(self,event):
+        pass
+
+    def evt_menu_switchbar_align_top(self,event):
+        pass
+
+    def evt_menu_switchbar_align_bottom(self,event):
         pass

@@ -12,6 +12,11 @@ class switchsection:
             raise "Button %d already exists in section %d" % (button_id, self.section_id)
         else:
             self.buttons[button_id] = switchbutton(button_id,parent,text,icon)
+    
+    def RemoveAll(self):
+        for button_id,button in self.buttons.iteritems():
+            print "Remove %s" % button.text
+            button.Destroy()
 
 class switchbutton(genbuttons.GenBitmapTextToggleButton):
     def __init__(self,button_id,parent,text,icon=None):
@@ -28,7 +33,6 @@ class panel_switchbar(wx.Panel):
         self.sections = {}
         wx.Panel.__init__(self,parent,panelID,wx.DefaultPosition,self.barsize)
         
-        self.CreateControls()
         self.CreateSizers()
         self.AddControls()
         
@@ -38,10 +42,16 @@ class panel_switchbar(wx.Panel):
         self.AddSection(1)
         self.AddButton(1,0,"Section 1 Button 0")
         self.AddButton(1,1,"Section 1 Button 1")
-        self.RefreshButtons()
+        self.AddSection(2)
+        self.AddButton(2,0,"Section 2 Button 0")
+        self.AddButton(2,1,"Section 2 Button 1")
+        self.RemoveSection(1)
+        self.Realize()
     
-    def RefreshButtons(self):
+    def Realize(self):
         self.RemoveControls()
+        self.DestroySizers()
+        self.CreateSizers()
         self.AddControls()
     
     def AddSection(self,section_id):
@@ -49,6 +59,13 @@ class panel_switchbar(wx.Panel):
             raise "Section %d already exists" % section_id
         else:
             self.sections[section_id] = switchsection(section_id)
+    
+    def RemoveSection(self,section_id):
+        if(section_id in self.sections):
+            self.sections[section_id].RemoveAll()
+            del self.sections[section_id]
+        else:
+            raise "Section %d does not exist" % section_id
     
     def AddButton(self,section_id,button_id,text,icon=None):
         if(section_id in self.sections):
@@ -59,16 +76,11 @@ class panel_switchbar(wx.Panel):
     def SetAlignment(self,baralign,barsize):
         self.SetSize(barsize)
         self.baralign = baralign
-        self.RemoveControls()
-        self.DestroySizers()
-        self.CreateSizers()
-        self.AddControls()
-        
-    def CreateControls(self):
-        pass
+        self.Realize()
     
     def DestroySizers(self):
-        del self.sizer_Top
+        self.sizer_Top.Clear(False)
+        self.sizer_Top.Destroy()
     
     def CreateSizers(self):
         self.sizer_Top = wx.BoxSizer(self.baralign)

@@ -33,6 +33,25 @@ div#header {
 	padding: 0px;
 }
 
+div#header div#latestsvn {
+	/*
+	float: right;
+	*/
+	position: absolute;
+	right: 0px;
+	padding: 10px;
+	text-align: right;
+	/*
+	width: 200px;
+	*/
+	/*
+	border-style: solid;
+	border-width: 1px;
+	background-color: #E0E0EB;
+	*/
+	color: #FFFFFF;
+}
+
 div#header h1#appname {
 	font-size: 22px;
 	margin: 5px;

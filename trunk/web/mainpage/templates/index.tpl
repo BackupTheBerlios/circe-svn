@@ -11,6 +11,11 @@
 <body>
 
 <div id="header">
+{if $svn_revision > 0}
+<div id="latestsvn">
+{include file="latestsvn.tpl"}
+</div>
+{/if}
 {$htmlimages.circebig}
 </div>
 

@@ -1,4 +1,4 @@
-{$appname} will be divided into 3 sections:
+{$appname} will be divided into multiple sections:
 <ul class="featurelist">
 <li>circe_gtk - <i>A {$acronyms.GUI} powered by <a href="http://www.pygtk.org">PyGTK</a> (primary interface)</i></li>
 <li>circe_wx - <i>A {$acronyms.GUI} powered by <a href="http://www.wxpython.org">wxPython</a> (not being worked on right now)</i></li>
@@ -10,7 +10,7 @@ Some of the projected features:
 <ul class="featurelist">
 <li>Fully scriptable through Python modules</li>
 <li>Completely functional on Windows (2000/XP), Mac OS X, Linux and {$acronyms.BSD}</li>
-<li>Uniform {$acronyms.GUI} on all platforms (circe_gtk)</li>
+<li>Uniform {$acronyms.GUI} (for all versions) on all platforms .</li>
 <li>Multiserver support</li>
 <li>{$acronyms.DCC} (and {$acronyms.DCC}2) support</li>
 <li>{$acronyms.SSL} support</li>

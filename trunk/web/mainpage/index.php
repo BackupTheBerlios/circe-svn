@@ -5,6 +5,8 @@ require("smarty/Smarty.class.php");
 require("pages.php");
 require("images.php");
 require("acronyms.php");
+require("parsesvn.php");
+require("duration.php");
 
 // create object
 $smarty = new Smarty;
@@ -50,6 +52,9 @@ foreach(array_keys($acronyms) as $acronym) {
 	$htmlacronyms[$acronym] = "<acronym title=\"" . $acronyms[$acronym] . "\">" . $acronym . "</acronym>";
 }
 
+// Read SVN data (if any)
+$svndata = readsvn();
+
 // set values
 $smarty->assign("appname", "Circe");
 $smarty->assign("currentname", $currentname);
@@ -63,6 +68,19 @@ $smarty->assign("htmlimages",$htmlimages);
 $smarty->assign("acronyms",$htmlacronyms);
 if($currentimage != $null) {
     $smarty->assign("currentimage",$images[$currentimage]);
+}
+// SVN vars:
+if(!$svndata) {
+    $smarty->assign("svn_revision",0);
+}
+else {
+    // Translate duration
+    $svn_ago = time() - $svndata["timestamp"];
+    $svn_ago_format = Duration::toString($svn_ago);
+    $smarty->assign("svn_revision",$svndata["revision"]);
+    $smarty->assign("svn_author",$svndata["author"]);
+    $smarty->assign("svn_log",$svndata["log"]);
+    $smarty->assign("svn_ago_format",$svn_ago_format);
 }
 
 // display it

@@ -28,6 +28,12 @@ div#header h1#appname {
 	color: #000000;
 }
 
+acronym {
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #AAAAAA;
+}
+
 div#menu {
 	float: left;
 	width: 90px;

@@ -59,8 +59,10 @@ class frame_main(wx.Frame):
         else:
             self.toolbar_Channels = wx.Button(self.TopPanel,-1,"Test Toolbar")
             #self.toolbar_Channels = toolbar_channel(self.TopPanel,ID_TOOLBAR_CHANNEL)
+        self.WindowArea = wx.TextCtrl(self.TopPanel,-1,"Test Window Area.\nModify circe_config.toolbarposition to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
 
     def CreateSizers(self):
+        print "Toolbar position:",circe_config.toolbarposition
         if(circe_config.toolbarposition == wx.RIGHT or circe_config.toolbarposition == wx.LEFT):
             self.sizer_Top = wx.BoxSizer()
         else:
@@ -75,7 +77,13 @@ class frame_main(wx.Frame):
         else:
             self.sizer_Top.Add(self.sizer_TreeAndWindowArea,1,wx.EXPAND)
             self.sizer_Top.Add(self.toolbar_Channels,0,wx.EXPAND)
-        self.sizer_TreeAndWindowArea.Add(wx.TextCtrl(self.TopPanel,-1,"Test Window Area.\nModify circe_config.toolbarposition to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE),1,wx.EXPAND)
+        self.sizer_TreeAndWindowArea.Add(self.WindowArea,1,wx.EXPAND)
+        self.TopPanel.Layout()
+    
+    def RebuildSizers(self):
+        self.sizer_Top.Clear(False)
+        self.CreateSizers()
+        self.AddControls()
         self.TopPanel.Layout()
 
     def evt_menu_About(self,event):
@@ -85,13 +93,17 @@ class frame_main(wx.Frame):
         self.Close()
     
     def evt_menu_switchbar_align_left(self,event):
-        pass
+        circe_config.toolbarposition = wx.LEFT
+        self.RebuildSizers()
 
     def evt_menu_switchbar_align_right(self,event):
-        pass
+        circe_config.toolbarposition = wx.RIGHT
+        self.RebuildSizers()
 
     def evt_menu_switchbar_align_top(self,event):
-        pass
+        circe_config.toolbarposition = wx.TOP
+        self.RebuildSizers()
 
     def evt_menu_switchbar_align_bottom(self,event):
-        pass
+        circe_config.toolbarposition = wx.BOTTOM
+        self.RebuildSizers()

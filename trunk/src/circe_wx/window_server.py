@@ -15,15 +15,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-from circelib.circelib import Server
+import wx
+from panel_window import panel_window
 
-servers = []
-        
-def AddServer(*options):
-    s = Server(*options)
-    servers.append(s)
-    return s
-
-def RemoveServer(s):
-    if s in servers:
-        del servers[s]
+class window_server(panel_window):
+    def __init__(self,windowarea,id,server,caption=None):
+        self.windowarea = windowarea
+        self.server = server
+        panel_window.__init__(self,windowarea,id,caption)

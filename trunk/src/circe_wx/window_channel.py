@@ -17,14 +17,16 @@
 
 import wx
 import lorem
+#import commandparser
 from panel_window import panel_window
+from window_server import window_server
 
 ID_TXT_EDIT = wx.NewId()
 ID_LST_USERS = wx.NewId()
 
-class window_channel(panel_window):
-    def __init__(self,parent,id=-1,caption=""):
-        panel_window.__init__(self,parent,id,caption)
+class window_channel(window_server):
+    def __init__(self,windowarea,id,server):
+        window_server.__init__(self,windowarea,id,server,"Channel")
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
@@ -33,6 +35,7 @@ class window_channel(panel_window):
         self.txtBuffer = wx.TextCtrl(self,-1,"Channel: %s\n\n%s" % (self.caption,lorem.text),wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
         self.lstUsers = wx.ListCtrl(self,ID_LST_USERS,wx.DefaultPosition,wx.DefaultSize)
+        wx.EVT_CHAR(self.txtEdit,self.txtEdit_EvtChar)
     
     def CreateSizers(self):
         self.sizer_Top = wx.BoxSizer(wx.VERTICAL)
@@ -44,3 +47,13 @@ class window_channel(panel_window):
         self.sizer_BufferAndUsers.Add(self.lstUsers,0,wx.EXPAND)
         self.sizer_Top.Add(self.sizer_BufferAndUsers,1,wx.EXPAND)
         self.sizer_Top.Add(self.txtEdit,0,wx.EXPAND)
+
+    def txtEdit_EvtChar(self, event):
+        key = event.GetKeyCode()
+        if(key == 13):
+            # Enter pressed
+            #self.TextCommand(self.txtEdit.GetValue())
+            #commandparser.TextCommand(self.server,self.windowarea,self.txtEdit.GetValue())
+            self.txtEdit.SetValue("")
+        else:
+            event.Skip()

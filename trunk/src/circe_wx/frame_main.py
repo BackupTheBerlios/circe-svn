@@ -18,12 +18,12 @@
 import wx
 import circe_globals
 import circe_config
+import servermanager
 from panel_switchbar import panel_switchbar
 from panel_windowarea import panel_windowarea
 from panel_tree import panel_tree
 from window_channel import window_channel
 from window_status import window_status
-import servermanager
 
 ID_MENU_FILE_ABOUT = wx.NewId()
 ID_MENU_FILE_EXIT = 1002

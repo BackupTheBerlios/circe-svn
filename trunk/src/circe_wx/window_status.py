@@ -16,17 +16,17 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import wx
-from panel_window import panel_window
 import servermanager
+import commandparser
+#from panel_window import panel_window
+from window_server import window_server
 
 ID_TXT_EDIT = wx.NewId()
 
-class window_status(panel_window):
-    def __init__(self,parent,server,id=-1):
-        self.server = server
+class window_status(window_server):
+    def __init__(self,windowarea,server,id=-1):
         #server.SetStatusWindow(self)
-        self.caption = self.MakeCaption()
-        panel_window.__init__(self,parent,id,self.caption)
+        window_server.__init__(self,windowarea,id,server,"Status")
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
@@ -56,7 +56,8 @@ class window_status(panel_window):
         key = event.GetKeyCode()
         if(key == 13):
             # Enter pressed
-            servermanager.TextCommand(self.server,self.txtEdit.GetValue())
+            #self.TextCommand(self.txtEdit.GetValue())
+            commandparser.TextCommand(self.server,self.windowarea,self.txtEdit.GetValue())
             self.txtEdit.SetValue("")
         else:
             event.Skip()

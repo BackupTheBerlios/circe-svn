@@ -113,6 +113,7 @@ class frame_main(wx.Frame):
         self.CreateSizers()
         self.AddControls()
         self.Refresh(True)
+        self.panel_WindowArea.Refresh(True)
     
     def DestroySizers(self):
         self.sizer_Top.Clear(False)

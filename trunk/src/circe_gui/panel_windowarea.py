@@ -20,7 +20,7 @@ class panel_windowarea(wx.Panel):
     
     def AddWindow(self,window):
         if(window in self.windowList):
-            raise "Window already exists"
+            raise "Window %s already exists" % window
         else:
             self.windowList.append(window)
             window.Show(False)
@@ -30,7 +30,7 @@ class panel_windowarea(wx.Panel):
             self.sizer_Top.Remove(window)
             self.windowList[self.windowList.index(window)] = None
         else:
-            raise "Window does not exist in windows list"
+            raise "Window: %s does not exist in windows list" % window
     
     def ShowWindow(self,window):
         if(window in self.windowList):
@@ -41,7 +41,7 @@ class panel_windowarea(wx.Panel):
             self.sizer_Top.Add(window,1,wx.EXPAND)
             self.sizer_Top.Layout()
         else:
-            raise "Window does not exist in windows list"
+            raise "Window: %s does not exist in windows list" % window
     
     def CreateControls(self):
         pass

@@ -18,9 +18,9 @@
 import wx
 import circe_globals
 import circe_config
-from circe_gui.panel_switchbar import panel_switchbar
-from circe_gui.panel_windowarea import panel_windowarea
-from circe_gui.panel_tree import panel_tree
+from panel_switchbar import panel_switchbar
+from panel_windowarea import panel_windowarea
+from panel_tree import panel_tree
 
 ID_MENU_FILE_ABOUT = 1001
 ID_MENU_FILE_EXIT = 1002
@@ -37,7 +37,7 @@ class frame_main(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, -1, circe_globals.APPNAME + " " + circe_globals.VERSION, wx.DefaultPosition, wx.Size(600,  400)) 
         self.CreateStatusBar()
-        self.SetStatusText("Welcome to " + circe_globals.APPNAME + " version " + circe_globals.VERSION + " (" + circe_globals.APPTAG + ")") 
+        self.SetStatusText("Welcome to " + circe_globals.APPNAME + " version " + circe_globals.VERSION + " (" + circe_globals.APPTAG + ")")
         
         self.toolbar_Channels = None
         

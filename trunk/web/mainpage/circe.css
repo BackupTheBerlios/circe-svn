@@ -2,7 +2,7 @@ body {
 	margin-left: 5px;
 	/* background-color: #DAE0EA; */
 	background-color: #DADAEA;
-	width: 600px; /* To prevent the layout messing up with a small window */
+	width: 606px; /* To prevent the layout messing up with a small window */
 	margin-top: 6px;
 	margin-left: 6px;
 	font-family: verdana,helvetica,arial,sans-serif;
@@ -39,11 +39,14 @@ acronym {
 
 div#menu {
 	float: left;
-	width: 90px;
+	width: 95px;
 	font-size: 12px;
 	border-top: solid;
 	border-bottom: solid;
-	border-width: 5px;
+	border-right: solid;
+	border-bottom-width: 4px;
+	border-top-width: 5px;
+	border-right-width: 1px;
 	border-color: #8888B0;
 }
 
@@ -70,6 +73,8 @@ ul#menulist li a {
 	border-bottom: solid;
 	border-width: 1px;
 	border-color: #8888B0;
+	padding-top: 1px;
+	padding-bottom: 2px;
 }
 
 ul#menulist li a:hover {
@@ -108,7 +113,7 @@ div#footer {
 	clear: left;
 	font-size: 12px;
 	padding-top: 1px;
-	margin-left: 90px;
+	margin-left: 95px;
 }
 
 div#footer img#berlioslogo {

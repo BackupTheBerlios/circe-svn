@@ -1,0 +1,4 @@
+wxPython:
+    
+    - (window_channel.py) Make self.setUsers method update the ListCtrl 
+      widget. I (alst) get errors with the code I've commented out.

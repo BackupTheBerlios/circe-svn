@@ -2,7 +2,7 @@ body {
 	margin-left: 5px;
 	/* background-color: #DAE0EA; */
 	background-color: #DADAEA;
-	width: 605px; /* To prevent the layout messing up with a small window */
+	width: 600px; /* To prevent the layout messing up with a small window */
 	margin-top: 3px;
 	color: #222244;
 }

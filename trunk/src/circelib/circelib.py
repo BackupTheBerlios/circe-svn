@@ -28,9 +28,9 @@ class Server:
         self.host = host
         self.port = port
         IC.connect((host,int(port)))
-    def nick(self, nick, user="circe", host="circe"):
-        IC.send("USER %s %s %s %s\r\n" % (nick, user,host,user))
-        IC.send("NICK %s %s\r\n" % (nick, user))
+    def nick(self, nick, host="circe"):
+        IC.send("USER ident * * :%s\r\n" % (host))
+        IC.send("NICK %s\r\n" % (nick))
     def send(self, ts):
         IC.send("%s\r\n" % (ts))
     def nickChange(self, newnick):

@@ -16,7 +16,7 @@ class WXServer(Server):
         self.channels.append(new)
 
     def TextCommand(self,cmdstring,window):
-        if(cmdstring == None or len(cmdstring) == 0):
+        if cmdstring == None or len(cmdstring) == 0:
             raise "Empty command"
         # Strip /
         if cmdstring[0] == "/":
@@ -28,19 +28,19 @@ class WXServer(Server):
         cmd = cmdlist[0]
         params = cmdlist[1:]
         # Find out what command is being executed
-        if(cmd == "server"):
+        if cmd == "server":
             self.connect(*params)
-        elif(cmd == "join"):
+        elif cmd == "join":
             self.joinChannel(*params)
-        elif(cmd == "nick"):
+        elif cmd == "nick":
             self.nick(*params)
-        elif(cmd == "msg"):
+        elif cmd == "msg":
             channel = params[0]
             text = params[1:]
             text=" ".join(text)
             self.sendMessage(channel, text)
-        elif(cmd == "quit"):
+        elif cmd == "quit":
             self.closeConnection()
         # For debug purposes:
-        elif(cmd == "joindebug"):
+        elif cmd == "joindebug":
             self.NewChannelWindow(params[0])

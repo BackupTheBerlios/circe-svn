@@ -35,6 +35,6 @@ class CirceApp(wx.App):
             handle_exc("Error on application init:")
         return True
 
-if(__name__ == "__main__"):
+if __name__ == "__main__":
     circe = CirceApp(0)
     circe.MainLoop()

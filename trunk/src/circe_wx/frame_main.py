@@ -112,7 +112,7 @@ class frame_main(wx.Frame):
 
     def CreateSwitchBar(self):
         sbsize = (circe_config.switchbar_hsize,circe_config.switchbar_vsize)
-        if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
+        if circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT:
             sbalign = wx.VERTICAL
         else:
             sbalign = wx.HORIZONTAL
@@ -122,7 +122,7 @@ class frame_main(wx.Frame):
         self.panel_Switchbar.AddSection(0)
     
     def AlignSwitchbar(self):
-        if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
+        if circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT:
             sbalign = wx.VERTICAL
             sbsize = (circe_config.switchbar_hsize,-1)
         else:
@@ -155,7 +155,7 @@ class frame_main(wx.Frame):
         self.sizer_Top.Destroy()
     
     def CreateSizers(self):
-        if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
+        if circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT:
             self.sizer_Top = wx.BoxSizer()
         else:
             self.sizer_Top = wx.BoxSizer(wx.VERTICAL)
@@ -164,24 +164,24 @@ class frame_main(wx.Frame):
 
     def AddControls(self):
         # Switchbar
-        if((circe_config.switchbar_position == wx.LEFT or circe_config.switchbar_position == wx.TOP) and circe_config.switchbar_show == True):
+        if (circe_config.switchbar_position == wx.LEFT or circe_config.switchbar_position == wx.TOP) and circe_config.switchbar_show == True:
             self.sizer_Top.Add(self.panel_Switchbar,0,wx.EXPAND)
         self.sizer_Top.Add(self.sizer_TreeAndWindowArea,1,wx.EXPAND)
-        if((circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.BOTTOM) and circe_config.switchbar_show == True):
+        if (circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.BOTTOM) and circe_config.switchbar_show == True:
             self.sizer_Top.Add(self.panel_Switchbar,0,wx.EXPAND)
         # Tree
-        if(circe_config.tree_position == wx.LEFT and circe_config.tree_show == True):
+        if circe_config.tree_position == wx.LEFT and circe_config.tree_show == True:
             self.sizer_TreeAndWindowArea.Add(self.panel_Tree,0,wx.EXPAND)
         # Windowarea
         self.sizer_TreeAndWindowArea.Add(self.panel_WindowArea,1,wx.EXPAND)
         # Tree
-        if(circe_config.tree_position == wx.RIGHT and circe_config.tree_show == True):
+        if circe_config.tree_position == wx.RIGHT and circe_config.tree_show == True:
             self.sizer_TreeAndWindowArea.Add(self.panel_Tree,0,wx.EXPAND)
 
         # Hide disabled controls
-        if(not circe_config.tree_show):
+        if not circe_config.tree_show:
             self.panel_Tree.Show(False)
-        if(not circe_config.switchbar_show):
+        if not circe_config.switchbar_show:
             self.panel_Switchbar.Show(False)
         self.panel_Top.Layout()
     

@@ -48,7 +48,7 @@ class window_channel(window_server):
 
     def txtEdit_EvtChar(self, event):
         key = event.GetKeyCode()
-        if(key == 13):
+        if key == 13:
             # Enter pressed
             #self.TextCommand(self.txtEdit.GetValue())
             #commandparser.TextCommand(self.server,self.windowarea,self.txtEdit.GetValue())

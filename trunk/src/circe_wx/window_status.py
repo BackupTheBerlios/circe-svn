@@ -51,7 +51,7 @@ class window_status(window_server):
 
     def txtEdit_EvtChar(self, event):
         key = event.GetKeyCode()
-        if(key == 13):
+        if key == 13:
             # Enter pressed
             #self.TextCommand(self.txtEdit.GetValue())
             self.server.TextCommand(self.txtEdit.GetValue(),self)

@@ -20,10 +20,10 @@ class frame_main(wx.Frame):
         
         self.toolbar_Channels = None
         
-        self.CreateMenu()
         self.CreateControls()
+        self.CreateMenu()
         self.CreateSizers()
-        self.CreateToolbar()
+        self.CreateToolBar()
         self.AddControls()
         
     def CreateMenu(self):
@@ -33,10 +33,10 @@ class frame_main(wx.Frame):
         menu_file.Append(ID_MENU_FILE_EXIT, "E&xit", "Exit " + circe_globals.APPNAME)
         
         menu_switchbar = wx.Menu()
-        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ALEFT, "Align Switchbar Left")
-        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ARIGHT, "Align Switchbar Right")
-        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ATOP, "Align Switchbar Top")
-        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ABOTTOM, "Align Switchbar Bottom")
+        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ALEFT, "Align Switchbar &Left")
+        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ARIGHT, "Align Switchbar &Right")
+        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ATOP, "Align Switchbar &Top")
+        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ABOTTOM, "Align Switchbar &Bottom")
         
         menu_view = wx.Menu()
         menu_view.AppendMenu(-1, "&Switchbar", menu_switchbar)
@@ -53,23 +53,23 @@ class frame_main(wx.Frame):
         wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ARIGHT, self.evt_menu_switchbar_align_right)
         wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ATOP, self.evt_menu_switchbar_align_top)
         wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ABOTTOM, self.evt_menu_switchbar_align_bottom)
-    
-    def CreateToolbar(self):
-        if(self.toolbar_Channels):
-            self.toolbar_Channels.Destroy()
+
+    def CreateToolBar(self):
         if(circe_config.toolbar_position == wx.RIGHT or circe_config.toolbar_position == wx.LEFT):
             self.toolbar_Channels = wx.Button(self.TopPanel,-1,"Test Toolbar",wx.DefaultPosition,(circe_config.toolbar_hsize,-1))
             #self.toolbar_Channels = toolbar_channel(self.TopPanel,ID_TOOLBAR_CHANNEL,wx.TB_VERTICAL)
         else:
             self.toolbar_Channels = wx.Button(self.TopPanel,-1,"Test Toolbar",wx.DefaultPosition,(-1,circe_config.toolbar_vsize))
             #self.toolbar_Channels = toolbar_channel(self.TopPanel,ID_TOOLBAR_CHANNEL)
+    
+    def DestroyToolBar(self):
+        self.toolbar_Channels.Destroy()
 
     def CreateControls(self):
         self.TopPanel = wx.Panel(self,-1)
         self.WindowArea = wx.TextCtrl(self.TopPanel,-1,"Test Window Area.\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
 
     def CreateSizers(self):
-        print "Toolbar position:",circe_config.toolbar_position
         if(circe_config.toolbar_position == wx.RIGHT or circe_config.toolbar_position == wx.LEFT):
             self.sizer_Top = wx.BoxSizer()
         else:
@@ -90,15 +90,14 @@ class frame_main(wx.Frame):
     def ConfigControls(self):
         if(circe_config.toolbar_position == wx.RIGHT or circe_config.toolbar_position == wx.LEFT):
             self.toolbar_Channels.SetSize((-1,circe_config.toolbar_vsize))
-            print (circe_config.toolbar_hsize,-1)
         else:
             self.toolbar_Channels.SetSize((circe_config.toolbar_hsize,-1))
-            print (-1,circe_config.toolbar_vsize)
     
     def RebuildSizers(self):
         self.sizer_Top.Clear(False)
         self.CreateSizers()
-        self.CreateToolbar()
+        self.DestroyToolBar()
+        self.CreateToolBar()
         self.AddControls()
         self.TopPanel.Layout()
 

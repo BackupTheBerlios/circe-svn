@@ -24,7 +24,7 @@
 {else}
 <li>
 {/if}
-<a href="{$index}?page={$key}">{$page.name}</a>
+<a href="{$index}?page={$key}">&nbsp;{$page.name}</a>
 </li>
 {/foreach}
 </ul>

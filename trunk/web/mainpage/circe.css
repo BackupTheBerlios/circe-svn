@@ -47,7 +47,6 @@ ul#menulist li {
     list-style-type: none;
     background-repeat: no-repeat;
     display: block;
-    padding-left: 3px;
 }
 /*
 ul#menulist li#header {
@@ -84,10 +83,6 @@ ul#menulist li#active a {
 
 ul#menulist li#active a:hover {
 		background-color: #FF0000;
-}
-
-ul#menulist li:hover {
-		background-color: #CCCCCC;
 }
 
 div#content {

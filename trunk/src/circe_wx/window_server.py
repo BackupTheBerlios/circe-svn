@@ -23,3 +23,9 @@ class window_server(panel_window):
         self.windowarea = windowarea
         self.server = server
         panel_window.__init__(self,windowarea,id,caption)
+
+    def getWindowarea(self):
+        return self.windowarea
+
+    def getServer(self):
+        return self.server

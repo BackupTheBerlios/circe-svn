@@ -3,12 +3,16 @@ from window_channel import window_channel
 import irclib
 
 
-class CirceIRCClient(irclib.SimpleIRCClient):
+class CirceIRCClient:
     """Simple IRC client inspired from SimpleIRCClient from python-irclib."""
-    def __init__(self):
+    def __init__(self, target):
+        """Arguments:
+            target -- a nick or a channel name
+        """
         self.ircobj = irclib.IRC()
         self.connection = self.ircobj.server()
         self.ircobj.add_global_handler("all_events", self._processEvents)
+        self._target = target
         # Here are stored Events objects to be processed (use Event's methods
         # eventtype(), source(), target(), arguments() to have all info about
         # the event)
@@ -24,6 +28,9 @@ class CirceIRCClient(irclib.SimpleIRCClient):
         self.connection.connect(server, port, nickname, password, username,
                 ircname, localaddress, localport)
 
+    def getConnection(self):
+        return self.connection
+
     def setDebug(self, flag):
         """Turn on/off the debug mode."""
         irclib.DEBUG = flag
@@ -34,19 +41,23 @@ class CirceIRCClient(irclib.SimpleIRCClient):
         list if there is no new event.
         """
         self.new_events = []
-        self.ircobj.process_once()
+        self.ircobj.process_once(timeout=0.1)
         return self.new_events
 
-    
+
 class WXServer(CirceIRCClient):
     def __init__(self,windowarea):
-        CirceIRCClient.__init__(self)
-        self.c = self.connection    # just because it's shorter
-        self.host = self.c.connected and self.c.get_server_name() or ""
+        CirceIRCClient.__init__(self, target="")
+        c = self.connection
+        self.host = c.connected and c.get_server_name() or None
         self.statuswindow = window_status(windowarea,self)
         windowarea.AddWindow(self.statuswindow)
         self.windowarea = windowarea
         self.channels = []
+
+    def getHost(self):
+        """Return the host we are connected to."""
+	return self.host
 
     def NewChannelWindow(self,channelname):
         new = window_channel(self.windowarea,self,channelname)
@@ -56,6 +67,7 @@ class WXServer(CirceIRCClient):
     def TextCommand(self,cmdstring,window):
         if not cmdstring:
             raise "Empty command"
+        
         # Strip /
         if cmdstring[0] == "/":
             cmdstring = cmdstring[1:]
@@ -73,14 +85,29 @@ class WXServer(CirceIRCClient):
             nick = params[1]
             self.connection.connect(server=server, port=port, nickname=nick)
             self.host = server
-            # XXX TEST
-            print "Server: %s %s" % (server,
-                    self.connection.get_server_name())
         elif cmd =="check": # for testing
             print "-"*10, "CheckEvents"
             for e in self.checkEvents():
-                print "--\nEvent: %s Source: %s Target: %s\nArguments: %s" % ( 
+                text="""\nEvent: %s Source: %s Target: %s\nArguments: %s""" % ( 
                         e.eventtype(), e.source(), e.target(), e.arguments())
+	        print text
+		# connected to a server
+		# may be done with the 'yourhost' event, as well
+		if e.eventtype() == "welcome":
+		    self.host = e.source()
+		    self.statuswindow.SetCaption(self.getHost())
+		    for arg in e.arguments():
+		        self.statuswindow.ServerEvent(arg)
+		# display notices
+		elif e.eventtype() == "privnotice":
+		    text = ""
+		    if e.source() and e.source().startswith("NickServ"):
+		        text += "NickServ: "
+		    text += e.arguments()[0]
+		    self.statuswindow.ServerEvent(text)
+	        elif e.eventtype() == "motd":
+		    self.statuswindow.ServerEvent(e.arguments()[0])
+		    
         elif cmd == "debug":
             self.setDebug(True)
         elif cmd == "nodebug":
@@ -94,6 +121,9 @@ class WXServer(CirceIRCClient):
             text = params[1:]
             text=" ".join(text)
             self.connection.privmsg(channel, text)
+            # add text in circe window
+            mytext = "%s: %s\n" % (self.connection.get_nickname(), text)
+            window.addToBuffer(mytext)
         elif cmd == "quit":
             self.connection.disconnect()
         elif cmd == "joindebug":

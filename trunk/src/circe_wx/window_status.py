@@ -29,14 +29,16 @@ class window_status(window_server):
         self.AddControls()
 
     def MakeCaption(self):
-        if self.server.host != None:
-            caption = self.server.host
+        if self.server.getHost():
+            caption = self.server.getHost()
         else:
-            caption = "Status"
+            caption = "Not connected"
         return caption
     
     def CreateControls(self):
         self.txtBuffer = wx.TextCtrl(self,-1,"Server: %s\n" % self.server.host,wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        f = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Monospace")	
+	self.txtBuffer.SetDefaultStyle(wx.TextAttr("BLACK", wx.NullColour, f))
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
         #self.txtEdit.Bind(wx.EVT_CHAR, self.txtEdit_EvtChar)
         wx.EVT_CHAR(self.txtEdit,self.txtEdit_EvtChar)

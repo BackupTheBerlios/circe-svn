@@ -23,14 +23,21 @@ ID_TXT_EDIT = wx.NewId()
 ID_LST_USERS = wx.NewId()
 
 class window_channel(window_server):
-    def __init__(self,windowarea,server,channelname,id=-1):
+    def __init__(self,windowarea,server,channelname,id=wx.NewId()):
         window_server.__init__(self,windowarea,id,server,channelname)
+        self._id = id
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
+
+    def getId(self):
+        """Return a number proper at each instanciated object of window_channel.
+        """
+        return self._id
         
     def CreateControls(self):
         self.txtBuffer = wx.TextCtrl(self,-1,"Channel: %s\n\n%s" % (self.caption,lorem.text),wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        self.txtBuffer.SetEditable(False)
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
         self.lstUsers = wx.ListCtrl(self,ID_LST_USERS,wx.DefaultPosition,wx.DefaultSize)
         wx.EVT_CHAR(self.txtEdit,self.txtEdit_EvtChar)
@@ -56,3 +63,7 @@ class window_channel(window_server):
             self.txtEdit.SetValue("")
         else:
             event.Skip()
+
+    def addToBuffer(self, txt):
+        """Add some txt at the end of the TextCtrl."""
+        self.txtBuffer.AppendText(txt)

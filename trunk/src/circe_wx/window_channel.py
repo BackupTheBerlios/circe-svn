@@ -40,7 +40,7 @@ class window_channel(window_server):
 
     def getChannelname(self):
         return self._channelname
-        
+
     def CreateControls(self):
         self.txtBuffer = wx.TextCtrl(self,-1,"Channel: %s\n\n" % (self.caption),wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         self.txtBuffer.SetEditable(False)
@@ -84,7 +84,9 @@ class window_channel(window_server):
             to    -- (Optional) target of the message
 
         """
-        if to != "":
+        if to.startswith("#"):
+            to = "" # target of the message is obvious
+        else:
             to = "(to %s)" % to
         message = "%s%s: %s\n" % (from_, to, text)
         self.txtBuffer.AppendText(message)

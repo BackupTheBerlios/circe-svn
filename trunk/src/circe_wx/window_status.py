@@ -24,9 +24,19 @@ class window_status(window_server):
     def __init__(self,windowarea,server,id=-1):
         #server.SetStatusWindow(self)
         window_server.__init__(self,windowarea,id,server,"Status")
+        
+        self._server = server
+        # Whether to check regularly for new events or not
+        self._checking = False
+        # Delay between each checking (in ms)
+        self._timer_delay = 1000
+        
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
+
+        # Bind EVT_TIMER events to self.OnTimerEvt
+        self.Bind(wx.EVT_TIMER, self.OnTimerEvt)
 
     def MakeCaption(self):
         if self.server.getHost():
@@ -64,3 +74,32 @@ class window_status(window_server):
 
     def ServerEvent(self, event):
         self.txtBuffer.AppendText("%s\n" % event)
+
+    def enableChecking(self):
+        """Turns on checking for new events."""
+        if self._checking:
+            return
+        self.timer = wx.Timer(self)
+        self.timer.Start(self._timer_delay)
+        self._checking = True
+        print "Automatic checking for new events enabled"
+
+    def disableChecking(self):
+        """Turns off checking for new events."""
+        if not self._checking:
+            return
+        self.timer.Stop()
+        del self.timer
+        self._checking = False
+        print "Automatic checking for new events disabled"
+
+    def OnTimerEvt(self, evt):
+        if not self._server.is_connected():
+            self.disableChecking()
+            return
+        self._server.checkEvents()
+
+    def isChecking(self):
+        """Returns True if checking for new events is enabled otherwise False.
+        """
+        return self._checking

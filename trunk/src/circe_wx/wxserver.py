@@ -61,6 +61,9 @@ class WXServer(CirceIRCClient):
         """Returns the host we are connected to."""
         return self.host
 
+    def is_connected(self):
+        return self.connection.is_connected()
+
     def NewChannelWindow(self,channelname):
         """Opens a new channel window, sets the caption and stores it."""
         if self.connection.connected:
@@ -119,6 +122,8 @@ class WXServer(CirceIRCClient):
             port = 6667
             self.connect(server=server, port=port, nickname=nick)
             self.host = server
+            # Check regularly for new events
+            self.statuswindow.enableChecking()
 
         elif cmd == "action":
             self.connection.action(target=params[0], action=params[1])
@@ -180,8 +185,12 @@ class WXServer(CirceIRCClient):
 
         elif cmd == "privmsg_many":
             self.connection.privmsg_many(*params)   # args: targets, text
+
         elif cmd == "quit":
             self.connection.quit(*params)       # optional message
+            # Stop checking for events
+            self.statuswindow.disableChecking()
+            
         elif cmd == "sconnect":
             self.connection.sconnect(*params)   # args: target; optional: port, server
         elif cmd == "squit":
@@ -225,11 +234,6 @@ class WXServer(CirceIRCClient):
 
     def checkEvents(self):
         """Redirects all received events to the correct windows."""
-        print "- " * 30
-        print "Getting and redirecting events:"
-        print
-
-
         # Print events and display them in the rigth windows.
         for e in self.getEvents():
 
@@ -262,6 +266,8 @@ class WXServer(CirceIRCClient):
                 elif e.source() and e.source().startswith("MemoServ"):
                     text = "MemoServ: " + e.arguments()[0]
                     self.statuswindow.ServerEvent(text)
+                else:   # is it possible?
+                    self.statuswindow.ServerEvent(e.arguments()[0])
                     
             elif etype == "umode":
                 self.statuswindow.ServerEvent("umode: "+e.arguments()[0])
@@ -277,10 +283,11 @@ class WXServer(CirceIRCClient):
                 # find out the corresponding window
                 window = self.getWindowChannelRef(chan)
                 if window:
-                    if len(args) > 1:
-                        args = " ".join(args)
-                    else:
-                        args = args[0]
+#                    if len(args) > 1:
+#                        args = " ".join(args)
+#                    else:
+#                        args = args[0]
+                    args = " ".join(args)
                     text = "[%s] %s" % (etype, args)
                     window.addRawText(text)
 
@@ -304,3 +311,11 @@ class WXServer(CirceIRCClient):
                 if window:
                     text = "%s has joined %s" % (e.source(), chan)
                     window.addRawText(text)
+                    # TODO update users' list
+
+            elif etype == "part":
+                window = self.getWindowChannelRef(e.target())
+                if window:
+                    text = "%s has leaved %s" % (e.source(), e.target())
+                    window.addRawText(text)
+                    # TODO update users' list when it'll work

@@ -63,6 +63,14 @@ class switchbutton(genbuttons.GenBitmapTextToggleButton):
         genbuttons.GenBitmapTextToggleButton.__init__(self,parent,self.event_id,icon,text)
         self.SetUseFocusIndicator(False)
 
+        # Here begins code to change button behaviour
+        # The button will instantly trigger a click when left_down
+        self.Bind(wx.EVT_LEFT_DOWN,self.OnLeftDown_Override)
+
+    def OnLeftDown_Override(self,event):
+        self.OnLeftDown(event)
+        self.OnLeftUp(event)
+    
 class panel_switchbar(wx.Panel):
     def __init__(self,parent,panelID,barsize,baralign=wx.HORIZONTAL):
         self.barsize = barsize

@@ -4,7 +4,7 @@ from twisted.internet import protocol
 class Client(irc.IRCClient):
     """The gateway between the abstracted classes and irc.IRCClient"""
     def __init__(self,server):
-        self.nickname = "circe_test"
+        #self.nickname = "circe_test"
         self.server = server
         # Call the server object to announce myself
         server.InitClient(self)
@@ -20,11 +20,9 @@ class Client(irc.IRCClient):
 
     # IRC events
     def signedOn(self):
-        irc.IRCClient.signedOn(self)
         self.server.SignedOn()
 
     def joined(self,channel):
-        irc.IRCClient.joined(self,channel)
         self.server.Joined(channel)
 
 class ClientFactory(protocol.ClientFactory):

@@ -24,6 +24,7 @@ ID_TXT_EDIT = wx.NewId()
 class window_status(panel_window):
     def __init__(self,parent,server,id=-1):
         self.server = server
+        server.SetStatusWindow(self)
         self.caption = self.MakeCaption()
         panel_window.__init__(self,parent,id,self.caption)
         self.CreateControls()
@@ -58,3 +59,6 @@ class window_status(panel_window):
             self.txtEdit.SetValue("")
         else:
             event.Skip()
+
+    def ServerEvent(self, event):
+        self.txtBuffer.AppendText("%s\n" % event)

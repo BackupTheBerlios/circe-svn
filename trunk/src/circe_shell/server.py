@@ -3,8 +3,7 @@ import ircreactor
 
 class Server:
     def __init__(self,host=None,port=None):
-        """The Server class, interfaces between de UI and the IRC code"""
-        self.channels = None
+        """The Server class, interfaces between the UI and the IRC code"""
         self.host = host
         self.port = port
         self.factory = ircclient.ClientFactory(self)
@@ -16,7 +15,6 @@ class Server:
         #Todo: get default port
         self.host = host
         self.port = port
-        print "Connecting to:",host,port
         ircreactor.reactor.connectTCP(host,port,self.factory)
     
     def InitClient(self,client):
@@ -27,7 +25,6 @@ class Server:
     def Join(self,channelname):
         """Joins a channel on this server and returns a channel object"""
         channelname = str(channelname)
-        print "Joining %s" % channelname
         self.client.join(channelname)
 
     def Say(self,channel,text,length=None):

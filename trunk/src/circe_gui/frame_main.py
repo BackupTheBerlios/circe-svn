@@ -112,6 +112,7 @@ class frame_main(wx.Frame):
         self.DestroySizers()
         self.CreateSizers()
         self.AddControls()
+        self.Refresh(True)
     
     def DestroySizers(self):
         self.sizer_Top.Clear(False)
@@ -147,7 +148,7 @@ class frame_main(wx.Frame):
         self.Realize()
 
     def RebuildTree(self):
-        pass
+        self.Realize()
 
     def evt_menu_About(self,event):
         wx.MessageBox(circe_globals.APPNAME + " version " + circe_globals.VERSION,"About")

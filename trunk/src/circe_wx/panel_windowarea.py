@@ -56,7 +56,7 @@ class panel_windowarea(wx.Panel):
         else:
             raise "Window: %s does not exist in windows list" % window
     
-    def ShowWindow(self,window):
+    def ShowWindow(self,window,ignoreEvent=False):
         if(window in self.windowList):
             for winToHide in self.windowList:
                 winToHide.Show(False)
@@ -64,8 +64,9 @@ class panel_windowarea(wx.Panel):
             window.Show(True)
             self.sizer_Top.Add(window,1,wx.EXPAND)
             self.sizer_Top.Layout()
-            if(self.func_showwindow is not None):
-                self.func_showwindow(window)
+            if(not ignoreEvent):
+                if(self.func_showwindow is not None):
+                    self.func_showwindow(window)
         else:
             raise "Window: %s does not exist in windows list" % window
     

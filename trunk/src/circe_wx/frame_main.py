@@ -52,8 +52,10 @@ class frame_main(wx.Frame):
         # Run a little test for the window area and the switchbar
         self.testWindow = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 1)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         self.testWindow2 = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 2)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        self.testWindow3 = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 3)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         self.panel_WindowArea.AddWindow(self.testWindow,"Window 1")
         self.panel_WindowArea.AddWindow(self.testWindow2,"Window 2")
+        self.panel_WindowArea.AddWindow(self.testWindow3,"Window 3")
         self.panel_WindowArea.ShowWindow(self.testWindow)
         
     def CreateMenu(self):
@@ -196,7 +198,7 @@ class frame_main(wx.Frame):
         self.RebuildTree()
 
     def evt_switchbar_event(self,section_id,button_id):
-        self.panel_WindowArea.ShowWindow(button_id)
+        self.panel_WindowArea.ShowWindow(button_id,True)
 
     def evt_windowarea_addwindow(self,window_id,caption,type=None):
         self.panel_Switchbar.AddButton(0,window_id,caption)

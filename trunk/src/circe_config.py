@@ -1,3 +1,5 @@
 import wx
 
-toolbarposition = wx.RIGHT
+toolbar_position = wx.RIGHT
+toolbar_hsize = 80
+toolbar_vsize = 24

@@ -18,9 +18,12 @@ class frame_main(wx.Frame):
         self.CreateStatusBar()
         self.SetStatusText("Welcome to " + circe_globals.APPNAME + " version " + circe_globals.VERSION + " (" + circe_globals.APPTAG + ")") 
         
+        self.toolbar_Channels = None
+        
         self.CreateMenu()
         self.CreateControls()
         self.CreateSizers()
+        self.CreateToolbar()
         self.AddControls()
         
     def CreateMenu(self):
@@ -50,20 +53,24 @@ class frame_main(wx.Frame):
         wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ARIGHT, self.evt_menu_switchbar_align_right)
         wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ATOP, self.evt_menu_switchbar_align_top)
         wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ABOTTOM, self.evt_menu_switchbar_align_bottom)
+    
+    def CreateToolbar(self):
+        if(self.toolbar_Channels):
+            self.toolbar_Channels.Destroy()
+        if(circe_config.toolbar_position == wx.RIGHT or circe_config.toolbar_position == wx.LEFT):
+            self.toolbar_Channels = wx.Button(self.TopPanel,-1,"Test Toolbar",wx.DefaultPosition,(circe_config.toolbar_hsize,-1))
+            #self.toolbar_Channels = toolbar_channel(self.TopPanel,ID_TOOLBAR_CHANNEL,wx.TB_VERTICAL)
+        else:
+            self.toolbar_Channels = wx.Button(self.TopPanel,-1,"Test Toolbar",wx.DefaultPosition,(-1,circe_config.toolbar_vsize))
+            #self.toolbar_Channels = toolbar_channel(self.TopPanel,ID_TOOLBAR_CHANNEL)
 
     def CreateControls(self):
         self.TopPanel = wx.Panel(self,-1)
-        if(circe_config.toolbarposition == wx.RIGHT or circe_config.toolbarposition == wx.LEFT):
-            self.toolbar_Channels = wx.Button(self.TopPanel,-1,"Test Toolbar")
-            #self.toolbar_Channels = toolbar_channel(self.TopPanel,ID_TOOLBAR_CHANNEL,wx.TB_VERTICAL)
-        else:
-            self.toolbar_Channels = wx.Button(self.TopPanel,-1,"Test Toolbar")
-            #self.toolbar_Channels = toolbar_channel(self.TopPanel,ID_TOOLBAR_CHANNEL)
-        self.WindowArea = wx.TextCtrl(self.TopPanel,-1,"Test Window Area.\nModify circe_config.toolbarposition to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        self.WindowArea = wx.TextCtrl(self.TopPanel,-1,"Test Window Area.\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
 
     def CreateSizers(self):
-        print "Toolbar position:",circe_config.toolbarposition
-        if(circe_config.toolbarposition == wx.RIGHT or circe_config.toolbarposition == wx.LEFT):
+        print "Toolbar position:",circe_config.toolbar_position
+        if(circe_config.toolbar_position == wx.RIGHT or circe_config.toolbar_position == wx.LEFT):
             self.sizer_Top = wx.BoxSizer()
         else:
             self.sizer_Top = wx.BoxSizer(wx.VERTICAL)
@@ -71,7 +78,7 @@ class frame_main(wx.Frame):
         self.TopPanel.SetSizer(self.sizer_Top)
 
     def AddControls(self):
-        if(circe_config.toolbarposition == wx.LEFT or circe_config.toolbarposition == wx.TOP):
+        if(circe_config.toolbar_position == wx.LEFT or circe_config.toolbar_position == wx.TOP):
             self.sizer_Top.Add(self.toolbar_Channels,0,wx.EXPAND)
             self.sizer_Top.Add(self.sizer_TreeAndWindowArea,1,wx.EXPAND)
         else:
@@ -80,9 +87,18 @@ class frame_main(wx.Frame):
         self.sizer_TreeAndWindowArea.Add(self.WindowArea,1,wx.EXPAND)
         self.TopPanel.Layout()
     
+    def ConfigControls(self):
+        if(circe_config.toolbar_position == wx.RIGHT or circe_config.toolbar_position == wx.LEFT):
+            self.toolbar_Channels.SetSize((-1,circe_config.toolbar_vsize))
+            print (circe_config.toolbar_hsize,-1)
+        else:
+            self.toolbar_Channels.SetSize((circe_config.toolbar_hsize,-1))
+            print (-1,circe_config.toolbar_vsize)
+    
     def RebuildSizers(self):
         self.sizer_Top.Clear(False)
         self.CreateSizers()
+        self.CreateToolbar()
         self.AddControls()
         self.TopPanel.Layout()
 
@@ -93,17 +109,17 @@ class frame_main(wx.Frame):
         self.Close()
     
     def evt_menu_switchbar_align_left(self,event):
-        circe_config.toolbarposition = wx.LEFT
+        circe_config.toolbar_position = wx.LEFT
         self.RebuildSizers()
 
     def evt_menu_switchbar_align_right(self,event):
-        circe_config.toolbarposition = wx.RIGHT
+        circe_config.toolbar_position = wx.RIGHT
         self.RebuildSizers()
 
     def evt_menu_switchbar_align_top(self,event):
-        circe_config.toolbarposition = wx.TOP
+        circe_config.toolbar_position = wx.TOP
         self.RebuildSizers()
 
     def evt_menu_switchbar_align_bottom(self,event):
-        circe_config.toolbarposition = wx.BOTTOM
+        circe_config.toolbar_position = wx.BOTTOM
         self.RebuildSizers()

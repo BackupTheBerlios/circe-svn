@@ -1,13 +1,14 @@
-import circelib
+from circe_shell.server import Server
 
 servers = []
 
-class WXServer:
+class WXServer(Server):
     """This class catches all the events from the Server object"""
-    def __init__(self,**kwargs):
-        circelib.Server(**kwargs[0],**kwargs[1])
+    def __init__(self,*options):
+        Server.__init__(self,*options)
         self.statuswindow = None
         self.channels = None
+
     def SetStatusWindow(self,statuswindow):
         self.statuswindow = statuswindow
         
@@ -29,8 +30,8 @@ class WXServer:
     def Joined(self,channel):
         self.statuswindow.ServerEvent("Joined %s" % channel)
         
-def AddServer(**options):
-    s = WXServer(**options[0],**options[1])
+def AddServer(*options):
+    s = WXServer(*options)
     servers.append(s)
     return s
 

@@ -19,15 +19,18 @@ import wx
 import traceback
 from circe_gui.frame_main import frame_main
 
+def handle_exc(message):
+    print message
+    traceback.print_exc()
+
 class CirceApp(wx.App): 
     def OnInit(self):
         try:
             self.mainFrame = frame_main()
             self.mainFrame.Show(True)
             self.SetTopWindow(self.mainFrame)
-        except Exception:
-            print "Error on application init:"
-            traceback.print_exc()
+        except:
+            handle_exc("Error on application init:")
         return True
 
 if(__name__ == "__main__"):

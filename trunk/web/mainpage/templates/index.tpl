@@ -35,8 +35,8 @@
 </div>
 
 <div id="footer">
-Generated on {$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"} by <a href="http://smarty.php.net">Smarty</a> v{$smarty.version}<br/>
-Valid <a href="http://validator.w3.org/check/referer">XHTML 1.0</a> and <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS2</a>
+<span id="leftsection">Generated on {$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"} by <a href="http://smarty.php.net">Smarty</a> v{$smarty.version}</span>
+<span id="rightsection">Valid <a href="http://validator.w3.org/check/referer">XHTML 1.0</a> and <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS2</a></span>
 </div>
 
 </body>

@@ -37,6 +37,7 @@ class window_status(window_server):
     
     def CreateControls(self):
         self.txtBuffer = wx.TextCtrl(self,-1,"Server: %s\n" % self.server.host,wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        self.txtBuffer.SetEditable(False)
         f = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Monospace")	
 	self.txtBuffer.SetDefaultStyle(wx.TextAttr("BLACK", wx.NullColour, f))
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)

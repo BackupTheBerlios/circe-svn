@@ -102,8 +102,7 @@ div#footer {
 div#footer img#berlioslogo {
 	margin-top: 3px;
 	border-width: 0px;
-	position: absolute;
-	left: 480px;
+	float: right;
 }
 
 /* http://www.sovavsiti.cz/css/w3c_buttons.html */

@@ -1,5 +1,3 @@
-{$currentname}<br/>
-<br/>
 Our {$acronyms.IRC} channel is <a href="irc://irc.freenode.net/circe">irc://irc.freenode.net/circe</a> (or #circe at irc.freenode.net)<br/>
 Our <a href="http://developer.berlios.de/projects/circe/">project page</a> can be found at <a href="http://developer.berlios.de">Berlios</a>.<br/>
 <br/>

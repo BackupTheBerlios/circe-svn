@@ -1,11 +1,9 @@
-{$currentname}<br/>
-<br/>
 {$appname} will be divided into 3 sections:
 <ul class="featurelist">
-<li>circe_gtk - <i>A {$acronyms.GUI} powered by <a href="http://www.pygtk.org">PyGTK</a>(primary {$acronyms.GUI})</i></li>
-<li>circe_wx - <i>A {$acronyms.GUI} powered by <a href="http://www.wxpython.org">wxPython</a>(not being worked on right now)</i></li>
+<li>circe_gtk - <i>A {$acronyms.GUI} powered by <a href="http://www.pygtk.org">PyGTK</a> (primary interface)</i></li>
+<li>circe_wx - <i>A {$acronyms.GUI} powered by <a href="http://www.wxpython.org">wxPython</a> (not being worked on right now)</i></li>
 <li>circe_cli - <i>A {$acronyms.CLI} (not being worked on right now)</i></li>
-<li>circe_shell - <i>The actual {$acronyms.IRC} network code (powered by <a href="http://www.twistedmatrix.com">Twisted</a>) and some non-{$acronyms.UI} functionality</i></li>
+<li>circe_shell - <i>The {$acronyms.IRC} network code (powered by <a href="http://www.twistedmatrix.com">Twisted</a>) and some non-{$acronyms.UI} functionality</i></li>
 </ul>
 <br/>
 Some of the projected features:
@@ -19,4 +17,6 @@ Some of the projected features:
 <li>Unicode support</li>
 </ul>
 <br/>
-Also possible might be {$acronyms.GPG} authentication, encrypted private chat, etc.
+Also possible might be {$acronyms.GPG} authentication, encrypted private chat, etc.<br/>
+<br/>
+Want to add something to this list? <a href="{$index}?page=contact">Contact us</a> or <a href="{$index}?page=development">contribute something</a>!

@@ -1,5 +1,3 @@
-{$currentname}<br/>
-<br/>
 {$appname} is an open-source {$acronyms.IRC} client written in <a href="http://www.python.org">Python</a>.<br/>
 When completed, {$appname} will offer all features found in modern {$acronyms.IRC} clients across multiple platforms.<br/>
 <br/>

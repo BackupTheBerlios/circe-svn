@@ -1,6 +1,4 @@
-{$currentname}<br/>
-<br/>
-We are currently looking for some developers to help us out.<br/>
+We are currently looking for some developers to help shape and build {$appname}.<br/>
 So if you have some programming experience and too much free time, please <a href="{$index}?page=contact">contact us</a>. =)<br/>
 <br/>
 Note:<br/>

@@ -1,5 +1,3 @@
-{$currentname}<br/>
-<br/>
 No releases have been made yet.<br/>
 But if you're interested, take a look at our <a href="{$index}?page=svn">{$acronyms.SVN} repository</a>.<br/>
 <br/>

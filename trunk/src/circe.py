@@ -39,5 +39,5 @@ if(__name__ == "__main__"):
     circe = CirceApp(0)
     #ircreactor.ImportReactor()
     #ircreactor.RegisterWxApp(circe)
-    #ircreactor.Run()
+    #Ircreactor.()
     circe.MainLoop()

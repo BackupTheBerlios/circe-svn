@@ -2,37 +2,38 @@ from twisted.protocols import irc
 from twisted.internet import protocol
 
 class Client(irc.IRCClient):
-    """The gateway between the server object and irc.IRCClient"""
-    
-    def __init__(self):
+    """The gateway between the abstracted classes and irc.IRCClient"""
+    def __init__(self,server):
         self.nickname = "circe_test"
+        self.server = server
+        server.OnInit(self)
 
     def connectionMade(self):
-        print "Connected!"
         irc.IRCClient.connectionMade(self)
+        self.server.ConnectionMade()
 
     def connectionLost(self, reason):
-        print "Connection lost!"
         irc.IRCClient.connectionLost(self, reason)
+        self.server.ConnectionLost(reason)
 
     # callbacks for events
-
     def signedOn(self):
         """Called when bot has succesfully signed on to server."""
-        pass
+        self.server.SignedOn()
 
 class ClientFactory(protocol.ClientFactory):
     """A factory for clients."""
-
-    # the class of the protocol to build when new connection is made
-    protocol = Client
-
-    def __init__(self):
-        pass
+    def __init__(self,server):
+        self.protocol = Client
+        self.server = server
 
     def clientConnectionLost(self, connector, reason):
-        """If we get disconnected, reconnect to server."""
         print "Connection lost:", reason
 
     def clientConnectionFailed(self, connector, reason):
         print "Connection failed:", reason
+
+    def buildProtocol(self,addr):
+        p = self.protocol(self.server)
+        p.factory = self
+        return p

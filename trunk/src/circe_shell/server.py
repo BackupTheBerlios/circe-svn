@@ -6,7 +6,7 @@ class Server:
         self.channels = None
         self.host = host
         self.port = port
-        self.factory = ircclient.ClientFactory()
+        self.factory = ircclient.ClientFactory(self)
         if(self.host != None):
             self.Connect(host,port)
 
@@ -16,8 +16,23 @@ class Server:
         self.host = host
         self.port = port
         print "Connecting to:",host,port
-        ircreactor.reactor.connectTCP(host,port,self.factory)
+        c = ircreactor.reactor.connectTCP(host,port,self.factory)
 
     def Join(self,channelname):
         """Joins a channel on this server and returns a channel object"""
-        pass
+        self.client.join(channelname)
+
+    # Events
+    def OnInit(self,client):
+        """Sets the client object used by this server"""
+        self.client = client
+        
+    def ConnectionMade(self):
+        print "Connected!"
+
+    def ConnectionLost(self,reason):
+        print "Connection lost!"
+
+    def SignedOn(self):
+        print "Signed on!"
+        self.Join("#circe")

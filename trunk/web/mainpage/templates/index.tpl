@@ -34,7 +34,7 @@
 </div>
 
 <div id="footer">
-
+<a href="http://developer.berlios.de/projects/circe/"><img src="http://developer.berlios.de/sflogo.php?group_id=1863&amp;type=1" alt="Hosted by Berlios" title="Hosted by Berlios" id="berlioslogo"/></a>
 <span id="leftsection">Generated on {$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"} by <a href="http://smarty.php.net">Smarty</a> v{$smarty.version}</span>
 <br/>
 <span class="w3cbutton3">
@@ -49,8 +49,6 @@
 <span>CSS2</span>
 </a>
 </span>
-<br/>
-<a href="https://developer.berlios.de/projects/circe/"><img src="http://developer.berlios.de/sflogo.php?group_id=1863&amp;type=1" alt="Hosted by Berlios" title="Hosted by Berlios" id="berlioslogo"/></a>
 </div>
 
 </body>

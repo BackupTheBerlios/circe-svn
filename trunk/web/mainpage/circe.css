@@ -1,7 +1,8 @@
 body {
 	margin-left: 5px;
-	background-color: #DAE0EA;
-	min-width: 600px; /* To prevent the layout messing up with a small window */
+	/* background-color: #DAE0EA; */
+	background-color: #DADAEA;
+	width: 605px; /* To prevent the layout messing up with a small window */
 	margin-top: 3px;
 	color: #222244;
 }
@@ -79,9 +80,16 @@ div#content {
 	border-width: 5px;
 	border-color: #8888B0;
 	min-height: 200px;
+	padding-top: 5px;
 	padding-left: 5px;
-	min-width: 505px;
+	padding-bottom: 20px;
+	width: 505px;
 	background-color: #FFFFFF;
+}
+
+ul.featurelist {
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
 
 div#footer {
@@ -94,6 +102,8 @@ div#footer {
 div#footer img#berlioslogo {
 	margin-top: 3px;
 	border-width: 0px;
+	position: absolute;
+	left: 480px;
 }
 
 /* http://www.sovavsiti.cz/css/w3c_buttons.html */

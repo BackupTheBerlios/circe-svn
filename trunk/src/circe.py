@@ -8,5 +8,6 @@ class CirceApp(wx.App):
         self.SetTopWindow(self.mainFrame)
         return True
 
-circe = CirceApp(0)
-circe.MainLoop()
+if(__name__ == "__main__"):
+    circe = CirceApp(0)
+    circe.MainLoop()

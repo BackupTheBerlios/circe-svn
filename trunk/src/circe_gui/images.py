@@ -1,0 +1,7 @@
+IMAGE_SERVER = 400
+IMAGE_CHANNEL = 401
+IMAGE_CIRCE_16PX = 410
+IMAGE_CIRCE_SPLASH = 411
+
+def GetImage(image_id):
+    return None

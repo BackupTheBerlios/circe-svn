@@ -91,6 +91,11 @@ class frame_main(wx.Frame):
         self.panel_Top = wx.Panel(self,-1)
         self.panel_WindowArea = panel_windowarea(self.panel_Top,-1)
     
+    def Realize(self):
+        self.DestroySizers()
+        self.CreateSizers()
+        self.AddControls()
+    
     def DestroySizers(self):
         self.sizer_Top.Clear(False)
         self.sizer_Top.Destroy()
@@ -121,18 +126,11 @@ class frame_main(wx.Frame):
         self.panel_Top.Layout()
     
     def RebuildSwitchBar(self):
-        self.DestroySizers()
-        self.CreateSizers()
         self.AlignSwitchbar()
-        self.AddControls()
-        self.Layout()
+        self.Realize()
 
     def RebuildTree(self):
-        self.DestroySizers()
-        self.CreateSizers()
-        self.AddControls()
-        self.Layout()
-
+        pass
 
     def evt_menu_About(self,event):
         wx.MessageBox(circe_globals.APPNAME + " version " + circe_globals.VERSION,"About")

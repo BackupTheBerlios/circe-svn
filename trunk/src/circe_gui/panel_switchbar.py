@@ -12,6 +12,7 @@ class switchsection:
             raise "Button %d already exists in section %d" % (button_id, self.section_id)
         else:
             self.buttons[button_id] = switchbutton(button_id,parent,text,icon)
+            self.buttons[button_id].Show(False)
     
     def RemoveButton(self,button_id):
         if(button_id in self.buttons):
@@ -76,7 +77,7 @@ class panel_switchbar(wx.Panel):
     
     def AddButton(self,section_id,button_id,text,icon=None):
         if(button_id in self.button_id_list):
-            raise "Duplicate button_id: %d" % button_id
+            raise "Duplicate unique button_id: %d" % button_id
         else:
             if(section_id in self.sections):
                 self.sections[section_id].AddButton(button_id,self,text,icon)
@@ -108,6 +109,7 @@ class panel_switchbar(wx.Panel):
         for section_id,section in self.sections.iteritems():
             for button_id,button in section.buttons.iteritems():
                 self.sizer_Top.Add(button,0,wx.EXPAND)
+                button.Show(True)
             self.sizer_Top.Add((10,10))
     
     def RemoveControls(self):

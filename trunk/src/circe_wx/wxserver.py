@@ -9,6 +9,8 @@ class CirceIRCClient:
         """Arguments:
             target -- a nick or a channel name
         """
+        # DEBUGGING
+        irclib.DEBUG = True
         self.ircobj = irclib.IRC()
         self.connection = self.ircobj.server()
         self.ircobj.add_global_handler("all_events", self._processEvents)
@@ -143,24 +145,21 @@ class WXServer(CirceIRCClient):
         elif cmd == "pong":
             self.connection.pong(params)
 
-        elif cmd == "msg":
-            target = window.getChannelname()    # set it to channel name
-            text = params[0]
+        elif cmd in ("msg","privmsg"):
+            if len(params) == 0:
+                raise "MSGError", "You must supply the target and the message"
+            target = params[0]
+            if len(params) == 2:
+                text = params[1]
+            else:
+                text = " " .join(params[1:])
+            print target, text
             self.connection.privmsg(target=target, text=text)
             # Displays out message in the window_channel
-            if target == window.getChannelname():
-                target = ""     # don't need to specify the channel, it's obvious
-            window.addMessage(text, self.connection.get_nickname(), to=target)
-
-        elif cmd == "privmsg":
-            if len(params) < 2:
-                raise "PRIVMSGError", "You must supply two arguments"
-            target = params[0]
-            text = params[1]
-            self.connection.privmsg(target, text)
-            if target == window.getChannelname():
-                target = ""     # don't need to specify the channel, it's obvious
-            window.addMessage(text, self.connection.get_nickname(), to=target)
+            if hasattr(window, "getChannelname"):
+                window.addMessage(text, self.connection.get_nickname(),target)
+            else:   # window status
+                window.ServerEvent("[%s(%s)] %s" % ("msg", target, text))
 
         elif cmd == "privmsg_many":
             self.connection.privmsg_many(*params)   # args: targets, text

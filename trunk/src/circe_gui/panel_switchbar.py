@@ -70,7 +70,7 @@ class panel_switchbar(wx.Panel):
         self.AddButton(2,5,"Section 2 Button 5")
         self.RemoveSection(1)
         self.RemoveButton(2,4)
-        self.Realize()
+        self.AddControls()
     
     def Realize(self):
         self.RemoveControls()

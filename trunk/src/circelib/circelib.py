@@ -10,3 +10,14 @@ class server:
     def send(self, ts):
         IC.send("%s\r\n" % (ts))
     def nickChange(self, newnick):
+        IC.send("NICK %s\r\n" % (newnick))
+    def joinChannel(self, channel, channelpass):
+        IC.send("JOIN %s %s\r\n" % (channel, channelpass))
+    def partChannel(self, channel, partmessage):
+        IC.send("PART %s %s\r\n" % (channel, partmessage))
+    def sendMessage(self, channel, message):
+        IC.send("PRIVMSG %s :%s\r\n" % (str(channel), str(message)))
+    def closeConnection(self, quitmsg):
+        IC.send("QUIT %s\r\n" % (str(quitmsg)))
+        IC.close()
+        

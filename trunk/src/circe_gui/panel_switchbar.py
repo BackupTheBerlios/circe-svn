@@ -38,7 +38,6 @@ class panel_switchbar(wx.Panel):
         self.barsize = barsize
         self.baralign = baralign
         self.sections = {}
-        self.button_id_list = {} # We need a unique ID for every button
         wx.Panel.__init__(self,parent,panelID,wx.DefaultPosition,self.barsize)
         
         self.CreateSizers()
@@ -76,19 +75,14 @@ class panel_switchbar(wx.Panel):
             raise "Section %d does not exist" % section_id
     
     def AddButton(self,section_id,button_id,text,icon=None):
-        if(button_id in self.button_id_list):
-            raise "Duplicate unique button_id: %d" % button_id
+        if(section_id in self.sections):
+            self.sections[section_id].AddButton(button_id,self,text,icon)
         else:
-            if(section_id in self.sections):
-                self.sections[section_id].AddButton(button_id,self,text,icon)
-                self.button_id_list[button_id] = self.sections[section_id].buttons[button_id]
-            else:
-                raise "Section %d does not exist" % section_id
+            raise "Section %d does not exist" % section_id
     
     def RemoveButton(self,section_id,button_id):
         if(section_id in self.sections):
             self.sections[section_id].RemoveButton(button_id)
-            del self.button_id_list[button_id]
         else:
             raise "Section %d does not exist" % section_id
     

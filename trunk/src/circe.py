@@ -15,10 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+__revision__ = "$Id$"
+
 import wx
 import traceback
-#from circe_shell import ircreactor
-#ircreactor.ImportWx()
 from circe_wx.frame_main import frame_main
 
 def handle_exc(message):
@@ -37,7 +37,4 @@ class CirceApp(wx.App):
 
 if(__name__ == "__main__"):
     circe = CirceApp(0)
-    #ircreactor.ImportReactor()
-    #ircreactor.RegisterWxApp(circe)
-    #Ircreactor.()
     circe.MainLoop()

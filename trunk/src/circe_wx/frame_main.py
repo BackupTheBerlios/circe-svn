@@ -21,8 +21,9 @@ import circe_config
 from panel_switchbar import panel_switchbar
 from panel_windowarea import panel_windowarea
 from panel_tree import panel_tree
+from window_channel import window_channel
 
-ID_MENU_FILE_ABOUT = 1001
+ID_MENU_FILE_ABOUT = wx.NewId()
 ID_MENU_FILE_EXIT = 1002
 ID_MENU_VIEW_SWITCHBAR_ALEFT = 1651
 ID_MENU_VIEW_SWITCHBAR_ARIGHT = 1652
@@ -50,12 +51,15 @@ class frame_main(wx.Frame):
         self.AddControls()
 
         # Run a little test for the window area and the switchbar
-        self.testWindow = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 1)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        self.testWindow2 = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 2)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        self.testWindow3 = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 3)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        self.panel_WindowArea.AddWindow(self.testWindow,"Window 1")
-        self.panel_WindowArea.AddWindow(self.testWindow2,"Window 2")
-        self.panel_WindowArea.AddWindow(self.testWindow3,"Window 3")
+        #self.testWindow = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 1)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        #self.testWindow2 = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 2)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        #self.testWindow3 = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 3)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        self.testWindow = window_channel(self.panel_WindowArea,-1,"Window 1")
+        self.testWindow2 = window_channel(self.panel_WindowArea,-1,"Window 2")
+        self.testWindow3 = window_channel(self.panel_WindowArea,-1,"Window 3")
+        self.panel_WindowArea.AddWindow(self.testWindow,self.testWindow.GetCaption())
+        self.panel_WindowArea.AddWindow(self.testWindow2,self.testWindow2.GetCaption())
+        self.panel_WindowArea.AddWindow(self.testWindow3,self.testWindow3.GetCaption())
         self.panel_WindowArea.ShowWindow(self.testWindow)
         
     def CreateMenu(self):
@@ -160,6 +164,12 @@ class frame_main(wx.Frame):
         # Tree
         if(circe_config.tree_position == wx.RIGHT and circe_config.tree_show == True):
             self.sizer_TreeAndWindowArea.Add(self.panel_Tree,0,wx.EXPAND)
+
+        # Hide disabled controls
+        if(not circe_config.tree_show):
+            self.panel_Tree.Show(False)
+        if(not circe_config.switchbar_show):
+            self.panel_Switchbar.Show(False)
         self.panel_Top.Layout()
     
     def RebuildSwitchBar(self):

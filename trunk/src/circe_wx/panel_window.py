@@ -18,6 +18,12 @@
 import wx
 
 class panel_window(wx.Panel):
-    def __init__(self,parent,windowID):
-        wx.Panel.__init__(self,parent,windowID)
-        print "Window created! ID:",windowID
+    def __init__(self,parent,id,caption):
+        wx.Panel.__init__(self,parent,id)
+        self.caption = caption
+
+    def GetCaption(self):
+        return self.caption
+
+    def SetCaption(self,cap):
+        self.caption = cap

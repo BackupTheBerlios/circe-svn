@@ -94,13 +94,15 @@ class frame_main(wx.Frame):
         wx.EVT_MENU(self, ID_MENU_VIEW_TREE_ARIGHT, self.evt_menu_tree_align_right)
 
     def CreateSwitchBar(self):
+        sbsize = (circe_config.switchbar_hsize,circe_config.switchbar_vsize)
         if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
             sbalign = wx.VERTICAL
-            sbsize = (circe_config.switchbar_hsize,-1)
         else:
             sbalign = wx.HORIZONTAL
-            sbsize = (-1,circe_config.switchbar_vsize)
         self.panel_Switchbar = panel_switchbar(self.panel_Top,-1,sbsize,sbalign)
+        # Temporary, until we find some decent way to interact with
+        # panel_WindowArea about servers
+        self.panel_Switchbar.AddSection(0)
     
     def AlignSwitchbar(self):
         if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
@@ -119,7 +121,7 @@ class frame_main(wx.Frame):
         self.panel_WindowArea = panel_windowarea(self.panel_Top,-1)
 
     def BindEvents(self):
-        self.panel_Switchbar.BindEvent(self.evt_switchbar_event)
+        self.panel_Switchbar.BindClick(self.evt_switchbar_event)
         self.panel_WindowArea.BindAdd(self.evt_windowarea_addwindow)
         self.panel_WindowArea.BindDel(self.evt_windowarea_delwindow)
         self.panel_WindowArea.BindShow(self.evt_windowarea_showwindow)

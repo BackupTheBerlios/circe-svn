@@ -69,29 +69,33 @@ class panel_switchbar(wx.Panel):
         self.baralign = baralign
         self.sections = {}
         self.currentbutton = None
-        self.eventfunction = None
+        self.func_click = None
         wx.Panel.__init__(self,parent,panelID,wx.DefaultPosition,self.barsize)
         
         self.CreateSizers()
-
-        # Temporary, until we find some decent way to interact with panel_WindowArea
-        self.AddSection(0)
         
-        self.AddControls()
+        #self.AddControls()
+        self.Realize()
+
+        self.Bind(wx.EVT_SIZE,self.OnSize)
     
     def Realize(self):
+        """Makes all changes effective and layouts the window"""
         self.RemoveControls()
         self.DestroySizers()
         self.CreateSizers()
         self.AddControls()
+        self.Layout()
     
     def AddSection(self,section_id):
+        """Adds a section"""
         if(section_id in self.sections):
             raise "Section %s already exists" % section_id
         else:
             self.sections[section_id] = switchsection(section_id,self)
     
     def RemoveSection(self,section_id):
+        """Removes a section"""
         if(section_id in self.sections):
             self.sections[section_id].RemoveAll()
             del self.sections[section_id]
@@ -99,6 +103,7 @@ class panel_switchbar(wx.Panel):
             raise "Section %s does not exist" % section_id
     
     def AddButton(self,section_id,button_id,text,icon=None):
+        """Adds a button"""
         if(section_id in self.sections):
             self.sections[section_id].AddButton(button_id,text,icon)
             self.Realize()
@@ -106,6 +111,7 @@ class panel_switchbar(wx.Panel):
             raise "Section %s does not exist" % section_id
     
     def RemoveButton(self,section_id,button_id):
+        """Removes a button"""
         if(section_id in self.sections):
             self.sections[section_id].RemoveButton(button_id)
             del self.button_id_list[button_id]
@@ -118,17 +124,23 @@ class panel_switchbar(wx.Panel):
         self.Realize()
     
     def DestroySizers(self):
+        """Destroys sizer"""
         self.sizer_Top.Clear(False)
         self.sizer_Top.Destroy()
     
     def CreateSizers(self):
+        """Creates sizer"""
         self.sizer_Top = wx.BoxSizer(self.baralign)
         self.SetSizer(self.sizer_Top)
     
     def AddControls(self):
-        fill = 0
+        """Adds all controls to the sizer"""
         if (self.baralign == wx.HORIZONTAL):
             fill = 1
+            self.sizer_Top.Add((0,self.barsize[1]))
+        else:
+            fill = 0
+            self.sizer_Top.Add((self.barsize[0],0))
         for section_id,section in self.sections.iteritems():
             for button_id,button in section.buttons.iteritems():
                 self.sizer_Top.Add(button,fill,wx.EXPAND)
@@ -136,11 +148,13 @@ class panel_switchbar(wx.Panel):
             self.sizer_Top.Add((10,10))
     
     def RemoveControls(self):
+        """Removes all controls from the sizer"""
         for section_id,section in self.sections.iteritems():
             for button_id,button in section.buttons.iteritems():
                 self.sizer_Top.Remove(button)
                 
     def GetButton(self,section_id,button_id):
+        """Gets a button object"""
         for active_section_id,section in self.sections.iteritems():
             if(active_section_id == section_id):
                 for active_button_id,button in section.buttons.iteritems():
@@ -149,6 +163,7 @@ class panel_switchbar(wx.Panel):
         return None # Not found
     
     def UnselectAllExcept(self,section_id,button_id):
+        """Unselects all buttons except the one specified"""
         for active_section_id,section in self.sections.iteritems():
                 for active_button_id,button in section.buttons.iteritems():
                     if(not(active_button_id == button_id and active_section_id == section_id)):
@@ -191,10 +206,17 @@ class panel_switchbar(wx.Panel):
                 button.SetValue(True)
 
     def ButtonEvent(self,section_id,button_id):
+        """Called whenever a button is clicked"""
         #print "Button event: section_id:",section_id," button_id:", button_id
         self.ToggleButton(section_id,button_id)
-        if(self.eventfunction is not None):
-            self.eventfunction(self.currentbutton[0],self.currentbutton[1])
+        if(self.func_click is not None):
+            self.func_click(self.currentbutton[0],self.currentbutton[1])
 
-    def BindEvent(self,func):
-        self.eventfunction = func
+    def BindClick(self,func):
+        """Bind a function to a Click event"""
+        self.func_click = func
+
+    def OnSize(self,event):
+        """The Size event needs to be overloaded to hard-Refresh the buttons"""
+        self.Layout()
+        self.Refresh()

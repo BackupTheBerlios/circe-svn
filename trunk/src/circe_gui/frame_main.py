@@ -1,7 +1,7 @@
 import wx
 import circe_globals
 import circe_config
-from circe_gui.toolbar_channel import toolbar_channel
+from circe_gui.panel_switchbar import panel_switchbar
 from circe_gui.panel_windowarea import panel_windowarea
 from circe_gui.panel_tree import panel_tree
 
@@ -60,14 +60,15 @@ class frame_main(wx.Frame):
     def CreateSwitchBar(self):
         if(circe_config.switchbar_show == True):
             if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
-                self.toolbar_Channels = wx.Button(self.panel_Top,-1,"Test Switchbar",wx.DefaultPosition,(circe_config.switchbar_hsize,-1))
-                #self.toolbar_Channels = toolbar_channel(self.panel_Top,ID_TOOLBAR_CHANNEL,wx.TB_VERTICAL)
+                sbalign = wx.TB_VERTICAL
+                sbsize = (circe_config.switchbar_hsize,-1)
             else:
-                self.toolbar_Channels = wx.Button(self.panel_Top,-1,"Test Switchbar",wx.DefaultPosition,(-1,circe_config.switchbar_vsize))
-                #self.toolbar_Channels = toolbar_channel(self.panel_Top,ID_TOOLBAR_CHANNEL)
+                sbalign = wx.TB_HORIZONTAL
+                sbsize = (-1,circe_config.switchbar_vsize)
+            self.panel_Switchbar = panel_switchbar(self.panel_Top,-1,sbsize,sbalign)
     
     def DestroySwitchBar(self):
-        self.toolbar_Channels.Destroy()
+        self.panel_Switchbar.Destroy()
 
     def CreateTree(self):
         if(circe_config.tree_show == True):
@@ -92,10 +93,10 @@ class frame_main(wx.Frame):
     def AddControls(self):
         # Switchbar
         if((circe_config.switchbar_position == wx.LEFT or circe_config.switchbar_position == wx.TOP) and circe_config.switchbar_show == True):
-            self.sizer_Top.Add(self.toolbar_Channels,0,wx.EXPAND)
+            self.sizer_Top.Add(self.panel_Switchbar,0,wx.EXPAND)
         self.sizer_Top.Add(self.sizer_TreeAndWindowArea,1,wx.EXPAND)
         if((circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.BOTTOM) and circe_config.switchbar_show == True):
-            self.sizer_Top.Add(self.toolbar_Channels,0,wx.EXPAND)
+            self.sizer_Top.Add(self.panel_Switchbar,0,wx.EXPAND)
         # Tree
         if(circe_config.tree_position == wx.LEFT and circe_config.tree_show == True):
             self.sizer_TreeAndWindowArea.Add(self.panel_Tree,0,wx.EXPAND)

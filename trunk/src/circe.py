@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Circe
 # Copyright (C) 2004 The Circe development team
 

@@ -1,10 +1,12 @@
 from window_status import window_status
 from window_channel import window_channel
-from circelib.circelib import Server
+from circelib.circelib import CirceIRCClient
 
-class WXServer(Server):
-    def __init__(self,windowarea,host=None,port=None):
-        Server.__init__(self,host,port)
+
+class WXServer(CirceIRCClient):
+    def __init__(self,windowarea, target=""):
+        CirceIRCClient.__init__(self, target)
+        self.host = self.target
         self.statuswindow = window_status(windowarea,self)
         windowarea.AddWindow(self.statuswindow)
         self.windowarea = windowarea
@@ -16,7 +18,7 @@ class WXServer(Server):
         self.channels.append(new)
 
     def TextCommand(self,cmdstring,window):
-        if cmdstring == None or len(cmdstring) == 0:
+        if not cmdstring:
             raise "Empty command"
         # Strip /
         if cmdstring[0] == "/":
@@ -29,18 +31,21 @@ class WXServer(Server):
         params = cmdlist[1:]
         # Find out what command is being executed
         if cmd == "server":
-            self.connect(*params)
+            # /server servername nickname
+            server = params[0]
+            port = 6667
+            nick = params[1]
+            self.connection.connect(server=server, port=port, nickname=nick)
         elif cmd == "join":
-            self.joinChannel(*params)
+            self.connection.join(*params)
         elif cmd == "nick":
-            self.nick(*params)
-        elif cmd == "msg":
+            self.connection.nick(*params)
+        elif cmd in ("msg", "privmsg"):
             channel = params[0]
             text = params[1:]
             text=" ".join(text)
-            self.sendMessage(channel, text)
+            self.connection.privmsg(channel, text)
         elif cmd == "quit":
-            self.closeConnection()
-        # For debug purposes:
+            self.connection.disconnect()
         elif cmd == "joindebug":
             self.NewChannelWindow(params[0])

@@ -15,6 +15,37 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+import irclib
+
+
+
+class CirceIRCClient(irclib.SimpleIRCClient):
+    """Single-server IRC client class.
+    Based on SimpleIRCClient class from python-irclib.
+
+    Here methods can be created to receive events from irclib. For example, we
+    create on_privmsg() method to process a privmsg sent to us. In General add
+    the prefix "on_" at the event (privmsg, notice,...) to form the name of
+    the method, with two arguments which are respectively the connection
+    object and the event object.
+    """
+    def __init__(self, target):
+        irclib.SimpleIRCClient.__init__(self)
+        # print some interesting messages
+        irclib.DEBUG = 1
+        self.target = target
+
+    def on_welcome(self, connection, event):
+        if irclib.is_channel(self.target):
+            connection.join(self.target)
+
+    def on_privmsg(self, c, e):
+        # XXX Make it do something more interesting actually.
+        print "Got PRIVMSG"
+
+
+
+"""
 import socket, circe_globals
 class Server:
     def __init__(self, host=None, port=None):
@@ -53,3 +84,4 @@ class Server:
         IC.send("KICK %s %s %s" % (channel, person, reason))
     def chanTopic(self, channel, nt):
         IC.send("TOPIC %s %s" % (channel, nt))
+"""

@@ -1,37 +1,9 @@
-from circe_shell.server import Server
+from circelib.circelib import Server
 
 servers = []
-
-class WXServer(Server):
-    """This class catches all the events from the Server object"""
-    def __init__(self,*options):
-        Server.__init__(self,*options)
-        self.statuswindow = None
-        self.channels = None
-
-    def SetStatusWindow(self,statuswindow):
-        self.statuswindow = statuswindow
-        
-    def AddChannel(self,channel):
-        pass
-
-    def RemoveChannel(self,channel):
-        pass
-
-    def ConnectionMade(self):
-        self.statuswindow.ServerEvent("Connected to %s:%s" % (self.host,self.port))
-
-    def ConnectionLost(self,reason):
-        self.statuswindow.ServerEvent("Connection to %s lost, reason: %s" % (self.host,reason))
-
-    def SignedOn(self):
-        self.statuswindow.ServerEvent("Signed on to %s" % self.host)
-
-    def Joined(self,channel):
-        self.statuswindow.ServerEvent("Joined %s" % channel)
         
 def AddServer(*options):
-    s = WXServer(*options)
+    s = Server(*options)
     servers.append(s)
     return s
 
@@ -39,7 +11,7 @@ def RemoveServer(s):
     if s in servers:
         del servers[s]
 
-def TextCommand(server,cmdstring):
+def TextCommand(s,cmdstring):
     if(cmdstring == None or len(cmdstring) == 0):
         raise "Empty command"
     # Strip /
@@ -50,6 +22,8 @@ def TextCommand(server,cmdstring):
     cmd = cmdlist[0]
     params = cmdlist[1:]
     if(cmd == "server"):
-        server.Connect(*params)
+        s.connect(*params)
     elif(cmd == "join"):
-        server.Join(*params)
+        s.joinChannel(*params)
+    elif(cmd == "nick"):
+        s.nick(*params)

@@ -1,18 +1,24 @@
 import socket, circe_globals
 class Server:
-    def __init__(self, host, port=6667):
+    def __init__(self, host=None, port=None):
         global IC
         IC = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    def connect(host, port)
-        IC.connect(host,int(port))
+        self.host = host
+        self.port = port
+        if(host != None):
+            self.connect(host,port)
+    def connect(self, host, port=6667):
+        self.host = host
+        self.port = port
+        IC.connect((host,int(port)))
     def nick(self, nick, user, host):
-        IC.send("USER %s %s %s %s\r\n" % (nick, user,server,user))
+        IC.send("USER %s %s %s %s\r\n" % (nick, user,host,user))
         IC.send("NICK %s %s\r\n" % (nick, user))
     def send(self, ts):
         IC.send("%s\r\n" % (ts))
     def nickChange(self, newnick):
         IC.send("NICK %s\r\n" % (newnick))
-    def joinChannel(self, channel, channelpass):
+    def joinChannel(self, channel, channelpass=""):
         IC.send("JOIN %s %s\r\n" % (channel, channelpass))
     def partChannel(self, channel, partmessage):
         IC.send("PART %s %s\r\n" % (channel, partmessage))

@@ -26,17 +26,23 @@ class window_channel(window_server):
     def __init__(self,windowarea,server,channelname,id=wx.NewId()):
         window_server.__init__(self,windowarea,id,server,channelname)
         self._id = id
+        self._channelname = channelname # Used to attribute events at the
+                                        # right window.
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
 
     def getId(self):
-        """Return a number proper at each instanciated object of window_channel.
+        """Return a number proper at each instanciated object of a
+        window_channel.
         """
         return self._id
+
+    def getChannelname(self):
+        return self._channelname
         
     def CreateControls(self):
-        self.txtBuffer = wx.TextCtrl(self,-1,"Channel: %s\n\n%s" % (self.caption,lorem.text),wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        self.txtBuffer = wx.TextCtrl(self,-1,"Channel: %s\n\n" % (self.caption),wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         self.txtBuffer.SetEditable(False)
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
         self.lstUsers = wx.ListCtrl(self,ID_LST_USERS,wx.DefaultPosition,wx.DefaultSize)
@@ -64,6 +70,21 @@ class window_channel(window_server):
         else:
             event.Skip()
 
-    def addToBuffer(self, txt):
-        """Add some txt at the end of the TextCtrl."""
-        self.txtBuffer.AppendText(txt)
+    def addRawText(self, text):
+        """Adds some text at the end of the TextCtrl."""
+        self.txtBuffer.AppendText(text+"\n")
+
+    def addMessage(self, text, from_, to=""):
+        """Formats a message in a pretty way with the given arguments.
+
+        Arguments:
+
+            text  -- the content of the message
+            from_ -- the sender of the message
+            to    -- (Optional) target of the message
+
+        """
+        if to != "":
+            to = "(to %s)" % to
+        message = "%s%s: %s\n" % (from_, to, text)
+        self.txtBuffer.AppendText(message)

@@ -92,8 +92,8 @@ class frame_main(wx.Frame):
         self.panel_WindowArea = panel_windowarea(self.panel_Top,-1)
     
     def DestroySizers(self):
-        del self.sizer_Top
-        del self.sizer_TreeAndWindowArea
+        self.sizer_Top.Clear(False)
+        self.sizer_Top.Destroy()
     
     def CreateSizers(self):
         if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):

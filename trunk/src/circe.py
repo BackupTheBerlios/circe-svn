@@ -16,13 +16,18 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import wx
+import traceback
 from circe_gui.frame_main import frame_main
 
 class CirceApp(wx.App): 
-    def OnInit(self): 
-        self.mainFrame = frame_main()
-        self.mainFrame.Show(True)
-        self.SetTopWindow(self.mainFrame)
+    def OnInit(self):
+        try:
+            self.mainFrame = frame_main()
+            self.mainFrame.Show(True)
+            self.SetTopWindow(self.mainFrame)
+        except Exception:
+            print "Error on application init:"
+            traceback.print_exc()
         return True
 
 if(__name__ == "__main__"):

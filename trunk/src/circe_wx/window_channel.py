@@ -47,12 +47,12 @@ class window_channel(window_server):
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
         self.lstUsers = wx.ListCtrl(self,ID_LST_USERS,wx.DefaultPosition,wx.DefaultSize)
         wx.EVT_CHAR(self.txtEdit,self.txtEdit_EvtChar)
-    
+
     def CreateSizers(self):
         self.sizer_Top = wx.BoxSizer(wx.VERTICAL)
         self.sizer_BufferAndUsers = wx.BoxSizer(wx.HORIZONTAL)
         self.SetSizer(self.sizer_Top)
-    
+
     def AddControls(self):
         self.sizer_BufferAndUsers.Add(self.txtBuffer,1,wx.EXPAND)
         self.sizer_BufferAndUsers.Add(self.lstUsers,0,wx.EXPAND)
@@ -69,6 +69,19 @@ class window_channel(window_server):
             self.txtEdit.SetValue("")
         else:
             event.Skip()
+
+    def setUsers(self, users):
+        """Display connected users to this channel in the ListCtrl."""
+        pass
+        # FIXME don't work! ??
+#        if not self.lstUsers.GetColumnCount():
+#            self.lstUsers.InsertColumn(0, "Users")
+
+#        self.lstUsers.DeleteAllItems()
+#        for u in users:
+#            self.lstUsers.Append(u)
+#        self.lstUsers.Append(users[0])
+#        self.lstUsers.InsertStringItem(users[0])
 
     def addRawText(self, text):
         """Adds some text at the end of the TextCtrl."""

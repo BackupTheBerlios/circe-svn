@@ -67,30 +67,34 @@ class frame_main(wx.Frame):
         wx.EVT_MENU(self, ID_MENU_VIEW_TREE_ARIGHT, self.evt_menu_tree_align_right)
 
     def CreateSwitchBar(self):
-        if(circe_config.switchbar_show == True):
-            if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
-                sbalign = wx.TB_VERTICAL
-                sbsize = (circe_config.switchbar_hsize,-1)
-            else:
-                sbalign = wx.TB_HORIZONTAL
-                sbsize = (-1,circe_config.switchbar_vsize)
-            self.panel_Switchbar = panel_switchbar(self.panel_Top,-1,sbsize,sbalign)
+        if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
+            sbalign = wx.VERTICAL
+            sbsize = (circe_config.switchbar_hsize,-1)
+        else:
+            sbalign = wx.HORIZONTAL
+            sbsize = (-1,circe_config.switchbar_vsize)
+        self.panel_Switchbar = panel_switchbar(self.panel_Top,-1,sbsize,sbalign)
     
-    def DestroySwitchBar(self):
-        self.panel_Switchbar.Destroy()
+    def AlignSwitchbar(self):
+        if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
+            sbalign = wx.VERTICAL
+            sbsize = (circe_config.switchbar_hsize,-1)
+        else:
+            sbalign = wx.HORIZONTAL
+            sbsize = (-1,circe_config.switchbar_vsize)
+        self.panel_Switchbar.SetAlignment(sbalign,sbsize)
 
     def CreateTree(self):
-        if(circe_config.tree_show == True):
-            self.panel_Tree = panel_tree(self.panel_Top,-1,circe_config.tree_size)
-
-    def DestroyTree(self):
-        self.panel_Tree.Destroy()
+        self.panel_Tree = panel_tree(self.panel_Top,-1,circe_config.tree_size)
 
     def CreateControls(self):
         self.panel_Top = wx.Panel(self,-1)
-        #self.panel_WindowArea = wx.TextCtrl(self.panel_Top,-1,"Test Window Area.\nModify circe_config.switchbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         self.panel_WindowArea = panel_windowarea(self.panel_Top,-1)
-
+    
+    def DestroySizers(self):
+        del self.sizer_Top
+        del self.sizer_TreeAndWindowArea
+    
     def CreateSizers(self):
         if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
             self.sizer_Top = wx.BoxSizer()
@@ -114,30 +118,20 @@ class frame_main(wx.Frame):
         # Tree
         if(circe_config.tree_position == wx.RIGHT and circe_config.tree_show == True):
             self.sizer_TreeAndWindowArea.Add(self.panel_Tree,0,wx.EXPAND)
-        #self.panel_WindowArea.AddControls()
         self.panel_Top.Layout()
-    
-    def ConfigControls(self):
-        if(circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT):
-            self.toolbar_Channels.SetSize((-1,circe_config.switchbar_vsize))
-        else:
-            self.toolbar_Channels.SetSize((circe_config.switchbar_hsize,-1))
     
     def RebuildSwitchBar(self):
-        self.sizer_Top.Clear(False)
+        self.DestroySizers()
         self.CreateSizers()
-        self.DestroySwitchBar()
-        self.CreateSwitchBar()
+        self.AlignSwitchbar()
         self.AddControls()
-        self.panel_Top.Layout()
+        self.Layout()
 
     def RebuildTree(self):
-        self.sizer_Top.Clear(False)
+        self.DestroySizers()
         self.CreateSizers()
-        self.DestroyTree()
-        self.CreateTree()
         self.AddControls()
-        self.panel_Top.Layout()
+        self.Layout()
 
 
     def evt_menu_About(self,event):

@@ -4,7 +4,7 @@ import wx
 
 switchbar_show = True
 switchbar_position = wx.LEFT
-switchbar_hsize = 80
+switchbar_hsize = 120
 switchbar_vsize = 24
 
 tree_show = True

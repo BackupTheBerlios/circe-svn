@@ -17,7 +17,7 @@
 
 import wx
 import traceback
-from circe_gui.frame_main import frame_main
+from circe_wx.frame_main import frame_main
 
 def handle_exc(message):
     print message

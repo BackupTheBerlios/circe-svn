@@ -46,7 +46,15 @@ class frame_main(wx.Frame):
         self.CreateSizers()
         self.CreateSwitchBar()
         self.CreateTree()
+        self.BindEvents()
         self.AddControls()
+
+        # Run a little test for the window area and the switchbar
+        self.testWindow = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 1)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        self.testWindow2 = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 2)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        self.panel_WindowArea.AddWindow(self.testWindow,"Window 1")
+        self.panel_WindowArea.AddWindow(self.testWindow2,"Window 2")
+        self.panel_WindowArea.ShowWindow(self.testWindow)
         
     def CreateMenu(self):
         menu_file = wx.Menu() 
@@ -107,6 +115,12 @@ class frame_main(wx.Frame):
     def CreateControls(self):
         self.panel_Top = wx.Panel(self,-1)
         self.panel_WindowArea = panel_windowarea(self.panel_Top,-1)
+
+    def BindEvents(self):
+        self.panel_Switchbar.BindEvent(self.evt_switchbar_event)
+        self.panel_WindowArea.BindAdd(self.evt_windowarea_addwindow)
+        self.panel_WindowArea.BindDel(self.evt_windowarea_delwindow)
+        self.panel_WindowArea.BindShow(self.evt_windowarea_showwindow)
     
     def Realize(self):
         self.DestroySizers()
@@ -180,3 +194,15 @@ class frame_main(wx.Frame):
     def evt_menu_tree_align_right(self,event):
         circe_config.tree_position = wx.RIGHT
         self.RebuildTree()
+
+    def evt_switchbar_event(self,section_id,button_id):
+        self.panel_WindowArea.ShowWindow(button_id)
+
+    def evt_windowarea_addwindow(self,window_id,caption,type=None):
+        self.panel_Switchbar.AddButton(0,window_id,caption)
+
+    def evt_windowarea_delwindow(self,window_id):
+        self.panel_Switchbar.RemoveButton(0,window_id)
+
+    def evt_windowarea_showwindow(self,window_id):
+        self.panel_Switchbar.Select(0,window_id)

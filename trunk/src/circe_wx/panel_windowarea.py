@@ -22,30 +22,37 @@ class panel_windowarea(wx.Panel):
     def __init__(self,parent,panelID):
         wx.Panel.__init__(self,parent,panelID)
         self.windowList = []
+        self.func_addwindow = None
+        self.func_delwindow = None
+        self.func_showwindow = None
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
         
-        self.testWindow = wx.TextCtrl(self,-1,"Test Window Area. (Window 1)\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        self.testWindow2 = wx.TextCtrl(self,-1,"Test Window Area. (Window 2)\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        #self.testWindow = wx.TextCtrl(self,-1,"Test Window Area. (Window 1)\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        #self.testWindow2 = wx.TextCtrl(self,-1,"Test Window Area. (Window 2)\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         #self.testWindow = window_channel(self,-1)
         #self.testWindow2 = window_channel(self,-1)
-        self.AddWindow(self.testWindow)
-        self.AddWindow(self.testWindow2)
-        self.ShowWindow(self.testWindow)
-        self.ShowWindow(self.testWindow2)
+        #self.AddWindow(self.testWindow)
+        #self.AddWindow(self.testWindow2)
+        #self.ShowWindow(self.testWindow)
+        #self.ShowWindow(self.testWindow2)
     
-    def AddWindow(self,window):
+    def AddWindow(self,window,caption):
         if(window in self.windowList):
             raise "Window %s already exists" % window
         else:
             self.windowList.append(window)
             window.Show(False)
+            if(self.func_addwindow is not None):
+                self.func_addwindow(window,caption)
     
     def RemoveWindow(self,window):
         if(window in self.windowList):
             self.sizer_Top.Remove(window)
             self.windowList[self.windowList.index(window)] = None
+            if(self.func_delwindow is not None):
+                self.func_delwindow(window)
         else:
             raise "Window: %s does not exist in windows list" % window
     
@@ -57,6 +64,8 @@ class panel_windowarea(wx.Panel):
             window.Show(True)
             self.sizer_Top.Add(window,1,wx.EXPAND)
             self.sizer_Top.Layout()
+            if(self.func_showwindow is not None):
+                self.func_showwindow(window)
         else:
             raise "Window: %s does not exist in windows list" % window
     
@@ -69,3 +78,12 @@ class panel_windowarea(wx.Panel):
     
     def AddControls(self):
         pass
+
+    def BindAdd(self,func):
+        self.func_addwindow = func
+
+    def BindDel(self,func):
+        self.func_delwindow = func
+
+    def BindShow(self,func):
+        self.func_showwindow = func

@@ -27,12 +27,12 @@ class switchsection:
     
     def AddButton(self,button_id,text,icon=None):
         if(button_id in self.buttons):
-            raise "Button %d already exists in section %d" % (button_id, self.section_id)
+            raise "Button %s already exists in section %s" % (button_id, self.section_id)
         else:
             self.buttons[button_id] = switchbutton(self.section_id,button_id,self.parent,text,icon)
             self.buttons[button_id].Show(False)
             # Bind event
-            print "Binding with: ",self.buttons[button_id].event_id
+            #print "Binding with: ",self.buttons[button_id].event_id
             wx.EVT_BUTTON(self.parent,self.buttons[button_id].event_id,self.ButtonEvent)
     
     def RemoveButton(self,button_id):
@@ -40,7 +40,7 @@ class switchsection:
             self.buttons[button_id].Destroy()
             del self.buttons[button_id]
         else:
-            raise "Button %d does not exist in section %d" % (button_id, self.section_id)
+            raise "Button %s does not exist in section %s" % (button_id, self.section_id)
     
     def RemoveAll(self):
         for button_id,button in self.buttons.iteritems():
@@ -64,29 +64,19 @@ class switchbutton(genbuttons.GenBitmapTextToggleButton):
         self.SetUseFocusIndicator(False)
 
 class panel_switchbar(wx.Panel):
-    def __init__(self,parent,panelID,barsize=-1,baralign=wx.HORIZONTAL):
+    def __init__(self,parent,panelID,barsize,baralign=wx.HORIZONTAL):
         self.barsize = barsize
         self.baralign = baralign
         self.sections = {}
         self.currentbutton = None
+        self.eventfunction = None
         wx.Panel.__init__(self,parent,panelID,wx.DefaultPosition,self.barsize)
         
         self.CreateSizers()
-        
+
+        # Temporary, until we find some decent way to interact with panel_WindowArea
         self.AddSection(0)
-        self.AddButton(0,0,"Section 0 Button 0")
-        self.AddButton(0,1,"Section 0 Button 1")
-        self.AddButton(0,2,"Section 0 Button 2")
-        self.AddSection(1)
-        self.AddButton(1,0,"Section 1 Button 0")
-        self.AddButton(1,1,"Section 1 Button 1")
-        self.AddButton(1,2,"Section 1 Button 2")
-        self.AddSection(2)
-        self.AddButton(2,6,"Section 2 Button 6")
-        self.AddButton(2,7,"Section 2 Button 7")
-        self.AddButton(2,8,"Section 2 Button 8")
-        #self.RemoveSection(1)
-        #self.RemoveButton(2,4)
+        
         self.AddControls()
     
     def Realize(self):
@@ -97,7 +87,7 @@ class panel_switchbar(wx.Panel):
     
     def AddSection(self,section_id):
         if(section_id in self.sections):
-            raise "Section %d already exists" % section_id
+            raise "Section %s already exists" % section_id
         else:
             self.sections[section_id] = switchsection(section_id,self)
     
@@ -106,20 +96,21 @@ class panel_switchbar(wx.Panel):
             self.sections[section_id].RemoveAll()
             del self.sections[section_id]
         else:
-            raise "Section %d does not exist" % section_id
+            raise "Section %s does not exist" % section_id
     
     def AddButton(self,section_id,button_id,text,icon=None):
         if(section_id in self.sections):
             self.sections[section_id].AddButton(button_id,text,icon)
+            self.Realize()
         else:
-            raise "Section %d does not exist" % section_id
+            raise "Section %s does not exist" % section_id
     
     def RemoveButton(self,section_id,button_id):
         if(section_id in self.sections):
             self.sections[section_id].RemoveButton(button_id)
             del self.button_id_list[button_id]
         else:
-            raise "Section %d does not exist" % section_id
+            raise "Section %s does not exist" % section_id
     
     def SetAlignment(self,baralign,barsize):
         self.SetSize(barsize)
@@ -164,15 +155,23 @@ class panel_switchbar(wx.Panel):
                         button.SetValue(False)
     
     def SelectButton(self,section_id,button_id):
-        # Selects a button
+        """Selects a button without deselecting anything"""
         button = self.GetButton(section_id,button_id)
         if(button != None):
             button.SetValue(True)
             return True
         return False
+
+    def Select(self,section_id,button_id):
+        """Selects a button and deselects everything else, this doesn't raise an event"""
+        button = self.GetButton(section_id,button_id)
+        self.UnselectAllExcept(section_id,button_id)
+        self.SelectButton(section_id,button_id)
+        button.previous_button = self.currentbutton
+        self.currentbutton = [section_id,button_id]
     
     def ToggleButton(self,section_id,button_id):
-        # Checks if button is pressed, if it is NOT, select previous button
+        """Checks if button is pressed, if it is NOT, select previous button"""
         button = self.GetButton(section_id,button_id)
         if(button.GetValue()):
             # Clicked a new button
@@ -192,5 +191,10 @@ class panel_switchbar(wx.Panel):
                 button.SetValue(True)
 
     def ButtonEvent(self,section_id,button_id):
-        print "Button event: section_id:",section_id," button_id:", button_id
+        #print "Button event: section_id:",section_id," button_id:", button_id
         self.ToggleButton(section_id,button_id)
+        if(self.eventfunction is not None):
+            self.eventfunction(self.currentbutton[0],self.currentbutton[1])
+
+    def BindEvent(self,func):
+        self.eventfunction = func

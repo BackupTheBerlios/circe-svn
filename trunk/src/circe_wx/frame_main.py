@@ -22,6 +22,8 @@ from panel_switchbar import panel_switchbar
 from panel_windowarea import panel_windowarea
 from panel_tree import panel_tree
 from window_channel import window_channel
+from window_status import window_status
+import servermanager
 
 ID_MENU_FILE_ABOUT = wx.NewId()
 ID_MENU_FILE_EXIT = 1002
@@ -54,13 +56,19 @@ class frame_main(wx.Frame):
         #self.testWindow = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 1)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         #self.testWindow2 = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 2)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         #self.testWindow3 = wx.TextCtrl(self.panel_WindowArea,-1,"Test Window Area. (Window 3)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        self.testWindow = window_channel(self.panel_WindowArea,-1,"Window 1")
-        self.testWindow2 = window_channel(self.panel_WindowArea,-1,"Window 2")
-        self.testWindow3 = window_channel(self.panel_WindowArea,-1,"Window 3")
-        self.panel_WindowArea.AddWindow(self.testWindow,self.testWindow.GetCaption())
-        self.panel_WindowArea.AddWindow(self.testWindow2,self.testWindow2.GetCaption())
-        self.panel_WindowArea.AddWindow(self.testWindow3,self.testWindow3.GetCaption())
-        self.panel_WindowArea.ShowWindow(self.testWindow)
+        #self.testWindow = window_channel(self.panel_WindowArea,-1,"Window 1")
+        #self.testWindow2 = window_channel(self.panel_WindowArea,-1,"Window 2")
+        #self.testWindow3 = window_channel(self.panel_WindowArea,-1,"Window 3")
+        #self.panel_WindowArea.AddWindow(self.testWindow,self.testWindow.GetCaption())
+        #self.panel_WindowArea.AddWindow(self.testWindow2,self.testWindow2.GetCaption())
+        #self.panel_WindowArea.AddWindow(self.testWindow3,self.testWindow3.GetCaption())
+        #self.panel_WindowArea.ShowWindow(self.testWindow)
+
+        # Create empty server + status window
+        s = servermanager.AddServer()
+        w = window_status(self.panel_WindowArea,s,-1)
+        self.panel_WindowArea.AddWindow(w)
+        self.panel_WindowArea.ShowWindow(w)
         
     def CreateMenu(self):
         menu_file = wx.Menu() 

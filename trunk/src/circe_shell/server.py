@@ -26,10 +26,13 @@ class Server:
     # IRC methods
     def Join(self,channelname):
         """Joins a channel on this server and returns a channel object"""
+        channelname = str(channelname)
+        print "Joining %s" % channelname
         self.client.join(channelname)
 
     def Say(self,channel,text,length=None):
         """Says into a channel"""
+        channel = str(channel)
         self.client.say(channel,text,length)
 
     # Events

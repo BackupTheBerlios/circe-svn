@@ -1,0 +1,76 @@
+body {
+	margin-left: 10px;
+}
+
+div {
+	/* Use for debugging purposes */
+	/*
+	border-style: solid;
+	border-width: thin;
+	*/
+}
+
+div#header {
+	border-bottom: solid;
+	border-width: 1px;
+	padding-left: 5px;
+}
+
+div#header span#appname {
+	font-weight: bold;
+	font-size: 14px;
+}
+
+div#menu {
+	/* float: left; */
+	position: absolute;
+	left: 10px;
+	width: 90px;
+	font-size: 14px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+ul#menulist {
+    margin: 0px 5px 5px 5px;
+    padding: 0px;
+}
+ul#menulist li {
+    margin: 1px 0 1px 0px;
+    padding: 1px 0 1px 0px;
+    list-style-type: none;
+    background-repeat: no-repeat;
+}
+ul#menulist li#header {
+    padding: 5px 0px 5px 11px;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 5px;
+}
+ul#menulist li#active {
+    font-weight: bold;
+}
+ul#menulist li a {
+    text-decoration: none;
+}
+ul#menulist li a:hover {
+    text-decoration: underline;
+}
+
+div#content {
+	/* float: right; */
+	border-left: solid;
+	border-width: 1px;
+	margin-left: 90px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	min-height: 200px;
+	padding-left: 5px;
+}
+
+div#footer {
+	font-size: 12px;
+	border-top: solid;
+	border-width: 1px;
+	padding-top: 1px;
+	padding-left: 1px;
+}

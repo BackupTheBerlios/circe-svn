@@ -6,8 +6,10 @@ class Client(irc.IRCClient):
     def __init__(self,server):
         self.nickname = "circe_test"
         self.server = server
-        server.OnInit(self)
+        # Call the server object to announce myself
+        server.InitClient(self)
 
+    # Connection events
     def connectionMade(self):
         irc.IRCClient.connectionMade(self)
         self.server.ConnectionMade()
@@ -16,10 +18,15 @@ class Client(irc.IRCClient):
         irc.IRCClient.connectionLost(self, reason)
         self.server.ConnectionLost(reason)
 
-    # callbacks for events
+    # IRC events
     def signedOn(self):
         """Called when bot has succesfully signed on to server."""
+        irc.IRCClient.signedOn(self)
         self.server.SignedOn()
+
+    def joined(self,channel):
+        irc.IRCClient.joined(self,channel)
+        self.server.Joined(channel)
 
 class ClientFactory(protocol.ClientFactory):
     """A factory for clients."""

@@ -16,23 +16,30 @@ class Server:
         self.host = host
         self.port = port
         print "Connecting to:",host,port
-        c = ircreactor.reactor.connectTCP(host,port,self.factory)
+        ircreactor.reactor.connectTCP(host,port,self.factory)
+    
+    def InitClient(self,client):
+        """Sets the client object used by this server"""
+        self.client = client
 
+    # IRC methods
     def Join(self,channelname):
         """Joins a channel on this server and returns a channel object"""
         self.client.join(channelname)
 
+    def Say(self,channel,text,length=None):
+        """Says into a channel"""
+        self.client.say(channel,text,length)
+
     # Events
-    def OnInit(self,client):
-        """Sets the client object used by this server"""
-        self.client = client
-        
     def ConnectionMade(self):
-        print "Connected!"
+        pass
 
     def ConnectionLost(self,reason):
-        print "Connection lost!"
+        pass
 
     def SignedOn(self):
-        print "Signed on!"
-        self.Join("#circe")
+        pass
+
+    def Joined(self,channel):
+        pass

@@ -135,9 +135,12 @@ class panel_switchbar(wx.Panel):
         self.SetSizer(self.sizer_Top)
     
     def AddControls(self):
+        fill = 0
+        if (self.baralign == wx.HORIZONTAL):
+            fill = 1
         for section_id,section in self.sections.iteritems():
             for button_id,button in section.buttons.iteritems():
-                self.sizer_Top.Add(button,0,wx.EXPAND)
+                self.sizer_Top.Add(button,fill,wx.EXPAND)
                 button.Show(True)
             self.sizer_Top.Add((10,10))
     

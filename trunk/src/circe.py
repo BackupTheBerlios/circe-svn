@@ -17,8 +17,8 @@
 
 import wx
 import traceback
-from circe_shell import ircreactor
-ircreactor.ImportWx()
+#from circe_shell import ircreactor
+#ircreactor.ImportWx()
 from circe_wx.frame_main import frame_main
 
 def handle_exc(message):
@@ -37,7 +37,7 @@ class CirceApp(wx.App):
 
 if(__name__ == "__main__"):
     circe = CirceApp(0)
-    #circe.MainLoop()
-    ircreactor.ImportReactor()
-    ircreactor.RegisterWxApp(circe)
-    ircreactor.Run()
+    #ircreactor.ImportReactor()
+    #ircreactor.RegisterWxApp(circe)
+    #ircreactor.Run()
+    circe.MainLoop()

@@ -228,5 +228,5 @@ class panel_switchbar(wx.Panel):
 
     def OnSize(self,event):
         """The Size event needs to be overloaded to hard-Refresh the buttons"""
-        #self.Layout()
+        self.Layout()
         self.Refresh()

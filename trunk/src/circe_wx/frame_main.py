@@ -40,9 +40,9 @@ ID_TOOLBAR_TOOLS = 1401
 
 class frame_main(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, -1, circe_globals.APPNAME + " " + circe_globals.VERSION, wx.DefaultPosition, wx.Size(600,  400)) 
+        wx.Frame.__init__(self, None, -1, "%s %s" % (circe_globals.APPNAME, circe_globals.VERSION), wx.DefaultPosition, wx.Size(600,  400)) 
         self.CreateStatusBar()
-        self.SetStatusText("Welcome to " + circe_globals.APPNAME + " version " + circe_globals.VERSION + " (" + circe_globals.APPTAG + ")")
+        self.SetStatusText("Welcome to %s version %s (%s)" % (circe_globals.APPNAME,  circe_globals.VERSION, circe_globals.APPTAG))
         
         self.toolbar_Channels = None
         
@@ -77,9 +77,9 @@ class frame_main(wx.Frame):
         
     def CreateMenu(self):
         menu_file = wx.Menu() 
-        menu_file.Append(ID_MENU_FILE_ABOUT, "&About", "About " + circe_globals.APPNAME)
+        menu_file.Append(ID_MENU_FILE_ABOUT, "&About", "About %s" % (circe_globals.APPNAME))
         menu_file.AppendSeparator()
-        menu_file.Append(ID_MENU_FILE_EXIT, "E&xit", "Exit " + circe_globals.APPNAME)
+        menu_file.Append(ID_MENU_FILE_EXIT, "E&xit", "Exit %s" % (circe_globals.APPNAME))
         
         menu_switchbar = wx.Menu()
         menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ALEFT, "Align Switchbar &Left")

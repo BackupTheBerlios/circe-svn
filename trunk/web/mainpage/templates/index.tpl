@@ -6,14 +6,13 @@
 <title>{$appname} [{$currentname}]</title>
 
 <link rel="stylesheet" title="{$appname}" href="circe.css" type="text/css" />
-
 </head>
 <body>
 
 <div id="header">
-<span id="appname">
+<h1 id="appname">
 {$appname}
-</span>
+</h1>
 </div>
 
 <div id="menu">
@@ -35,8 +34,22 @@
 </div>
 
 <div id="footer">
+
 <span id="leftsection">Generated on {$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"} by <a href="http://smarty.php.net">Smarty</a> v{$smarty.version}</span>
-<span id="rightsection">Valid <a href="http://validator.w3.org/check/referer">XHTML 1.0</a> and <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS2</a></span>
+
+<div class="w3cbutton3">
+<a href="http://validator.w3.org/check/referer">
+<span class="w3c">W3C</span>
+<span>XHTML 1.0</span>
+</a>
+</div>
+<div class="w3cbutton3">
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+<span class="w3c">W3C</span>
+<span>CSS2</span>
+</a>
+</div>
+
 </div>
 
 </body>

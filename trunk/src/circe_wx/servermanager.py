@@ -27,3 +27,8 @@ def TextCommand(s,cmdstring):
         s.joinChannel(*params)
     elif(cmd == "nick"):
         s.nick(*params)
+    elif(cmd == "msg"):
+        channel = params[0]
+        text = params[1:];text=" ".join(text); s.sendMessage(channel, text)
+    elif(cmd == "quit"):
+        s.closeConnection()        

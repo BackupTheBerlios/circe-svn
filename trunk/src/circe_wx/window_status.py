@@ -41,7 +41,8 @@ class window_status(panel_window):
     def CreateControls(self):
         self.txtBuffer = wx.TextCtrl(self,-1,"Server: %s\n" % self.server.host,wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
-        self.txtEdit.Bind(wx.EVT_CHAR, self.txtEdit_EvtChar)
+        #self.txtEdit.Bind(wx.EVT_CHAR, self.txtEdit_EvtChar)
+        wx.EVT_CHAR(self.txtEdit,self.txtEdit_EvtChar)
     
     def CreateSizers(self):
         self.sizer_Top = wx.BoxSizer(wx.VERTICAL)

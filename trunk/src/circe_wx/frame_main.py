@@ -27,10 +27,12 @@ import servermanager
 
 ID_MENU_FILE_ABOUT = wx.NewId()
 ID_MENU_FILE_EXIT = 1002
+ID_MENU_VIEW_SWITCHBAR = 1650
 ID_MENU_VIEW_SWITCHBAR_ALEFT = 1651
 ID_MENU_VIEW_SWITCHBAR_ARIGHT = 1652
 ID_MENU_VIEW_SWITCHBAR_ATOP = 1653
 ID_MENU_VIEW_SWITCHBAR_ABOTTOM = 1654
+ID_MENU_VIEW_TREE = 1660
 ID_MENU_VIEW_TREE_ALEFT = 1661
 ID_MENU_VIEW_TREE_ARIGHT = 1662
 ID_TOOLBAR_CHANNEL = 1401
@@ -87,8 +89,8 @@ class frame_main(wx.Frame):
         menu_tree.Append(ID_MENU_VIEW_TREE_ARIGHT, "Align Tree &Right")
         
         menu_view = wx.Menu()
-        menu_view.AppendMenu(-1, "&Switchbar", menu_switchbar)
-        menu_view.AppendMenu(-1, "&Treebar", menu_tree)
+        menu_view.AppendMenu(ID_MENU_VIEW_SWITCHBAR, "&Switchbar", menu_switchbar)
+        menu_view.AppendMenu(ID_MENU_VIEW_TREE, "&Treebar", menu_tree)
         
         menuBar = wx.MenuBar() 
         menuBar.Append(menu_file, "&File");
@@ -155,7 +157,7 @@ class frame_main(wx.Frame):
         else:
             self.sizer_Top = wx.BoxSizer(wx.VERTICAL)
         self.sizer_TreeAndWindowArea = wx.BoxSizer()
-        self.panel_Top.SetSizer(self.sizer_Top)
+        self.panel_Top.SetSizer(self.sizer_Top,False)
 
     def AddControls(self):
         # Switchbar

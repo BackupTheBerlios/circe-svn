@@ -65,7 +65,8 @@ class switchbutton(genbuttons.GenBitmapTextToggleButton):
 
         # Here begins code to change button behaviour
         # The button will instantly trigger a click when left_down
-        self.Bind(wx.EVT_LEFT_DOWN,self.OnLeftDown_Override)
+        #self.Bind(wx.EVT_LEFT_DOWN,self.OnLeftDown_Override)
+        wx.EVT_LEFT_DOWN(self,self.OnLeftDown_Override)
 
     def OnLeftDown_Override(self,event):
         self.OnLeftDown(event)
@@ -83,9 +84,10 @@ class panel_switchbar(wx.Panel):
         self.CreateSizers()
         
         #self.AddControls()
+        #self.Layout()
         self.Realize()
 
-        self.Bind(wx.EVT_SIZE,self.OnSize)
+        wx.EVT_SIZE(self,self.OnSize)
     
     def Realize(self):
         """Makes all changes effective and layouts the window"""
@@ -139,8 +141,8 @@ class panel_switchbar(wx.Panel):
     def CreateSizers(self):
         """Creates sizer"""
         self.sizer_Top = wx.BoxSizer(self.baralign)
-        self.SetSizer(self.sizer_Top)
-    
+        self.SetSizer(self.sizer_Top,False)
+        
     def AddControls(self):
         """Adds all controls to the sizer"""
         if (self.baralign == wx.HORIZONTAL):
@@ -226,5 +228,5 @@ class panel_switchbar(wx.Panel):
 
     def OnSize(self,event):
         """The Size event needs to be overloaded to hard-Refresh the buttons"""
-        self.Layout()
+        #self.Layout()
         self.Refresh()

@@ -65,6 +65,8 @@ XHTML 1.0</a>
 CSS2</a>
 |
 <a href="irc://irc.freenode.net/circe" title="#circe at irc.freenode.net">irc://irc.freenode.net/circe</a>
+|
+<a href="http://www.mozilla.org/products/firefox/"><img id="getfirefox" alt="Get Firefox!" title="Get Firefox!" src="http://www.spreadfirefox.com/community/images/affiliates/Buttons/80x15/white_2.gif"/></a>
 </span>
 </div>
 

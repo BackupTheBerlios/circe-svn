@@ -52,9 +52,12 @@ div#header div#latestsvn {
 	color: #FFFFFF;
 }
 
-div#header h1#appname {
-	font-size: 22px;
-	margin: 5px;
+div#header span#title {
+	font-size: 24px;
+	/* margin: 5px; */
+        color: #FFFFFF;
+        position: absolute;
+        top: 15px;
 }
 
 div#menu {
@@ -135,8 +138,15 @@ div#footer img.w3image {
 }
 
 div#footer img#berlioslogo {
+        border-style: none;
 	border-width: 0px;
 	float: right;
+}
+
+div#footer img#getfirefox {
+        border-style: none;
+        border-width: 0px;
+        vertical-align: middle;
 }
 
 /* http://www.sovavsiti.cz/css/w3c_buttons.html */

@@ -5,7 +5,7 @@
 
 <title>{$appname} [{$currentname}]</title>
 
-<link rel="stylesheet" title="{$appname}" href="circe.css" type="text/css"/>
+<link rel="stylesheet" href="circe.css" type="text/css"/>
 <link rel="shortcut icon" href="favicon.ico"/>
 </head>
 <body>

@@ -3,7 +3,10 @@ body {
 	/* background-color: #DAE0EA; */
 	background-color: #DADAEA;
 	width: 600px; /* To prevent the layout messing up with a small window */
-	margin-top: 3px;
+	margin-top: 6px;
+	margin-left: 6px;
+	font-family: verdana,helvetica,arial,sans-serif;
+	font-size: 14px;
 	color: #222244;
 }
 
@@ -37,7 +40,7 @@ acronym {
 div#menu {
 	float: left;
 	width: 90px;
-	font-size: 14px;
+	font-size: 12px;
 	border-top: solid;
 	border-bottom: solid;
 	border-width: 5px;
@@ -64,6 +67,9 @@ ul#menulist li a {
 	color: #000044;
 	display: block;
 	width: 100%;
+	border-bottom: solid;
+	border-width: 1px;
+	border-color: #8888B0;
 }
 
 ul#menulist li a:hover {

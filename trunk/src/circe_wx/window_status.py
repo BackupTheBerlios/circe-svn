@@ -19,6 +19,7 @@ import wx
 from window_server import window_server
 
 ID_TXT_EDIT = wx.NewId()
+ID_TIMER_STATUS = wx.NewId()
 
 class window_status(window_server):
     def __init__(self,windowarea,server,id=-1):
@@ -36,7 +37,8 @@ class window_status(window_server):
         self.AddControls()
 
         # Bind EVT_TIMER events to self.OnTimerEvt
-        self.Bind(wx.EVT_TIMER, self.OnTimerEvt)
+        #self.Bind(wx.EVT_TIMER, self.OnTimerEvt)
+        wx.EVT_TIMER(self,ID_TIMER_STATUS,self.OnTimerEvt)
 
     def MakeCaption(self):
         if self.server.getHost():

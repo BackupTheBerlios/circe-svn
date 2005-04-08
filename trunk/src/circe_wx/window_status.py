@@ -19,7 +19,6 @@ import wx
 from window_server import window_server
 
 ID_TXT_EDIT = wx.NewId()
-ID_TIMER_STATUS = wx.NewId()
 
 class window_status(window_server):
     def __init__(self,windowarea,server,id=-1):
@@ -29,16 +28,10 @@ class window_status(window_server):
         self._server = server
         # Whether to check regularly for new events or not
         self._checking = False
-        # Delay between each checking (in ms)
-        self._timer_delay = 1000
         
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
-
-        # Bind EVT_TIMER events to self.OnTimerEvt
-        #self.Bind(wx.EVT_TIMER, self.OnTimerEvt)
-        wx.EVT_TIMER(self,ID_TIMER_STATUS,self.OnTimerEvt)
 
     def MakeCaption(self):
         if self.server.getHost():
@@ -81,8 +74,8 @@ class window_status(window_server):
         """Turns on checking for new events."""
         if self._checking:
             return
-        self.timer = wx.Timer(self)
-        self.timer.Start(self._timer_delay)
+        # Bind EVT_IDLE events to self.OnIdleEvt
+        wx.EVT_IDLE(self,self.OnIdleEvt)
         self._checking = True
         print "Automatic checking for new events enabled"
 
@@ -90,12 +83,11 @@ class window_status(window_server):
         """Turns off checking for new events."""
         if not self._checking:
             return
-        self.timer.Stop()
-        del self.timer
+        wx.EVT_IDLE(self,None)
         self._checking = False
         print "Automatic checking for new events disabled"
 
-    def OnTimerEvt(self, evt):
+    def OnIdleEvt(self, evt):
         if not self._server.is_connected():
             self.disableChecking()
             return

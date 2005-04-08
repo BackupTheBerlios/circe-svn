@@ -65,7 +65,6 @@ class frame_main(wx.Frame):
         #self.panel_WindowArea.AddWindow(self.testWindow2,self.testWindow2.GetCaption())
         #self.panel_WindowArea.AddWindow(self.testWindow3,self.testWindow3.GetCaption())
         #self.panel_WindowArea.ShowWindow(self.testWindow)
-
         # Create two servers + status windows
         s = servermanager.AddServer(self.panel_WindowArea)
         #w = window_status(self.panel_WindowArea,s,-1)
@@ -73,7 +72,7 @@ class frame_main(wx.Frame):
         #w2 = window_status(self.panel_WindowArea,s2,-1)
         #self.panel_WindowArea.AddWindow(w)
         #self.panel_WindowArea.AddWindow(w2)
-        #self.panel_WindowArea.ShowWindow(w)
+        self.panel_WindowArea.ShowWindow(s.statuswindow.section_id,s.statuswindow)
         
     def CreateMenu(self):
         menu_file = wx.Menu() 
@@ -142,6 +141,7 @@ class frame_main(wx.Frame):
         self.panel_WindowArea.BindAdd(self.evt_windowarea_addwindow)
         self.panel_WindowArea.BindDel(self.evt_windowarea_delwindow)
         self.panel_WindowArea.BindShow(self.evt_windowarea_showwindow)
+        self.panel_WindowArea.BindSetCaption(self.evt_windowarea_setcaption)
     
     def Realize(self):
         self.DestroySizers()
@@ -223,13 +223,16 @@ class frame_main(wx.Frame):
         self.RebuildTree()
 
     def evt_switchbar_event(self,section_id,button_id):
-        self.panel_WindowArea.ShowWindow(button_id,True)
+        self.panel_WindowArea.ShowWindow(section_id,button_id,True)
 
-    def evt_windowarea_addwindow(self,window_id,caption,type=None):
-        self.panel_Switchbar.AddButton(0,window_id,caption)
+    def evt_windowarea_addwindow(self,section_id,window_id,caption,type=None):
+        self.panel_Switchbar.AddButton(section_id,window_id,caption)
 
-    def evt_windowarea_delwindow(self,window_id):
-        self.panel_Switchbar.RemoveButton(0,window_id)
+    def evt_windowarea_delwindow(self,section_id,window_id):
+        self.panel_Switchbar.RemoveButton(section_id,window_id)
 
-    def evt_windowarea_showwindow(self,window_id):
-        self.panel_Switchbar.Select(0,window_id)
+    def evt_windowarea_showwindow(self,section_id,window_id):
+        self.panel_Switchbar.Select(section_id,window_id)
+
+    def evt_windowarea_setcaption(self,section_id,window_id,caption):
+        self.panel_Switchbar.SetCaption(section_id,window_id,caption)

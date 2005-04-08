@@ -25,6 +25,7 @@ class panel_windowarea(wx.Panel):
         self.func_addwindow = None
         self.func_delwindow = None
         self.func_showwindow = None
+        self.func_setcaption = None
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
@@ -38,7 +39,7 @@ class panel_windowarea(wx.Panel):
         #self.ShowWindow(self.testWindow)
         #self.ShowWindow(self.testWindow2)
     
-    def AddWindow(self,window):
+    def AddWindow(self,section,window):
         if window in self.windowList:
             raise "Window %s already exists" % window
         else:
@@ -46,18 +47,18 @@ class panel_windowarea(wx.Panel):
             window.Show(False)
             if self.func_addwindow != None:
                 caption = window.GetCaption()
-                self.func_addwindow(window,caption)
+                self.func_addwindow(section,window,caption)
     
-    def RemoveWindow(self,window):
+    def RemoveWindow(self,section,window):
         if window in self.windowList:
             self.sizer_Top.Remove(window)
             self.windowList[self.windowList.index(window)] = None
             if self.func_delwindow is not None:
-                self.func_delwindow(window)
+                self.func_delwindow(section,window)
         else:
             raise "Window: %s does not exist in windows list" % window
     
-    def ShowWindow(self,window,ignoreEvent=False):
+    def ShowWindow(self,section,window,ignoreEvent=False):
         if window in self.windowList:
             for winToHide in self.windowList:
                 winToHide.Show(False)
@@ -67,9 +68,14 @@ class panel_windowarea(wx.Panel):
             self.sizer_Top.Layout()
             if not ignoreEvent:
                 if self.func_showwindow is not None:
-                    self.func_showwindow(window)
+                    self.func_showwindow(section,window)
         else:
             raise "Window: %s does not exist in windows list" % window
+
+    def SetCaption(self,section,window,caption):
+        if window in self.windowList:
+            if self.func_setcaption is not None:
+                    self.func_setcaption(section,window,caption)
     
     def CreateControls(self):
         pass
@@ -89,3 +95,6 @@ class panel_windowarea(wx.Panel):
 
     def BindShow(self,func):
         self.func_showwindow = func
+
+    def BindSetCaption(self,func):
+        self.func_setcaption = func

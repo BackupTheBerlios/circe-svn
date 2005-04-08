@@ -19,13 +19,16 @@ import wx
 from panel_window import panel_window
 
 class window_server(panel_window):
-    def __init__(self,windowarea,id,server,caption=None):
+    def __init__(self,windowarea,server,caption=None):
         self.windowarea = windowarea
         self.server = server
-        panel_window.__init__(self,windowarea,id,caption)
+        panel_window.__init__(self,windowarea,caption)
 
     def getWindowarea(self):
         return self.windowarea
 
     def getServer(self):
         return self.server
+
+    def evt_caption(self):
+        self.windowarea.SetCaption(self.server,self,self.caption)

@@ -53,7 +53,6 @@ class WXServer(CirceIRCClient):
         c = self.connection
         self.host = c.connected and c.get_server_name() or None
         self.statuswindow = window_status(windowarea,self)
-        windowarea.AddWindow(self.statuswindow)
         self.windowarea = windowarea
         self.channels = []
 
@@ -73,7 +72,6 @@ class WXServer(CirceIRCClient):
         caption = "%s(%s)" % (channelname, nick)
         new = window_channel(self.windowarea,self,channelname)
         new.SetCaption(caption)
-        self.windowarea.AddWindow(new)
         self.channels.append(new)
         return new
 

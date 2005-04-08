@@ -41,10 +41,17 @@ class switchsection:
             del self.buttons[button_id]
         else:
             raise "Button %s does not exist in section %s" % (button_id, self.section_id)
+
+    def SetCaption(self,button_id,caption):
+        if button_id in self.buttons:
+            self.buttons[button_id].SetCaption(caption)
+        else:
+            raise "Button %s does not exist in section %s" % (button_id, self.section_id)
     
     def RemoveAll(self):
         for button_id,button in self.buttons.iteritems():
             button.Destroy()
+            del self.buttons[button_id]
     
     def ButtonEvent(self,event):
         for button_id,button in self.buttons.iteritems():
@@ -56,7 +63,6 @@ class switchbutton(genbuttons.GenBitmapTextToggleButton):
     def __init__(self,section_id,button_id,parent,text,icon=None):
         self.button_id = button_id
         self.event_id = int(wx.NewId())
-        self.text = text
         self.icon = icon
         self.parent = parent
         self.previous_button = None
@@ -68,6 +74,9 @@ class switchbutton(genbuttons.GenBitmapTextToggleButton):
         wx.EVT_LEFT_DOWN(self,self.OnLeftDown_Override)
         wx.EVT_LEFT_UP(self,self.OnLeftUp_Override)
         wx.EVT_LEFT_DCLICK(self,self.OnDClick_Override)
+
+    def SetCaption(self,caption):
+        self.SetLabel(caption)
 
     def OnLeftDown_Override(self,event):
         self.OnLeftDown(event)
@@ -81,10 +90,11 @@ class switchbutton(genbuttons.GenBitmapTextToggleButton):
         self.OnLeftUp(event)
     
 class panel_switchbar(wx.Panel):
-    def __init__(self,parent,panelID,barsize,baralign=wx.HORIZONTAL):
+    def __init__(self,parent,panelID,barsize,baralign=wx.HORIZONTAL,autosec=True):
         self.barsize = barsize
         self.baralign = baralign
         self.sections = {}
+        self.autosection = autosec # Automatically adds and deletes sections
         self.currentbutton = None
         self.func_click = None
         wx.Panel.__init__(self,parent,panelID,wx.DefaultPosition,self.barsize)
@@ -126,13 +136,28 @@ class panel_switchbar(wx.Panel):
             self.sections[section_id].AddButton(button_id,text,icon)
             self.Realize()
         else:
-            raise "Section %s does not exist" % section_id
+            if self.autosection:
+                self.AddSection(section_id)
+                self.AddButton(section_id,button_id,text,icon)
+            else:
+                raise "Section %s does not exist" % section_id
     
     def RemoveButton(self,section_id,button_id):
         """Removes a button"""
         if section_id in self.sections:
             self.sections[section_id].RemoveButton(button_id)
             del self.button_id_list[button_id]
+            if self.autosection:
+                if len(self.sections[section_id].buttons) == 0:
+                    self.RemoveSection(section_id)
+        else:
+            raise "Section %s does not exist" % section_id
+
+    def SetCaption(self,section_id,button_id,text):
+        """Adds a button"""
+        if section_id in self.sections:
+            self.sections[section_id].SetCaption(button_id,text)
+            self.Realize()
         else:
             raise "Section %s does not exist" % section_id
     

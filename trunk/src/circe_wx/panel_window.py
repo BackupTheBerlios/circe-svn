@@ -18,8 +18,9 @@
 import wx
 
 class panel_window(wx.Panel):
-    def __init__(self,parent,id,caption):
-        wx.Panel.__init__(self,parent,id)
+    def __init__(self,windowarea,caption):
+        wx.Panel.__init__(self,windowarea,-1)
+        self.windowarea = windowarea
         self.caption = caption
 
     def GetCaption(self):
@@ -27,3 +28,16 @@ class panel_window(wx.Panel):
 
     def SetCaption(self,cap):
         self.caption = cap
+        self.evt_caption()
+
+    def CloseWindow(self):
+        # TODO: Implement window closing
+        self.Close()
+        self.evt_closed()
+
+    # Events
+    def evt_closed(self):
+        pass
+
+    def evt_caption(self):
+        pass

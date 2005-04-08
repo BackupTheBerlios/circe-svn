@@ -23,20 +23,17 @@ ID_TXT_EDIT = wx.NewId()
 ID_LST_USERS = wx.NewId()
 
 class window_channel(window_server):
-    def __init__(self,windowarea,server,channelname,id=wx.NewId()):
-        window_server.__init__(self,windowarea,id,server,channelname)
-        self._id = id
+    def __init__(self,windowarea,server,channelname):
+        window_server.__init__(self,windowarea,server,channelname)
+        self.windowarea = windowarea
+        
         self._channelname = channelname # Used to attribute events at the
                                         # right window.
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
 
-    def getId(self):
-        """Return a number proper at each instanciated object of a
-        window_channel.
-        """
-        return self._id
+        self.windowarea.AddWindow(server,self)
 
     def getChannelname(self):
         return self._channelname
@@ -63,8 +60,6 @@ class window_channel(window_server):
         key = event.GetKeyCode()
         if key == 13:
             # Enter pressed
-            #self.TextCommand(self.txtEdit.GetValue())
-            #commandparser.TextCommand(self.server,self.windowarea,self.txtEdit.GetValue())
             self.server.TextCommand(self.txtEdit.GetValue(),self)
             self.txtEdit.SetValue("")
         else:
@@ -103,3 +98,7 @@ class window_channel(window_server):
             to = "(to %s)" % to
         message = "%s%s: %s\n" % (from_, to, text)
         self.txtBuffer.AppendText(message)
+
+    # Events
+    def evt_closed(self):
+        self.windowarea.RemoveWindow(self.server,self)

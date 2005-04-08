@@ -21,9 +21,12 @@ from window_server import window_server
 ID_TXT_EDIT = wx.NewId()
 
 class window_status(window_server):
-    def __init__(self,windowarea,server,id=-1):
+    def __init__(self,windowarea,server):
         #server.SetStatusWindow(self)
-        window_server.__init__(self,windowarea,id,server,"Status")
+        window_server.__init__(self,windowarea,server,"Status")
+
+        self.windowarea.AddWindow(server,self)
+        self.section_id = server
         
         self._server = server
         # Whether to check regularly for new events or not

@@ -9,8 +9,7 @@ class CirceIRCClient:
         """Arguments:
             target -- a nick or a channel name
         """
-        # DEBUGGING
-        irclib.DEBUG = True
+        self._debug = False
         self.ircobj = irclib.IRC()
         self.connection = self.ircobj.server()
         self.ircobj.add_global_handler("all_events", self._storeEvents)
@@ -33,10 +32,17 @@ class CirceIRCClient:
     def getConnection(self):
         return self.connection
 
-    def setDebug(self, flag):
-        """Turns on/off the debug mode."""
-        irclib.DEBUG = flag
-        print "Debug mode", flag and "on" or "off"
+    def setDebug(self):
+        """Turns on the debug mode."""
+        self._debug = True
+        irclib.DEBUG = True
+        print "Debug mode on"
+
+    def noDebug(self):
+        """Turns off the debug mode."""
+        self._debug = False
+        irclib.DEBUG = False
+        print "Debug mode off"
 
     def getEvents(self):
         """Gets new events, stores them in self._events and returns them in a
@@ -65,17 +71,17 @@ class WXServer(CirceIRCClient):
 
     def NewChannelWindow(self,channelname):
         """Opens a new channel window, sets the caption and stores it."""
-        if self.connection.connected:
-            nick = self.connection.get_nickname()
-        else:   # for debug window
-            nick = "not connected"
-        caption = "%s(%s)" % (channelname, nick)
         new = window_channel(self.windowarea,self,channelname)
-        new.SetCaption(caption)
+#        new.SetCaption(caption)
         self.channels.append(new)
         return new
 
-    def getWindowChannelRef(self, channelname):
+    def RemoveChannelWindow(self, channelname):
+        """Removes the channel window if it exists."""
+#        self.windowarea.ShowWindow(self.statuswindow)
+        self.windowarea.RemoveWindow(channelname)
+
+    def getChannelWindowRef(self, channelname):
         """Returns the window_channel object binded to channelname or False if
         it does not match.
         """
@@ -90,7 +96,7 @@ class WXServer(CirceIRCClient):
 
         # in a debug window, do nothing
         if hasattr(window, "getChannelname") and \
-            window.getChannelname() == "Debug window":
+            window.getChannelname() == "debug":
 #            window.setUsers(["hello", "test"])
             return
 
@@ -105,10 +111,12 @@ class WXServer(CirceIRCClient):
                 mynick = self.connection.get_nickname()
                 window.addMessage(cmdstring, mynick)
             return
+
         # Create a list
         cmdlist = cmdstring.split()
         cmd = cmdlist.pop(0)
         params = cmdlist
+        print params
 
         # Find out what command is being executed
         if cmd == "server":
@@ -125,39 +133,76 @@ class WXServer(CirceIRCClient):
 
         elif cmd == "action":
             self.connection.action(target=params[0], action=params[1])
+        elif cmd == "connect":
+            if not self.connection.is_connected():
+                raise "ConnectError", "Use /server command instead"
+            server = params[0]
+            port = int(params[1])
+#            remote_server = params[2]
+            self.connect(server, port, self.connection.get_nickname())
         elif cmd == "globops":
             self.connection.globops(params[0])
         elif cmd == "info":
-            self.connection.info(*params)   # optional arg: server
+            self.connection.info(params and params[0] or "")
         elif cmd == "invite":
             self.connection.invite(nick=params[0], channel=params[1])
         elif cmd == "ison":
-            self.connection.ison(*params)   # args: list of nicks
+            self.connection.ison(params)
         elif cmd == "join":
             self.NewChannelWindow(*params)
-            self.connection.join(*params)   # args: channel; optional key
+            self.connection.join(*params)
         elif cmd == "kick":
-            self.connection.kick(*params)   # args: channel, nick; optional comment
+            channel = params[0]
+            nick = params[1]
+            if len(params) > 2:
+                comment = params[2]
+            else:
+                comment = ""
+            self.connection.kick(channel, nick, comment)
         elif cmd == "links":
-            self.connection.links(*params)
+            if len(params) > 0:
+                remote_server = params[0]
+                if len(params) > 1:
+                    server_mask = params[1]
+            else:
+                remote_server = ""
+                server_mask = ""
+            self.connection.links(remote_server, server_mask)
         elif cmd == "list":
-            self.connection.list(*params)   # optional args: channel, server
+            if len(params) > 0:
+                channels = params[0]
+                if len(params) > 1:
+                    server = params[1]
+            else:
+                channels = None
+                server = ""
+            self.connection.list(channels, server)
         elif cmd == "lusers":
             self.connection.lusers(*params) # optional arg: server
         elif cmd == "mode":
-            self.connection.mode(target=params[0], command=params[1])
+            command = " ".join(params[1:])
+            self.connection.mode(target=params[0], command=command)
         elif cmd == "motd":
             self.connection.motd(*params)   # optional arg: server
         elif cmd == "names":
             self.connection.names(*params)  # optional arg: channels
+            # TODO update users list
         elif cmd == "nick":
             self.connection.nick(newnick=params[0])
         elif cmd == "notice":
             self.connection.notice(target=params[0], text=params[1])
         elif cmd == "oper":
             self.connection.oper(oper=params[0], password=params[1])
+
         elif cmd == "part":
-            self.connection.part(params)   # optional arg: (list of) channels
+            self.connection.part(params)
+            chans = params[0].split(",")
+            for chan in chans:
+                window = self.getChannelWindowRef(chan)
+                if window:
+                    self.RemoveChannelWindow(chan)
+                    del self.channels[self.channels.index(window)]
+                    
         elif cmd == "pass":
             self.connection.pass_(password=params[0])
         elif cmd == "ping":
@@ -169,12 +214,8 @@ class WXServer(CirceIRCClient):
             if len(params) == 0:
                 raise "MSGError", "You must supply the target and the message"
             target = params[0]
-            if len(params) == 2:
-                text = params[1]
-            else:
-                text = " " .join(params[1:])
-            print target, text
-            self.connection.privmsg(target=target, text=text)
+            text = " " .join(params[3:])
+            self.connection.privmsg(target, text)
             # Displays out message in the window_channel
             if hasattr(window, "getChannelname"):
                 window.addMessage(text, self.connection.get_nickname(),target)
@@ -182,25 +223,35 @@ class WXServer(CirceIRCClient):
                 window.ServerEvent("[%s(%s)] %s" % ("msg", target, text))
 
         elif cmd == "privmsg_many":
-            self.connection.privmsg_many(*params)   # args: targets, text
+            targets = params[0]
+            text = " ".join(params[1:])
+            self.connection.privmsg_many(targets, text)
 
         elif cmd == "quit":
             self.connection.quit(*params)       # optional message
             # Stop checking for events
             self.statuswindow.disableChecking()
+            # TODO close all channel windows
             
         elif cmd == "sconnect":
             self.connection.sconnect(*params)   # args: target; optional: port, server
         elif cmd == "squit":
             self.connection.squit(*params)      # args: server; optional: comment
         elif cmd == "stats":
-            self.connection.stats(*params)      # args: statstype; optional: server
+            query = params[0]   # either l, m, o or u as defined in the rfc
+            if len(params) > 1:
+                server = params[1]
+            else:
+                server = ""
+            self.connection.stats(query, server)
         elif cmd == "time":
-            self.connection.time(*params)       # optional: server
+            server = params[0:1]
+            self.connection.time(server)
         elif cmd == "topic":
-            self.connection.topice(*params)     # args: channel and optional: new_topic
+            new_topic = " ".join(params[1:])
+            self.connection.topice(channel=params[0], new_topic=new_topic)
         elif cmd == "trace":
-            self.connection.trace(*params)      # optional: target
+            self.connection.trace(*params)
         elif cmd == "user":
             self.connection.user(username=params[0], realname=params[1])
         elif cmd == "userhost":
@@ -220,13 +271,15 @@ class WXServer(CirceIRCClient):
 
         # commands used only for development purposes
         elif cmd == "debug":
-            self.setDebug(True)
-        elif cmd == "nodebug":
-            self.setDebug(False)
+            self.setDebug()
+            win = self.NewChannelWindow("debug")
+#            win.setUsers(["test", "toto"])
 
-        elif cmd == "joindebug":
-            window = self.NewChannelWindow("Debug window")
-#            window.setUsers(["test", "toto"])
+        elif cmd == "nodebug":
+            self.noDebug()
+            debug_window = self.getChannelWindowRef("debug")
+            self.RemoveChannelWindow(debug_window)
+
         elif cmd == "check":
             self.checkEvents()
 
@@ -240,14 +293,16 @@ class WXServer(CirceIRCClient):
             # Skip raw messages.
             if etype == "all_raw_messages": 
                 continue
-            # Print event.
-            text="\nEvent: %s\nSource: %s\nTarget: %s\nArguments: %s" % (
-                    etype,
-                    e.source(),
-                    e.target(),
-                    e.arguments()
-                    )
-            print text
+
+            if self._debug:
+                # Print event.
+                text="\nEvent: %s\nSource: %s\nTarget: %s\nArguments: %s" % (
+                        etype,
+                        e.source(),
+                        e.target(),
+                        e.arguments()
+                        )
+                print text
 
             # Events to display in the status window.
             if etype == "welcome":
@@ -264,7 +319,10 @@ class WXServer(CirceIRCClient):
                 elif e.source() and e.source().startswith("MemoServ"):
                     text = "MemoServ: " + e.arguments()[0]
                     self.statuswindow.ServerEvent(text)
-                else:   # is it possible?
+                elif e.source() and e.source().startswith("ChanServ"):
+                    text = "ChanServ: " + e.arguments()[0]
+                    self.statuswindow.ServerEvent(text)
+                else:
                     self.statuswindow.ServerEvent(e.arguments()[0])
                     
             elif etype == "umode":
@@ -273,25 +331,24 @@ class WXServer(CirceIRCClient):
             elif etype in ("motd", "motdstart", "endofmotd"):
                 self.statuswindow.ServerEvent(e.arguments()[0])
 
+            elif etype in ("info", "endofinfo"):
+                self.statuswindow.ServerEvent(e.arguments()[0])
+
             # Events to display in the channel windows.
             elif etype in ("topic", "topicinfo", "nochanmodes"):
                 args = e.arguments()
                 chan = args.pop(0)  # Channel name where the message come
                                     # from.
                 # find out the corresponding window
-                window = self.getWindowChannelRef(chan)
+                window = self.getChannelWindowRef(chan)
                 if window:
-#                    if len(args) > 1:
-#                        args = " ".join(args)
-#                    else:
-#                        args = args[0]
                     args = " ".join(args)
                     text = "[%s] %s" % (etype, args)
                     window.addRawText(text)
 
             elif etype == "namereply":
                 chan = e.arguments()[1]
-                window = self.getWindowChannelRef(chan)
+                window = self.getwChannelWindowRef(chan)
                 if window:
                     users = e.arguments()[2].split()
                     # TODO add users to user list (see window_channel.py)
@@ -299,21 +356,29 @@ class WXServer(CirceIRCClient):
                     
             elif etype == "pubmsg":
                 chan = e.target()
-                window = self.getWindowChannelRef(chan)
+                window = self.getChannelWindowRef(chan)
                 if window:
-                    window.addMessage(e.arguments()[0], e.source())
+                    source = e.source().split("!")[0]
+                    window.addMessage(e.arguments()[0], source)
                     
             elif etype == "join":
                 chan = e.target()
-                window = self.getWindowChannelRef(chan)
+                window = self.getChannelWindowRef(chan)
                 if window:
-                    text = "%s has joined %s" % (e.source(), chan)
+                    source = e.source().split("!")[0]
+                    text = "%s has joined %s" % (source, chan)
                     window.addRawText(text)
                     # TODO update users' list
 
             elif etype == "part":
-                window = self.getWindowChannelRef(e.target())
+                window = self.getChannelWindowRef(e.target())
                 if window:
-                    text = "%s has leaved %s" % (e.source(), e.target())
+                    text = "%s has left %s" % (e.source(), e.target())
                     window.addRawText(text)
                     # TODO update users' list when it'll work
+
+            elif etype == "quit":
+                # there is no target supplied by thei command, so display the
+                # message in the status window
+                text = "[%s has quit (%s)]" % (e.source(), e.arguments()[0])
+                self.statuswindow.ServerEvent(text)

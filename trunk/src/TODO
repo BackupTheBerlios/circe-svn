@@ -1,10 +1,8 @@
 - (window_channel.py) Make self.setUsers method update the ListCtrl 
   widget. I (alst) get errors with the code I've commented out.
 
-- Redirect debug messages in the special debug window. This window can be
+- PERHAPS redirect debug messages in the special debug window. This window can be
   reached as any channel window via the name "debug".
-
-- (wxserver.py) Complete good processing of the commands typed by the user.
 
 - (wxserver.py) In self.checkEvents() in WXServer add handling for missing
   events.

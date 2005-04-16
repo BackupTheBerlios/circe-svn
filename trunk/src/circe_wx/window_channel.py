@@ -92,11 +92,9 @@ class window_channel(window_server):
             to    -- (Optional) target of the message
 
         """
-        if to.startswith("#"):
-            to = "" # target of the message is obvious
-        else:
+        if to:
             to = "(to %s)" % to
-        message = "%s%s: %s\n" % (from_, to, text)
+        message = "<%s%s> %s\n" % (from_, to, text)
         self.txtBuffer.AppendText(message)
 
     # Events

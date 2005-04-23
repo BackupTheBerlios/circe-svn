@@ -50,9 +50,10 @@ class panel_windowarea(wx.Panel):
                 self.func_addwindow(section,window,caption)
     
     def RemoveWindow(self,section,window):
+        print self.windowList
         if window in self.windowList:
             self.sizer_Top.Remove(window)
-            self.windowList[self.windowList.index(window)] = None
+            del self.windowList[self.windowList.index(window)]
             if self.func_delwindow is not None:
                 self.func_delwindow(section,window)
         else:

@@ -71,15 +71,25 @@ class WXServer(CirceIRCClient):
 
     def NewChannelWindow(self,channelname):
         """Opens a new channel window, sets the caption and stores it."""
+
+        # Avoid to create the same window multiple times.
+        if channelname in [w.getChannelname() for w in self.channels]:
+            raise "WindowChannel %s already exists" % channelname
+
         new = window_channel(self.windowarea,self,channelname)
 #        new.SetCaption(caption)
         self.channels.append(new)
+        self.windowarea.ShowWindow(self, new)
         return new
 
     def RemoveChannelWindow(self, channelname):
         """Removes the channel window if it exists."""
-#        self.windowarea.ShowWindow(self.statuswindow)
-        self.windowarea.RemoveWindow(channelname)
+        self.windowarea.ShowWindow(self, self.statuswindow)
+        win = self.getChannelWindowRef(channelname)
+        if not win:
+            return
+        self.windowarea.RemoveWindow(self, win)
+        del self.channels[self.channels.index(win)]
 
     def getChannelWindowRef(self, channelname):
         """Returns the window_channel object binded to channelname or False if
@@ -97,7 +107,6 @@ class WXServer(CirceIRCClient):
         # in a debug window, do nothing
         if hasattr(window, "getChannelname") and \
             window.getChannelname() == "debug":
-#            window.setUsers(["hello", "test"])
             return
 
         # Strip /
@@ -140,15 +149,18 @@ class WXServer(CirceIRCClient):
             port = int(params[1])
 #            remote_server = params[2]
             self.connect(server, port, self.connection.get_nickname())
+            
         elif cmd == "globops":
             self.connection.globops(params[0])
         elif cmd == "info":
             self.connection.info(params and params[0] or "")
         elif cmd == "invite":
             self.connection.invite(nick=params[0], channel=params[1])
+            
         elif cmd == "ison":
             nicks = params.split(",")
             self.connection.ison(nicks)
+            
         elif cmd == "join":
             self.NewChannelWindow(*params)
             self.connection.join(*params)
@@ -183,9 +195,11 @@ class WXServer(CirceIRCClient):
             
         elif cmd == "lusers":
             self.connection.lusers(params and params[0] or "")
+            
         elif cmd == "mode":
             command = " ".join(params[1:])
             self.connection.mode(target=params[0], command=command)
+            
         elif cmd == "motd":
             self.connection.motd(params and params[0] or "")
             
@@ -196,8 +210,8 @@ class WXServer(CirceIRCClient):
                 channels = params[0].split(",")
                 # if channels given as multiple args "#chan1 #chan2 #chan3"
 #                channels = params
-            self.connection.names(channels)
-            # TODO update users list
+                self.connection.names(channels)
+                # TODO update users list
             
         elif cmd == "nick":
             self.connection.nick(newnick=params[0])
@@ -207,14 +221,13 @@ class WXServer(CirceIRCClient):
             self.connection.oper(oper=params[0], password=params[1])
 
         elif cmd == "part":
-            self.connection.part(params)
             chans = params[0].split(",")
             for chan in chans:
                 window = self.getChannelWindowRef(chan)
                 if window:
                     self.RemoveChannelWindow(chan)
-                    del self.channels[self.channels.index(window)]
-                    
+            self.connection.part(params)
+
         elif cmd == "pass":
             self.connection.pass_(password=params[0])
             
@@ -246,6 +259,7 @@ class WXServer(CirceIRCClient):
 
         elif cmd == "privmsg_many":
             targets = params[0]
+            q
             text = " ".join(params[1:])
             self.connection.privmsg_many(targets, text)
 
@@ -309,13 +323,12 @@ class WXServer(CirceIRCClient):
         # commands used only for development purposes
         elif cmd == "debug":
             self.setDebug()
-            win = self.NewChannelWindow("debug")
+#            win = self.NewChannelWindow("debug")
 #            win.setUsers(["test", "toto"])
 
         elif cmd == "nodebug":
             self.noDebug()
-            debug_window = self.getChannelWindowRef("debug")
-            self.RemoveChannelWindow(debug_window)
+#            self.RemoveChannelWindow("debug")
 
         elif cmd == "check":
             self.checkEvents()
@@ -383,9 +396,9 @@ class WXServer(CirceIRCClient):
                     text = "[%s] %s" % (etype, args)
                     window.addRawText(text)
 
-            elif etype == "namereply":
+            elif etype == "namreply":
                 chan = e.arguments()[1]
-                window = self.getwChannelWindowRef(chan)
+                window = self.getChannelWindowRef(chan)
                 if window:
                     users = e.arguments()[2].split()
                     # TODO add users to user list (see window_channel.py)

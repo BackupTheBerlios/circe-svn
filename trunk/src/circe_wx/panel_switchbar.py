@@ -146,7 +146,6 @@ class panel_switchbar(wx.Panel):
         """Removes a button"""
         if section_id in self.sections:
             self.sections[section_id].RemoveButton(button_id)
-            del self.button_id_list[button_id]
             if self.autosection:
                 if len(self.sections[section_id].buttons) == 0:
                     self.RemoveSection(section_id)

@@ -432,3 +432,15 @@ class WXServer(CirceIRCClient):
                 # message in the status window
                 text = "[%s has quit (%s)]" % (e.source(), e.arguments()[0])
                 self.statuswindow.ServerEvent(text)
+
+            elif etype == "nicknameinuse":
+                text = "%s: %s" % (e.arguments()[0], e.arguments()[1])
+                self.statuswindow.ServerEvent(text)
+
+            elif etype == "error":
+                # what way render these errors ?
+                pass
+
+            elif etype == "disconnect":
+                text = "%s (%s)" % (e.arguments()[0], e.source())
+                self.statuswindow.ServerEvent(text)

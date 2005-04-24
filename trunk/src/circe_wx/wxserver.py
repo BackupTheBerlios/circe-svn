@@ -410,6 +410,17 @@ class WXServer(CirceIRCClient):
                 if window:
                     source = e.source().split("!")[0]
                     window.addMessage(e.arguments()[0], source)
+
+            elif etype == "privmsg":
+                source = e.source().split("!")[0]
+                target = e.target()
+                text = "<%s> %s" % (source, " ".join(e.arguments()))
+                if irclib.is_channel(target):   # XXX is it possible?
+                    win = self.getChannelWindowRef(target)
+                    if win:
+                        win.addRawText(text)
+                else:
+                    self.statuswindow.ServerEvent(text)
                     
             elif etype == "join":
                 chan = e.target()

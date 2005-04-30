@@ -42,7 +42,8 @@ class window_channel(window_server):
         self.txtBuffer = wx.TextCtrl(self,-1,"Channel: %s\n\n" % (self.caption),wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         self.txtBuffer.SetEditable(False)
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
-        self.lstUsers = wx.ListCtrl(self,ID_LST_USERS,wx.DefaultPosition,wx.DefaultSize)
+        self.lstUsers = wx.ListCtrl(self,ID_LST_USERS, style=wx.LC_REPORT)
+        self.lstUsers.InsertColumn(0, "Users")
         wx.EVT_CHAR(self.txtEdit,self.txtEdit_EvtChar)
 
     def CreateSizers(self):
@@ -67,16 +68,21 @@ class window_channel(window_server):
 
     def setUsers(self, users):
         """Display connected users to this channel in the ListCtrl."""
-        pass
-        # FIXME don't work! ??
-#        if not self.lstUsers.GetColumnCount():
-#            self.lstUsers.InsertColumn(0, "Users")
+        self.lstUsers.DeleteAllItems()
+        self.addUsers(users)
 
-#        self.lstUsers.DeleteAllItems()
-#        for u in users:
-#            self.lstUsers.Append(u)
-#        self.lstUsers.Append(users[0])
-#        self.lstUsers.InsertStringItem(users[0])
+    def addUsers(self, users):
+        """Add some users to the users list."""
+        for u in users:
+            self.lstUsers.Append((u,))
+
+    def delUsers(self, users):
+        """Delete some users from the users list."""
+        for u in users:
+            item = self.lstUsers.FindItem(0, u)
+            if item < 0:   # item not found
+                continue
+            self.lstUsers.DeleteItem(item)
 
     def addRawText(self, text):
         """Adds some text at the end of the TextCtrl."""

@@ -125,7 +125,8 @@ class WXServer(CirceIRCClient):
         cmdlist = cmdstring.split()
         cmd = cmdlist.pop(0)
         params = cmdlist
-        print params
+        if self._debug:
+            print params
 
         # Find out what command is being executed
         if cmd == "server":
@@ -211,7 +212,6 @@ class WXServer(CirceIRCClient):
                 # if channels given as multiple args "#chan1 #chan2 #chan3"
 #                channels = params
                 self.connection.names(channels)
-                # TODO update users list
             
         elif cmd == "nick":
             self.connection.nick(newnick=params[0])
@@ -267,7 +267,7 @@ class WXServer(CirceIRCClient):
             self.connection.quit(params and params[0] or "")
             # Stop checking for events
             self.statuswindow.disableChecking()
-            # TODO close all channel windows
+            # TODO Would it be necessary to close all channel windows?
             
         elif cmd == "sconnect":
             self.connection.sconnect(params[0],
@@ -401,7 +401,6 @@ class WXServer(CirceIRCClient):
                 window = self.getChannelWindowRef(chan)
                 if window:
                     users = e.arguments()[2].split()
-                    # TODO add users to user list (see window_channel.py)
                     window.setUsers(users)
                     
             elif etype == "pubmsg":
@@ -429,14 +428,14 @@ class WXServer(CirceIRCClient):
                     source = e.source().split("!")[0]
                     text = "%s has joined %s" % (source, chan)
                     window.addRawText(text)
-                    # TODO update users' list
+                    window.addUsers([source])
 
             elif etype == "part":
                 window = self.getChannelWindowRef(e.target())
                 if window:
                     text = "%s has left %s" % (e.source(), e.target())
                     window.addRawText(text)
-                    # TODO update users' list when it'll work
+                    window.delUsers([e.source().split("!")[0]])
 
             elif etype == "quit":
                 # there is no target supplied by the command, so display the
@@ -449,7 +448,7 @@ class WXServer(CirceIRCClient):
                 self.statuswindow.ServerEvent(text)
 
             elif etype == "error":
-                # what way render these errors ?
+                # XXX is this event necessary?
                 pass
 
             elif etype == "disconnect":

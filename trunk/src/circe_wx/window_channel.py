@@ -27,8 +27,9 @@ class window_channel(window_server):
         window_server.__init__(self,windowarea,server,channelname)
         self.windowarea = windowarea
         
-        self._channelname = channelname # Used to attribute events at the
-                                        # right window.
+        self._channelname = channelname
+        self.users = {} # dict of connected users to this channel
+        
         self.CreateControls()
         self.CreateSizers()
         self.AddControls()
@@ -42,7 +43,11 @@ class window_channel(window_server):
         self.txtBuffer = wx.TextCtrl(self,-1,"Channel: %s\n\n" % (self.caption),wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         self.txtBuffer.SetEditable(False)
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
-        self.lstUsers = wx.ListCtrl(self,ID_LST_USERS, style=wx.LC_REPORT)
+        self.lstUsers = wx.ListCtrl(self,ID_LST_USERS, 
+                                    style=wx.LC_REPORT
+                                    | wx.LC_SORT_ASCENDING
+                                    | wx.LC_NO_HEADER
+                                    )
         self.lstUsers.InsertColumn(0, "Users")
         wx.EVT_CHAR(self.txtEdit,self.txtEdit_EvtChar)
 
@@ -66,14 +71,14 @@ class window_channel(window_server):
         else:
             event.Skip()
 
-    def setUsers(self, users):
-        """Display connected users to this channel in the ListCtrl."""
-        self.lstUsers.DeleteAllItems()
-        self.addUsers(users)
-
     def addUsers(self, users):
         """Add some users to the users list."""
         for u in users:
+            if u not in self.users.keys():
+                self.users[u] = ""
+
+        self.lstUsers.DeleteAllItems()
+        for u in self.users.keys():
             self.lstUsers.Append((u,))
 
     def delUsers(self, users):

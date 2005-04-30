@@ -324,7 +324,7 @@ class WXServer(CirceIRCClient):
         elif cmd == "debug":
             self.setDebug()
 #            win = self.NewChannelWindow("debug")
-#            win.setUsers(["test", "toto"])
+#            win.addUsers(["test", "toto"])
 
         elif cmd == "nodebug":
             self.noDebug()
@@ -401,7 +401,7 @@ class WXServer(CirceIRCClient):
                 window = self.getChannelWindowRef(chan)
                 if window:
                     users = e.arguments()[2].split()
-                    window.setUsers(users)
+                    window.addUsers(users)
                     
             elif etype == "pubmsg":
                 chan = e.target()

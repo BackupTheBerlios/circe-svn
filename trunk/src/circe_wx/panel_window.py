@@ -1,5 +1,5 @@
 # Circe
-# Copyright (C) 2004 The Circe development team
+# Copyright (C) 2004-2005 The Circe development team
 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License

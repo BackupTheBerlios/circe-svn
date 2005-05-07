@@ -18,10 +18,18 @@
 from window_status import window_status
 from window_channel import window_channel
 import irclib
+import time
 
 
 class CirceIRCClient:
     """Simple IRC client inspired from SimpleIRCClient from python-irclib."""
+
+# XXX To uncomment if patch 1197200 is applied to python-irclib. And remove
+# XXX the other initialization above.
+#
+#    ircobj = irclib.IRC()
+#
+
     def __init__(self, target):
         """Arguments:
             target -- a nick or a channel name
@@ -281,7 +289,7 @@ class WXServer(CirceIRCClient):
             self.connection.privmsg_many(targets, text)
 
         elif cmd == "quit":
-            self.connection.quit(params and params[0] or "")
+            self.connection.quit(" ".join(params) or "")
             # Stop checking for events
             self.statuswindow.disableChecking()
             # TODO Would it be necessary to close all channel windows?
@@ -402,7 +410,7 @@ class WXServer(CirceIRCClient):
                 self.statuswindow.ServerEvent(e.arguments()[0])
 
             # Events to display in the channel windows.
-            elif etype in ("topic", "topicinfo", "nochanmodes"):
+            elif etype in ("topic", "nochanmodes"):
                 args = e.arguments()
                 chan = args.pop(0)  # Channel name where the message comes
                                     # from.
@@ -413,13 +421,23 @@ class WXServer(CirceIRCClient):
                     text = "[%s] %s" % (etype, args)
                     window.addRawText(text)
 
+            elif etype == "topicinfo":
+                sender = e.arguments()[1]
+                timeago = int(e.arguments()[2])
+                date = time.asctime(time.gmtime(timeago))
+
+                window = self.getChannelWindowRef(e.arguments()[0])
+                if window:
+                    text = "[%s] %s on %s" % (etype, sender, date)
+                    window.addRawText(text)
+
             elif etype == "namreply":
                 chan = e.arguments()[1]
                 window = self.getChannelWindowRef(chan)
                 if window:
                     users = e.arguments()[2].split()
                     window.addUsers(users)
-                    
+
             elif etype == "pubmsg":
                 chan = e.target()
                 window = self.getChannelWindowRef(chan)

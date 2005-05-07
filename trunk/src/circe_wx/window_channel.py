@@ -28,7 +28,7 @@ class window_channel(window_server):
         self.windowarea = windowarea
         
         self._channelname = channelname
-        self.users = {} # dict of connected users to this channel
+        self._users = {} # Store info about users
         
         self.CreateControls()
         self.CreateSizers()
@@ -71,23 +71,23 @@ class window_channel(window_server):
         else:
             event.Skip()
 
-    def addUsers(self, users):
-        """Add some users to the users list."""
+    def users(self, users=[]):
+        """Add some users to the users list and update it."""
         for u in users:
-            if u not in self.users.keys():
-                self.users[u] = ""
+            if u not in self._users.keys():
+                self._users[u] = ""
 
         self.lstUsers.DeleteAllItems()
-        for u in self.users.keys():
+        for u in self._users.keys():
             self.lstUsers.Append((u,))
 
     def delUsers(self, users):
         """Delete some users from the users list."""
-        for u in users:
-            item = self.lstUsers.FindItem(0, u)
-            if item < 0:   # item not found
-                continue
-            self.lstUsers.DeleteItem(item)
+        # Deletes left users.
+        for u in self._users.keys():
+            if u in users:
+                del self._users[u]
+        self.users([])
 
     def addRawText(self, text):
         """Adds some text at the end of the TextCtrl."""

@@ -348,12 +348,9 @@ class WXServer(CirceIRCClient):
         # commands used only for development purposes
         elif cmd == "debug":
             self.setDebug()
-#            win = self.NewChannelWindow("debug")
-#            win.addUsers(["test", "toto"])
 
         elif cmd == "nodebug":
             self.noDebug()
-#            self.RemoveChannelWindow("debug")
 
         elif cmd == "check":
             self.checkEvents()
@@ -436,7 +433,7 @@ class WXServer(CirceIRCClient):
                 window = self.getChannelWindowRef(chan)
                 if window:
                     users = e.arguments()[2].split()
-                    window.addUsers(users)
+                    window.users(users)
 
             elif etype == "pubmsg":
                 chan = e.target()
@@ -463,7 +460,7 @@ class WXServer(CirceIRCClient):
                     source = e.source().split("!")[0]
                     text = "%s has joined %s" % (source, chan)
                     window.addRawText(text)
-                    window.addUsers([source])
+                    window.users([source])
 
             elif etype == "part":
                 window = self.getChannelWindowRef(e.target())

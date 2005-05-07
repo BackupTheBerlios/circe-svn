@@ -40,8 +40,6 @@ class window_channel(window_server):
         return self._channelname
 
     def CreateControls(self):
-        self.txtBuffer = wx.TextCtrl(self,-1,"Channel: %s\n\n" % (self.caption),wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        self.txtBuffer.SetEditable(False)
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
         self.lstUsers = wx.ListCtrl(self,ID_LST_USERS, 
                                     style=wx.LC_REPORT
@@ -89,10 +87,6 @@ class window_channel(window_server):
                 del self._users[u]
         self.users([])
 
-    def addRawText(self, text):
-        """Adds some text at the end of the TextCtrl."""
-        self.txtBuffer.AppendText(text+"\n")
-
     def addMessage(self, text, from_, to=""):
         """Formats a message in a pretty way with the given arguments.
 
@@ -105,8 +99,8 @@ class window_channel(window_server):
         """
         if to:
             to = "(to %s)" % to
-        message = "<%s%s> %s\n" % (from_, to, text)
-        self.txtBuffer.AppendText(message)
+        message = "<%s%s> %s" % (from_, to, text)
+        self.ServerEvent(message)
 
     # Events
     def evt_closed(self):

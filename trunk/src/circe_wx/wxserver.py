@@ -416,7 +416,7 @@ class WXServer(CirceIRCClient):
                 if window:
                     args = " ".join(args)
                     text = "[%s] %s" % (etype, args)
-                    window.addRawText(text)
+                    window.ServerEvent(text)
 
             elif etype == "topicinfo":
                 sender = e.arguments()[1]
@@ -426,7 +426,7 @@ class WXServer(CirceIRCClient):
                 window = self.getChannelWindowRef(e.arguments()[0])
                 if window:
                     text = "[%s] %s on %s" % (etype, sender, date)
-                    window.addRawText(text)
+                    window.ServerEvent(text)
 
             elif etype == "namreply":
                 chan = e.arguments()[1]
@@ -449,7 +449,7 @@ class WXServer(CirceIRCClient):
                 if irclib.is_channel(target):   # XXX is it possible?
                     win = self.getChannelWindowRef(target)
                     if win:
-                        win.addRawText(text)
+                        win.ServerEvent(text)
                 else:
                     self.statuswindow.ServerEvent(text)
                     
@@ -459,14 +459,14 @@ class WXServer(CirceIRCClient):
                 if window:
                     source = e.source().split("!")[0]
                     text = "%s has joined %s" % (source, chan)
-                    window.addRawText(text)
+                    window.ServerEvent(text)
                     window.users([source])
 
             elif etype == "part":
                 window = self.getChannelWindowRef(e.target())
                 if window:
                     text = "%s has left %s" % (e.source(), e.target())
-                    window.addRawText(text)
+                    window.ServerEvent(text)
                     window.delUsers([e.source().split("!")[0]])
 
             elif etype == "quit":

@@ -49,10 +49,6 @@ class window_status(window_server):
         return caption
     
     def CreateControls(self):
-        self.txtBuffer = wx.TextCtrl(self,-1,"Server: %s\n" % self.server.host,wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        self.txtBuffer.SetEditable(False)
-        f = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Monospace")	
-	self.txtBuffer.SetDefaultStyle(wx.TextAttr("BLACK", wx.NullColour, f))
         self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
         #self.txtEdit.Bind(wx.EVT_CHAR, self.txtEdit_EvtChar)
         wx.EVT_CHAR(self.txtEdit,self.txtEdit_EvtChar)
@@ -75,9 +71,6 @@ class window_status(window_server):
         else:
             event.Skip()
 
-    def ServerEvent(self, event):
-        self.txtBuffer.AppendText("%s\n" % event)
-
     def enableChecking(self):
         """Turns on checking for new events."""
         if self._checking:
@@ -85,7 +78,8 @@ class window_status(window_server):
         self.timer = wx.Timer(self)
         self.timer.Start(self._timer_delay)
         self._checking = True
-        print "Automatic checking for new events enabled"
+        if self._server._debug:
+            print "Automatic checking for new events enabled"
 
     def disableChecking(self):
         """Turns off checking for new events."""
@@ -94,7 +88,8 @@ class window_status(window_server):
         self.timer.Stop()
         del self.timer
         self._checking = False
-        print "Automatic checking for new events disabled"
+        if self._server._debug:
+            print "Automatic checking for new events disabled"
 
     def OnTimerEvt(self, evt):
         if not self._server.is_connected():

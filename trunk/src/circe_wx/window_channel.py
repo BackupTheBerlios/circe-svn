@@ -111,8 +111,7 @@ class window_channel(window_server):
 
         if user in self._users.keys():
             self.delUsers(user)
-
-        self.ServerEvent("%s has quit: %s" % (user, event.arguments()[0]))
+            self.ServerEvent("%s has quit: %s" % (user, event.arguments()[0]))
 
 
     def addMessage(self, text, from_, to=""):

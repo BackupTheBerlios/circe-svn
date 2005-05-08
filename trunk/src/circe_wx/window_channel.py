@@ -18,6 +18,7 @@
 import wx
 import lorem
 from window_server import window_server
+from irclib import nm_to_n
 
 ID_TXT_EDIT = wx.NewId()
 ID_LST_USERS = wx.NewId()
@@ -70,22 +71,49 @@ class window_channel(window_server):
             event.Skip()
 
     def users(self, users=[]):
-        """Add some users to the users list and update it."""
-        for u in users:
-            if u not in self._users.keys():
-                self._users[u] = ""
+        """Adds some users to the users list and update it."""
+        if users:
+            for u in users:
+                if u not in self._users.keys():
+                    self._users[u] = ""
 
         self.lstUsers.DeleteAllItems()
         for u in self._users.keys():
             self.lstUsers.Append((u,))
 
     def delUsers(self, users):
-        """Delete some users from the users list."""
+        """Deletes some users from the users list.
+
+        Arguments:
+
+            users -- either a string or a list of strings representing the
+                     user(s) name(s).
+
+        """
+        if type(users) != type([]):
+            users = [users]
+
         # Deletes left users.
         for u in self._users.keys():
             if u in users:
                 del self._users[u]
-        self.users([])
+        self.users()
+
+
+    def userQuit(self, event):
+        """Removes a users from the list and informs that the user has quit."""
+
+        # Ensures this is a quit event.
+        if event.eventtype() != "quit":
+            return
+
+        user = nm_to_n(event.source())
+
+        if user in self._users.keys():
+            self.delUsers(user)
+
+        self.ServerEvent("%s has quit: %s" % (user, event.arguments()[0]))
+
 
     def addMessage(self, text, from_, to=""):
         """Formats a message in a pretty way with the given arguments.

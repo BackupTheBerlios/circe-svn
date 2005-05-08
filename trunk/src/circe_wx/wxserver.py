@@ -231,13 +231,16 @@ class WXServer(CirceIRCClient):
             
         elif cmd == "names":
             if params:
-                # if channels given as a comma seperated list
-                # "#chan1,#chan2,#chan3"
-                channels = params[0].split(",")
-                # if channels given as multiple args "#chan1 #chan2 #chan3"
-#                channels = params
+                if "," in params[0]:
+                    # Assumes channels are in comma separated list.
+                    channels = params[0].split(",")
+                else:
+                    # Channels given as multiple args "#chan1 #chan2 #chan3"
+                    channels = params
+
                 self.connection.names(channels)
-            
+
+
         elif cmd == "nick":
             self.connection.nick(newnick=params[0])
         elif cmd == "notice":
@@ -470,10 +473,9 @@ class WXServer(CirceIRCClient):
                     window.delUsers([e.source().split("!")[0]])
 
             elif etype == "quit":
-                # there is no target supplied by the command, so display the
-                # message in the status window
-                text = "[%s has quit (%s)]" % (e.source(), e.arguments()[0])
-                self.statuswindow.ServerEvent(text)
+                # Informs each channel that the user has quit.
+                for chan in self.channels:
+                    chan.userQuit(e)
 
             elif etype == "nicknameinuse":
                 text = "%s: %s" % (e.arguments()[0], e.arguments()[1])

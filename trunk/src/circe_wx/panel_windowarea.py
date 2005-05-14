@@ -38,7 +38,7 @@ class panel_windowarea(wx.Panel):
         #self.AddWindow(self.testWindow2)
         #self.ShowWindow(self.testWindow)
         #self.ShowWindow(self.testWindow2)
-    
+
     def AddWindow(self,section,window):
         if window in self.windowList:
             raise "Window %s already exists" % window

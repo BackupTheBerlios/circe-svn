@@ -37,7 +37,7 @@ class window_server(panel_window):
         return self.server
 
     def ServerEvent(self, event):
-        """Display an event in the text buffer."""
+        """Displays an event in the text buffer."""
         self.txtBuffer.AppendText(event+"\n")
 
     def evt_caption(self):

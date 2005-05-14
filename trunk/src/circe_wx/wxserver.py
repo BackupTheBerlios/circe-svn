@@ -17,70 +17,13 @@
 
 from window_status import window_status
 from window_channel import window_channel
+from circelib.server import Server
 import irclib
 import time
 
-
-class CirceIRCClient:
-    """Simple IRC client inspired from SimpleIRCClient from python-irclib."""
-
-# XXX To uncomment if patch 1197200 is applied to python-irclib. And remove
-# XXX the other initialization above.
-#
-#    ircobj = irclib.IRC()
-#
-
-    def __init__(self, target):
-        """Arguments:
-            target -- a nick or a channel name
-        """
-        self._debug = False
-        self.ircobj = irclib.IRC()
-        self.connection = self.ircobj.server()
-        self.ircobj.add_global_handler("all_events", self._storeEvents)
-        self._target = target
-        # Here are stored Events objects to be processed (use Event's methods
-        # eventtype(), source(), target(), arguments() to get all info about
-        # events)
-        self._events = []
-
-    def _storeEvents(self, c, e):
-        """Adds events to self.new_events."""
-        self._events.append(e)
-
-    def connect(self, server, port, nickname, password=None, username=None,
-            ircname=None, localaddress="", localport=0):
-        """Connects/reconnects to a server."""
-        self.connection.connect(server, port, nickname, password, username,
-                ircname, localaddress, localport)
-
-    def getConnection(self):
-        return self.connection
-
-    def setDebug(self):
-        """Turns on the debug mode."""
-        self._debug = True
-        irclib.DEBUG = True
-        print "Debug mode on"
-
-    def noDebug(self):
-        """Turns off the debug mode."""
-        self._debug = False
-        irclib.DEBUG = False
-        print "Debug mode off"
-
-    def getEvents(self):
-        """Gets new events, stores them in self._events and returns them in a
-        list if there are some new ones.
-        """
-        self._events = []
-        self.ircobj.process_once(timeout=0.1)
-        return self._events
-
-
-class WXServer(CirceIRCClient):
+class WXServer(Server):
     def __init__(self,windowarea):
-        CirceIRCClient.__init__(self, target="")
+        Server.__init__(self, target="")
         c = self.connection
         self.host = c.connected and c.get_server_name() or None
         self.statuswindow = window_status(windowarea,self)
@@ -125,6 +68,11 @@ class WXServer(CirceIRCClient):
                 return window
         return False
 
+    def newConnection(self, server, port, name):
+        """Opens a new status window and connects to the server."""
+        if self._debug:
+            "Creating new status window not yet implemented"
+
     def TextCommand(self,cmdstring,window):
         if not cmdstring:
             raise "Empty command"
@@ -159,11 +107,22 @@ class WXServer(CirceIRCClient):
             if len(params) < 1:
                 raise TypeError, "You should supply two arguments: servername\
                                     and nick"
-            server, nick = params
-            port = 6667
+            server = params[0]
+            nick = params[1]
+            if len(params) > 2:
+                port = int(params[3])
+            else:
+                port = 6667
+
+            # If we're already connected to a server, opens a new connection in
+            # another status window.
+            if self.is_connected():
+                self.newConnection(serve, port, nick)
+                return
+
             self.connect(server=server, port=port, nickname=nick)
             self.host = server
-            # Check regularly for new events
+            # Ensures checking for new events is enabled.
             self.statuswindow.enableChecking()
 
         elif cmd == "action":

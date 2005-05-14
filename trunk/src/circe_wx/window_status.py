@@ -32,7 +32,7 @@ class window_status(window_server):
         # Whether to check regularly for new events or not
         self._checking = False
         # Delay between each checking (in ms)
-        self._timer_delay = 1000
+        self._timer_delay = 500
         
         self.CreateControls()
         self.CreateSizers()

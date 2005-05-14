@@ -56,6 +56,7 @@ class WXServer(Server):
         if not win:
             return
         self.windowarea.RemoveWindow(self, win)
+        win.Destroy()
         del self.channels[self.channels.index(win)]
 
     def getChannelWindowRef(self, channelname):
@@ -254,13 +255,6 @@ class WXServer(Server):
 
         elif cmd == "quit":
             self.connection.quit(" ".join(params) or "")
-            # Stops checking for events.
-            self.statuswindow.disableChecking()
-            # Closes all channel windows that were opened.
-            for chan in [c.getChannelname() for c in self.channels]:
-                self.RemoveChannelWindow(chan)
-            self.connection.disconnect()
-            self.host = ""
             
         elif cmd == "sconnect":
             self.connection.sconnect(params[0],
@@ -454,3 +448,8 @@ class WXServer(Server):
             elif etype == "disconnect":
                 text = "%s (%s)" % (e.arguments()[0], e.source())
                 self.statuswindow.ServerEvent(text)
+                # Stops checking for events.
+                self.statuswindow.disableChecking()
+                # Closes all channel windows that were opened.
+                for chan in [c.getChannelname() for c in self.channels]:
+                    self.RemoveChannelWindow(chan)

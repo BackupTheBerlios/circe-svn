@@ -283,7 +283,7 @@ class WXServer(Server):
             
         elif cmd == "topic":
             new_topic = " ".join(params[1:])
-            self.connection.topice(channel=params[0], new_topic=new_topic)
+            self.connection.topic(channel=params[0], new_topic=new_topic)
 
         elif cmd == "trace":
             self.connection.trace(params and params[0] or "")
@@ -305,10 +305,11 @@ class WXServer(Server):
                                 len(params) > 1 and params[1] or ""
                                 )
         elif cmd == "whois":
-            self.connection.whois(targets=params[0])
+            self.connection.whois(targets=params)
         elif cmd == "whowas":
             self.connection.whowas(params[0],
-                                    len(params) > 1 and params[1] or ""
+                                    len(params) > 1 and params[1] or "",
+                                    len(params) > 2 and params[2] or ""
                                     )
 
         # commands used only for development purposes

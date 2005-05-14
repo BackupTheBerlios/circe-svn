@@ -17,6 +17,7 @@
 
 import wx
 from window_channel import window_channel
+import servermanager
 
 class panel_windowarea(wx.Panel):
     def __init__(self,parent,panelID):
@@ -38,6 +39,11 @@ class panel_windowarea(wx.Panel):
         #self.AddWindow(self.testWindow2)
         #self.ShowWindow(self.testWindow)
         #self.ShowWindow(self.testWindow2)
+
+    def AddServer(self):
+        """Create a new window status to make a new connection."""
+        s = servermanager.AddServer(self)
+        return s
 
     def AddWindow(self,section,window):
         if window in self.windowList:

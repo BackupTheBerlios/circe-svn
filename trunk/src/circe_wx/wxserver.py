@@ -23,7 +23,7 @@ import time
 
 class WXServer(Server):
     def __init__(self,windowarea):
-        Server.__init__(self, target="")
+        Server.__init__(self)
         c = self.connection
         self.host = c.connected and c.get_server_name() or None
         self.statuswindow = window_status(windowarea,self)
@@ -68,10 +68,11 @@ class WXServer(Server):
                 return window
         return False
 
-    def newConnection(self, server, port, name):
-        """Opens a new status window and connects to the server."""
-        if self._debug:
-            "Creating new status window not yet implemented"
+    def NewStatusWindow(self):
+        """Opens a new status window."""
+        s = self.windowarea.AddServer()
+        self.windowarea.ShowWindow(s.statuswindow.section_id, s.statuswindow)
+        return s
 
     def TextCommand(self,cmdstring,window):
         if not cmdstring:
@@ -117,7 +118,10 @@ class WXServer(Server):
             # If we're already connected to a server, opens a new connection in
             # another status window.
             if self.is_connected():
-                self.newConnection(serve, port, nick)
+                s = self.NewStatusWindow()
+                s.connect(server, port, nick)
+                self.host = server
+                s.statuswindow.enableChecking()
                 return
 
             self.connect(server=server, port=port, nickname=nick)

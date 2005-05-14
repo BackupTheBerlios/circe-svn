@@ -30,7 +30,7 @@ class Server:
 #    ircobj = irclib.IRC()
 #
 
-    def __init__(self, target):
+    def __init__(self):
         """Arguments:
             target -- a nick or a channel name
         """
@@ -38,7 +38,6 @@ class Server:
         self.ircobj = irclib.IRC()
         self.connection = self.ircobj.server()
         self.ircobj.add_global_handler("all_events", self._storeEvents)
-        self._target = target
         # Here are stored Events objects to be processed (use Event's methods
         # eventtype(), source(), target(), arguments() to get all info about
         # events)

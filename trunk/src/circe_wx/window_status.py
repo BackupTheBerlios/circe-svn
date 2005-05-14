@@ -101,3 +101,7 @@ class window_status(window_server):
         """Returns True if checking for new events is enabled otherwise False.
         """
         return self._checking
+
+    # Events
+    def evt_focus(self):
+        self.txtEdit.SetFocus()

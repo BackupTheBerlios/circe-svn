@@ -73,6 +73,7 @@ class panel_windowarea(wx.Panel):
                 winToHide.Show(False)
                 self.sizer_Top.Remove(winToHide)
             window.Show(True)
+            window.evt_focus()
             self.sizer_Top.Add(window,1,wx.EXPAND)
             self.sizer_Top.Layout()
             if not ignoreEvent:

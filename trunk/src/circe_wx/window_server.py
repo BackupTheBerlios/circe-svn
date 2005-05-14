@@ -42,3 +42,6 @@ class window_server(panel_window):
 
     def evt_caption(self):
         self.windowarea.SetCaption(self.server,self,self.caption)
+        
+    def evt_closed(self):
+        self.windowarea.RemoveWindow(self.server,self)

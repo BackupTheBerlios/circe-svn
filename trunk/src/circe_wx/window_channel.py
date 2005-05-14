@@ -130,5 +130,5 @@ class window_channel(window_server):
         self.ServerEvent(message)
 
     # Events
-    def evt_closed(self):
-        self.windowarea.RemoveWindow(self.server,self)
+    def evt_focus(self):
+        self.txtEdit.SetFocus()

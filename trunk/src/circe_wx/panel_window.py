@@ -34,10 +34,14 @@ class panel_window(wx.Panel):
         # TODO: Implement window closing
         self.Close()
         self.evt_closed()
+        self.Destroy()
 
     # Events
     def evt_closed(self):
         pass
 
     def evt_caption(self):
+        pass
+
+    def evt_focus(self):
         pass

@@ -52,7 +52,6 @@ class WXServer(Server):
 
     def RemoveChannelWindow(self, channelname):
         """Removes the channel window if it exists."""
-        self.windowarea.ShowWindow(self, self.statuswindow)
         win = self.getChannelWindowRef(channelname)
         if not win:
             return
@@ -147,7 +146,7 @@ class WXServer(Server):
             self.connection.invite(nick=params[0], channel=params[1])
             
         elif cmd == "ison":
-            nicks = params.split(",")
+            nicks = params[0].split(",")
             self.connection.ison(nicks)
             
         elif cmd == "join":
@@ -250,15 +249,18 @@ class WXServer(Server):
 
         elif cmd == "privmsg_many":
             targets = params[0]
-            q
             text = " ".join(params[1:])
             self.connection.privmsg_many(targets, text)
 
         elif cmd == "quit":
             self.connection.quit(" ".join(params) or "")
-            # Stop checking for events
+            # Stops checking for events.
             self.statuswindow.disableChecking()
-            # TODO Would it be necessary to close all channel windows?
+            # Closes all channel windows that were opened.
+            for chan in [c.getChannelname() for c in self.channels]:
+                self.RemoveChannelWindow(chan)
+            self.connection.disconnect()
+            self.host = ""
             
         elif cmd == "sconnect":
             self.connection.sconnect(params[0],
@@ -305,7 +307,7 @@ class WXServer(Server):
                                 len(params) > 1 and params[1] or ""
                                 )
         elif cmd == "whois":
-            self.connection.whois(targets=params)
+            self.connection.whois(targets=params[:1])
         elif cmd == "whowas":
             self.connection.whowas(params[0],
                                     len(params) > 1 and params[1] or "",

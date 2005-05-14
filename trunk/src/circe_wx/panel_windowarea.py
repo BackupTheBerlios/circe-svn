@@ -61,6 +61,9 @@ class panel_windowarea(wx.Panel):
             del self.windowList[self.windowList.index(window)]
             if self.func_delwindow is not None:
                 self.func_delwindow(section,window)
+                # Lifts another widow otherwise the app keeps showing the
+                # window we just deleted.
+                self.ShowWindow(section, self.windowList[-1])
         else:
             raise "Window: %s does not exist in windows list" % window
     

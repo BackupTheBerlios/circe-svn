@@ -157,7 +157,6 @@ class WXServer(Server):
             self.connection.ison(nicks)
             
         elif cmd == "join":
-            self.NewChannelWindow(*params)
             self.connection.join(*params)
             
         elif cmd == "kick":
@@ -219,10 +218,6 @@ class WXServer(Server):
 
         elif cmd == "part":
             chans = params[0].split(",")
-            for chan in chans:
-                window = self.getChannelWindowRef(chan)
-                if window:
-                    self.RemoveChannelWindow(chan)
             self.connection.part(params)
 
         elif cmd == "pass":
@@ -425,9 +420,12 @@ class WXServer(Server):
                         win.ServerEvent(text)
                 else:
                     self.statuswindow.ServerEvent(text)
-                    
+
             elif etype == "join":
                 chan = e.target()
+                if e.source().split("!")[0] == self.connection.get_nickname():
+                    self.NewChannelWindow(chan)
+                    return
                 window = self.getChannelWindowRef(chan)
                 if window:
                     source = e.source().split("!")[0]
@@ -436,11 +434,18 @@ class WXServer(Server):
                     window.users([source])
 
             elif etype == "part":
-                window = self.getChannelWindowRef(e.target())
+                chan = e.target()
+                src = e.source()
+                window = self.getChannelWindowRef(chan)
+
+                if irclib.nm_to_n(src) == self.connection.get_nickname():
+                    if window:
+                        self.RemoveChannelWindow(chan)
+                        return
                 if window:
-                    text = "%s has left %s" % (e.source(), e.target())
+                    text = "%s has left %s" % (src, chan)
                     window.ServerEvent(text)
-                    window.delUsers([e.source().split("!")[0]])
+                    window.delUsers([src.split("!")[0]])
 
             elif etype == "quit":
                 # Informs each channel that the user has quit.

@@ -423,9 +423,15 @@ class WXServer(Server):
 
             elif etype == "join":
                 chan = e.target()
-                if e.source().split("!")[0] == self.connection.get_nickname():
+                src = e.source()
+
+                if irclib.nm_to_n(src) == self.connection.get_nickname():
                     self.NewChannelWindow(chan)
+                    # Ensures we get the topic info, users list,...
+                    self.connection.topic(chan)
+                    self.connection.names([chan])
                     return
+
                 window = self.getChannelWindowRef(chan)
                 if window:
                     source = e.source().split("!")[0]

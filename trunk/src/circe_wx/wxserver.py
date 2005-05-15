@@ -59,6 +59,12 @@ class WXServer(Server):
         win.Destroy()
         del self.channels[self.channels.index(win)]
 
+    def ChannelClosed(self, channel):
+        if channel in self.channels:
+            del self.channels[self.channels.index(channel)]
+        else:
+            raise "ChannelClosed called for unknown channel!"
+
     def getChannelWindowRef(self, channelname):
         """Returns the window_channel object binded to channelname or False if
         it does not match.
@@ -308,6 +314,10 @@ class WXServer(Server):
                                     len(params) > 2 and params[2] or ""
                                     )
 
+        # Commands used internally for the UI
+        elif cmd == "close":
+            window.CloseWindow()
+
         # commands used only for development purposes
         elif cmd == "debug":
             self.setDebug()
@@ -448,8 +458,9 @@ class WXServer(Server):
             elif etype == "disconnect":
                 text = "%s (%s)" % (e.arguments()[0], e.source())
                 self.statuswindow.ServerEvent(text)
+                self.statuswindow.evt_disconnect()
                 # Stops checking for events.
-                self.statuswindow.disableChecking()
+                #self.statuswindow.disableChecking()
                 # Closes all channel windows that were opened.
-                for chan in [c.getChannelname() for c in self.channels]:
-                    self.RemoveChannelWindow(chan)
+                #for chan in [c.getChannelname() for c in self.channels]:
+                #    self.RemoveChannelWindow(chan)

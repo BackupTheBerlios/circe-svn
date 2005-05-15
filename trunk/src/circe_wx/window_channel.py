@@ -65,8 +65,10 @@ class window_channel(window_server):
         key = event.GetKeyCode()
         if key == 13:
             # Enter pressed
-            self.server.TextCommand(self.txtEdit.GetValue(),self)
+            value = self.txtEdit.GetValue()
             self.txtEdit.SetValue("")
+            self.server.TextCommand(value,self)
+            # Do nothing after this! We might be destroyed!
         else:
             event.Skip()
 
@@ -131,4 +133,9 @@ class window_channel(window_server):
 
     # Events
     def evt_focus(self):
+        window_server.evt_focus(self)
         self.txtEdit.SetFocus()
+        
+    def evt_closed(self):
+        window_server.evt_closed(self)
+        self.server.ChannelClosed(self)

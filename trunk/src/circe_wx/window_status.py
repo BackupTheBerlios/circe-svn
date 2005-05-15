@@ -65,9 +65,10 @@ class window_status(window_server):
         key = event.GetKeyCode()
         if key == 13:
             # Enter pressed
-            #self.TextCommand(self.txtEdit.GetValue())
-            self.server.TextCommand(self.txtEdit.GetValue(),self)
+            value = self.txtEdit.GetValue()
             self.txtEdit.SetValue("")
+            self.server.TextCommand(value,self)
+            # Do nothing after this! We might be destroyed!
         else:
             event.Skip()
 
@@ -101,6 +102,13 @@ class window_status(window_server):
         """Returns True if checking for new events is enabled otherwise False.
         """
         return self._checking
+
+    def evt_disconnect(self):
+        self.disableChecking()
+        # Close all channels
+        for chan in self.server.channels:
+            print "Closing channel: %s" % chan._channelname
+            chan.CloseWindow()
 
     # Events
     def evt_focus(self):

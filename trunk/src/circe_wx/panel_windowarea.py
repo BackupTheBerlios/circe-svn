@@ -58,12 +58,16 @@ class panel_windowarea(wx.Panel):
     def RemoveWindow(self,section,window):
         if window in self.windowList:
             self.sizer_Top.Remove(window)
-            del self.windowList[self.windowList.index(window)]
+            index = self.windowList.index(window)
+            del self.windowList[index]
             if self.func_delwindow is not None:
                 self.func_delwindow(section,window)
-                # Lifts another widow otherwise the app keeps showing the
-                # window we just deleted.
-                self.ShowWindow(section, self.windowList[-1])
+                if len(self.windowList) > 0:
+                    # Lifts another widow otherwise the app keeps showing the
+                    # window we just deleted.
+                    # TODO: Pick the closest available window
+                    #self.ShowWindow(section, self.windowList[0])
+                    pass
         else:
             raise "Window: %s does not exist in windows list" % window
     

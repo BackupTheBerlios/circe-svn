@@ -31,9 +31,8 @@ class panel_window(wx.Panel):
         self.evt_caption()
 
     def CloseWindow(self):
-        # TODO: Implement window closing
-        self.Close()
         self.evt_closed()
+        self.windowarea.RemoveWindow(self.server,self)
         self.Destroy()
 
     # Events

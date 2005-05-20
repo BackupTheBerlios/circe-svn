@@ -104,10 +104,14 @@ class window_status(window_server):
         return self._checking
 
     def evt_disconnect(self):
+        # Disable checking
         self.disableChecking()
-        # Close all channels
+        # Duplicate channel list
+        channellist = []
         for chan in self.server.channels:
-            print "Closing channel: %s" % chan._channelname
+            channellist.append(chan)
+        # Close all channels
+        for chan in channellist:
             chan.CloseWindow()
 
     # Events

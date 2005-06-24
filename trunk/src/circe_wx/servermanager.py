@@ -20,11 +20,11 @@ import wxserver
 
 servers = []
         
-def AddServer(*options):
+def add_server(*options):
     s = wxserver.WXServer(*options)
     servers.append(s)
     return s
 
-def RemoveServer(s):
+def remove_server(s):
     if s in servers:
         del servers[s]

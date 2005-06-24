@@ -24,21 +24,21 @@ class window_server(panel_window):
         self.server = server
         panel_window.__init__(self,windowarea,caption)
 
-        self.txtBuffer = wx.TextCtrl(self,-1,"",wx.DefaultPosition,
+        self.txt_buffer = wx.TextCtrl(self,-1,"",wx.DefaultPosition,
                 wx.DefaultSize,wx.TE_MULTILINE)
-        self.txtBuffer.SetEditable(False)
+        self.txt_buffer.SetEditable(False)
         f = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Monospace")
-        self.txtBuffer.SetDefaultStyle(wx.TextAttr("BLACK", wx.NullColour, f))
+        self.txt_buffer.SetDefaultStyle(wx.TextAttr("BLACK", wx.NullColour, f))
 
-    def getWindowarea(self):
+    def get_windowarea(self):
         return self.windowarea
 
-    def getServer(self):
+    def get_server(self):
         return self.server
 
-    def ServerEvent(self, event):
+    def server_event(self, event):
         """Displays an event in the text buffer."""
-        self.txtBuffer.AppendText(event+"\n")
+        self.txt_buffer.AppendText(event+"\n")
 
     def evt_caption(self):
-        self.windowarea.SetCaption(self.server,self,self.caption)
+        self.windowarea.set_caption(self.server,self,self.caption)

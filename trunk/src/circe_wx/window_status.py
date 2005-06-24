@@ -25,7 +25,7 @@ class window_status(window_server):
         #server.SetStatusWindow(self)
         window_server.__init__(self,windowarea,server,"Status")
 
-        self.windowarea.AddWindow(server,self)
+        self.windowarea.add_window(server,self)
         self.section_id = server
         
         self._server = server
@@ -34,45 +34,45 @@ class window_status(window_server):
         # Delay between each checking (in ms)
         self._timer_delay = 500
         
-        self.CreateControls()
-        self.CreateSizers()
-        self.AddControls()
+        self.create_controls()
+        self.create_sizers()
+        self.add_controls()
 
         # Bind EVT_TIMER events to self.OnTimerEvt
         self.Bind(wx.EVT_TIMER, self.OnTimerEvt)
 
-    def MakeCaption(self):
-        if self.server.getHost():
-            caption = self.server.getHost()
+    def make_caption(self):
+        if self.server.get_host():
+            caption = self.server.get_host()
         else:
             caption = "Not connected"
         return caption
     
-    def CreateControls(self):
-        self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
-        #self.txtEdit.Bind(wx.EVT_CHAR, self.txtEdit_EvtChar)
-        wx.EVT_CHAR(self.txtEdit,self.txtEdit_EvtChar)
+    def create_controls(self):
+        self.txt_edit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
+        #self.txt_edit.Bind(wx.EVT_CHAR, self.txt_edit_evt_char)
+        wx.EVT_CHAR(self.txt_edit,self.txt_edit_evt_char)
     
-    def CreateSizers(self):
-        self.sizer_Top = wx.BoxSizer(wx.VERTICAL)
-        self.SetSizer(self.sizer_Top)
+    def create_sizers(self):
+        self.sizer_top = wx.BoxSizer(wx.VERTICAL)
+        self.SetSizer(self.sizer_top)
     
-    def AddControls(self):
-        self.sizer_Top.Add(self.txtBuffer,1,wx.EXPAND)
-        self.sizer_Top.Add(self.txtEdit,0,wx.EXPAND)
+    def add_controls(self):
+        self.sizer_top.Add(self.txt_buffer,1,wx.EXPAND)
+        self.sizer_top.Add(self.txt_edit,0,wx.EXPAND)
 
-    def txtEdit_EvtChar(self, event):
+    def txt_edit_evt_char(self, event):
         key = event.GetKeyCode()
         if key == 13:
             # Enter pressed
-            value = self.txtEdit.GetValue()
-            self.txtEdit.SetValue("")
-            self.server.TextCommand(value,self)
+            value = self.txt_edit.GetValue()
+            self.txt_edit.SetValue("")
+            self.server.text_command(value,self)
             # Do nothing after this! We might be destroyed!
         else:
             event.Skip()
 
-    def enableChecking(self):
+    def enable_checking(self):
         """Turns on checking for new events."""
         if self._checking:
             return
@@ -82,7 +82,7 @@ class window_status(window_server):
         if self._server._debug:
             print "Automatic checking for new events enabled"
 
-    def disableChecking(self):
+    def disable_checking(self):
         """Turns off checking for new events."""
         if not self._checking:
             return
@@ -94,26 +94,26 @@ class window_status(window_server):
 
     def OnTimerEvt(self, evt):
         if not self._server.is_connected():
-            self.disableChecking()
+            self.disable_checking()
             return
-        self._server.checkEvents()
+        self._server.check_events()
 
-    def isChecking(self):
+    def is_checking(self):
         """Returns True if checking for new events is enabled otherwise False.
         """
         return self._checking
 
     def evt_disconnect(self):
         # Disable checking
-        self.disableChecking()
+        self.disable_checking()
         # Duplicate channel list
         channellist = []
         for chan in self.server.channels:
             channellist.append(chan)
         # Close all channels
         for chan in channellist:
-            chan.CloseWindow()
+            chan.close_window()
 
     # Events
     def evt_focus(self):
-        self.txtEdit.SetFocus()
+        self.txt_edit.SetFocus()

@@ -21,16 +21,16 @@ class panel_tree(wx.Panel):
     def __init__(self,parent,panelID,treesize=-1):
         self.treesize = (treesize,-1)
         wx.Panel.__init__(self,parent,panelID,wx.DefaultPosition,self.treesize)
-        self.CreateControls()
-        self.CreateSizers()
-        self.AddControls()
+        self.create_controls()
+        self.create_sizers()
+        self.add_controls()
         
-    def CreateControls(self):
-        self.testArea = wx.TextCtrl(self,-1,"Test Tree Area",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+    def create_controls(self):
+        self.test_area = wx.TextCtrl(self,-1,"Test Tree Area",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
     
-    def CreateSizers(self):
-        self.sizer_Top = wx.BoxSizer()
-        self.SetSizer(self.sizer_Top)
+    def create_sizers(self):
+        self.sizer_top = wx.BoxSizer()
+        self.SetSizer(self.sizer_top)
     
-    def AddControls(self):
-        self.sizer_Top.Add(self.testArea,1,wx.EXPAND)
+    def add_controls(self):
+        self.sizer_top.Add(self.test_area,1,wx.EXPAND)

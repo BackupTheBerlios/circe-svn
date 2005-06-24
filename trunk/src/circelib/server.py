@@ -24,11 +24,8 @@ class Server:
     It can handles several connections to multiple servers.
     """
 
-# XXX To uncomment if patch 1197200 at sourceforge is applied to python-irclib. And 
-# XXX remove the other initialization above.
-#
+# Doesn't work well: some events are lost. Why?
 #    ircobj = irclib.IRC()
-#
 
     def __init__(self):
         """Arguments:
@@ -36,16 +33,17 @@ class Server:
         """
         self._debug = False
         self.ircobj = irclib.IRC()
+        self.ircobj.add_global_handler("all_events", self._store_events)
         self.connection = self.ircobj.server()
-        self.ircobj.add_global_handler("all_events", self._storeEvents)
         # Here are stored Events objects to be processed (use Event's methods
         # eventtype(), source(), target(), arguments() to get all info about
         # events)
         self._events = []
 
-    def _storeEvents(self, c, e):
+    def _store_events(self, c, e):
         """Adds events to self.new_events."""
         self._events.append(e)
+
 
     def connect(self, server, port, nickname, password=None, username=None,
             ircname=None, localaddress="", localport=0):
@@ -53,22 +51,22 @@ class Server:
         self.connection.connect(server, port, nickname, password, username,
                 ircname, localaddress, localport)
 
-    def getConnection(self):
+    def get_connection(self):
         return self.connection
 
-    def setDebug(self):
+    def set_debug(self):
         """Turns on the debug mode."""
         self._debug = True
         irclib.DEBUG = True
         print "Debug mode on"
 
-    def noDebug(self):
+    def no_debug(self):
         """Turns off the debug mode."""
         self._debug = False
         irclib.DEBUG = False
         print "Debug mode off"
 
-    def getEvents(self):
+    def get_events(self):
         """Gets new events, stores them in self._events and returns them in a
         list if there are some new ones.
         """

@@ -31,43 +31,43 @@ class window_channel(window_server):
         self._channelname = channelname
         self._users = {} # Store info about users
         
-        self.CreateControls()
-        self.CreateSizers()
-        self.AddControls()
+        self.create_controls()
+        self.create_sizers()
+        self.add_controls()
 
-        self.windowarea.AddWindow(server,self)
+        self.windowarea.add_window(server,self)
 
-    def getChannelname(self):
+    def get_channelname(self):
         return self._channelname
 
-    def CreateControls(self):
-        self.txtEdit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
-        self.lstUsers = wx.ListCtrl(self,ID_LST_USERS, 
+    def create_controls(self):
+        self.txt_edit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
+        self.lst_users = wx.ListCtrl(self,ID_LST_USERS, 
                                     style=wx.LC_REPORT
                                     | wx.LC_SORT_ASCENDING
                                     | wx.LC_NO_HEADER
                                     )
-        self.lstUsers.InsertColumn(0, "Users")
-        wx.EVT_CHAR(self.txtEdit,self.txtEdit_EvtChar)
+        self.lst_users.InsertColumn(0, "Users")
+        wx.EVT_CHAR(self.txt_edit,self.txt_edit_evt_char)
 
-    def CreateSizers(self):
-        self.sizer_Top = wx.BoxSizer(wx.VERTICAL)
-        self.sizer_BufferAndUsers = wx.BoxSizer(wx.HORIZONTAL)
-        self.SetSizer(self.sizer_Top)
+    def create_sizers(self):
+        self.sizer_top = wx.BoxSizer(wx.VERTICAL)
+        self.sizer_buffer_and_users = wx.BoxSizer(wx.HORIZONTAL)
+        self.SetSizer(self.sizer_top)
 
-    def AddControls(self):
-        self.sizer_BufferAndUsers.Add(self.txtBuffer,1,wx.EXPAND)
-        self.sizer_BufferAndUsers.Add(self.lstUsers,0,wx.EXPAND)
-        self.sizer_Top.Add(self.sizer_BufferAndUsers,1,wx.EXPAND)
-        self.sizer_Top.Add(self.txtEdit,0,wx.EXPAND)
+    def add_controls(self):
+        self.sizer_buffer_and_users.Add(self.txt_buffer,1,wx.EXPAND)
+        self.sizer_buffer_and_users.Add(self.lst_users,0,wx.EXPAND)
+        self.sizer_top.Add(self.sizer_buffer_and_users,1,wx.EXPAND)
+        self.sizer_top.Add(self.txt_edit,0,wx.EXPAND)
 
-    def txtEdit_EvtChar(self, event):
+    def txt_edit_evt_char(self, event):
         key = event.GetKeyCode()
         if key == 13:
             # Enter pressed
-            value = self.txtEdit.GetValue()
-            self.txtEdit.SetValue("")
-            self.server.TextCommand(value,self)
+            value = self.txt_edit.GetValue()
+            self.txt_edit.SetValue("")
+            self.server.text_command(value,self)
             # Do nothing after this! We might be destroyed!
         else:
             event.Skip()
@@ -79,11 +79,11 @@ class window_channel(window_server):
                 if u not in self._users.keys():
                     self._users[u] = ""
 
-        self.lstUsers.DeleteAllItems()
+        self.lst_users.DeleteAllItems()
         for u in self._users.keys():
-            self.lstUsers.Append((u,))
+            self.lst_users.Append((u,))
 
-    def delUsers(self, users):
+    def del_users(self, users):
         """Deletes some users from the users list.
 
         Arguments:
@@ -102,7 +102,7 @@ class window_channel(window_server):
         self.users()
 
 
-    def userQuit(self, event):
+    def user_quit(self, event):
         """Removes a users from the list and informs that the user has quit."""
 
         # Ensures this is a quit event.
@@ -112,11 +112,11 @@ class window_channel(window_server):
         user = nm_to_n(event.source())
 
         if user in self._users.keys():
-            self.delUsers(user)
-            self.ServerEvent("%s has quit: %s" % (user, event.arguments()[0]))
+            self.del_users(user)
+            self.server_event("%s has quit: %s" % (user, event.arguments()))
 
 
-    def addMessage(self, text, from_, to=""):
+    def add_message(self, text, from_, to=""):
         """Formats a message in a pretty way with the given arguments.
 
         Arguments:
@@ -129,13 +129,13 @@ class window_channel(window_server):
         if to:
             to = "(to %s)" % to
         message = "<%s%s> %s" % (from_, to, text)
-        self.ServerEvent(message)
+        self.server_event(message)
 
     # Events
     def evt_focus(self):
         window_server.evt_focus(self)
-        self.txtEdit.SetFocus()
+        self.txt_edit.SetFocus()
         
     def evt_closed(self):
         window_server.evt_closed(self)
-        self.server.ChannelClosed(self)
+        self.server.channel_closed(self)

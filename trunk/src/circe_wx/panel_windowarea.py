@@ -22,93 +22,93 @@ import servermanager
 class panel_windowarea(wx.Panel):
     def __init__(self,parent,panelID):
         wx.Panel.__init__(self,parent,panelID)
-        self.windowList = []
+        self.window_list = []
         self.func_addwindow = None
         self.func_delwindow = None
         self.func_showwindow = None
         self.func_setcaption = None
-        self.CreateControls()
-        self.CreateSizers()
-        self.AddControls()
+        self.create_controls()
+        self.create_sizers()
+        self.add_controls()
         
         #self.testWindow = wx.TextCtrl(self,-1,"Test Window Area. (Window 1)\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         #self.testWindow2 = wx.TextCtrl(self,-1,"Test Window Area. (Window 2)\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         #self.testWindow = window_channel(self,-1)
         #self.testWindow2 = window_channel(self,-1)
-        #self.AddWindow(self.testWindow)
-        #self.AddWindow(self.testWindow2)
-        #self.ShowWindow(self.testWindow)
-        #self.ShowWindow(self.testWindow2)
+        #self.add_window(self.testWindow)
+        #self.add_window(self.testWindow2)
+        #self.show_window(self.testWindow)
+        #self.show_window(self.testWindow2)
 
-    def AddServer(self):
+    def add_server(self):
         """Create a new window status to make a new connection."""
-        s = servermanager.AddServer(self)
+        s = servermanager.add_server(self)
         return s
 
-    def AddWindow(self,section,window):
-        if window in self.windowList:
+    def add_window(self,section,window):
+        if window in self.window_list:
             raise "Window %s already exists" % window
         else:
-            self.windowList.append(window)
+            self.window_list.append(window)
             window.Show(False)
             if self.func_addwindow != None:
-                caption = window.GetCaption()
+                caption = window.get_caption()
                 self.func_addwindow(section,window,caption)
     
-    def RemoveWindow(self,section,window):
-        if window in self.windowList:
-            self.sizer_Top.Remove(window)
-            index = self.windowList.index(window)
-            del self.windowList[index]
+    def remove_window(self,section,window):
+        if window in self.window_list:
+            self.sizer_top.Remove(window)
+            index = self.window_list.index(window)
+            del self.window_list[index]
             if self.func_delwindow is not None:
                 self.func_delwindow(section,window)
-                if len(self.windowList) > 0:
+                if len(self.window_list) > 0:
                     # Lifts another widow otherwise the app keeps showing the
                     # window we just deleted.
                     # TODO: Pick the closest available window
-                    #self.ShowWindow(section, self.windowList[0])
+                    #self.show_window(section, self.window_list[0])
                     pass
         else:
             raise "Window: %s does not exist in windows list" % window
     
-    def ShowWindow(self,section,window,ignoreEvent=False):
-        if window in self.windowList:
-            for winToHide in self.windowList:
+    def show_window(self,section,window,ignoreEvent=False):
+        if window in self.window_list:
+            for winToHide in self.window_list:
                 winToHide.Show(False)
-                self.sizer_Top.Remove(winToHide)
+                self.sizer_top.Remove(winToHide)
             window.Show(True)
             window.evt_focus()
-            self.sizer_Top.Add(window,1,wx.EXPAND)
-            self.sizer_Top.Layout()
+            self.sizer_top.Add(window,1,wx.EXPAND)
+            self.sizer_top.Layout()
             if not ignoreEvent:
                 if self.func_showwindow is not None:
                     self.func_showwindow(section,window)
         else:
             raise "Window: %s does not exist in windows list" % window
 
-    def SetCaption(self,section,window,caption):
-        if window in self.windowList:
+    def set_caption(self,section,window,caption):
+        if window in self.window_list:
             if self.func_setcaption is not None:
                     self.func_setcaption(section,window,caption)
     
-    def CreateControls(self):
+    def create_controls(self):
         pass
     
-    def CreateSizers(self):
-        self.sizer_Top = wx.BoxSizer()
-        self.SetSizer(self.sizer_Top)
+    def create_sizers(self):
+        self.sizer_top = wx.BoxSizer()
+        self.SetSizer(self.sizer_top)
     
-    def AddControls(self):
+    def add_controls(self):
         pass
 
-    def BindAdd(self,func):
+    def bind_add(self,func):
         self.func_addwindow = func
 
-    def BindDel(self,func):
+    def bind_del(self,func):
         self.func_delwindow = func
 
-    def BindShow(self,func):
+    def bind_show(self,func):
         self.func_showwindow = func
 
-    def BindSetCaption(self,func):
+    def bind_set_caption(self,func):
         self.func_setcaption = func

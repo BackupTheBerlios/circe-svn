@@ -23,17 +23,17 @@ class panel_window(wx.Panel):
         self.windowarea = windowarea
         self.caption = caption
 
-    def GetCaption(self):
+    def get_caption(self):
         return self.caption
 
-    def SetCaption(self,cap):
+    def set_caption(self,cap):
         self.caption = cap
         self.evt_caption()
 
-    def CloseWindow(self):
+    def close_window(self):
         self.evt_closed()
-        self.windowarea.RemoveWindow(self.server,self)
-        self.Destroy()
+        self.windowarea.remove_window(self.server,self)
+        self.destroy()
 
     # Events
     def evt_closed(self):

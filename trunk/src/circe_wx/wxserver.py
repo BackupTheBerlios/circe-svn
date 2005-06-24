@@ -15,11 +15,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+import time
+
+import irclib
+
 from window_status import window_status
 from window_channel import window_channel
 from circelib.server import Server
-import irclib
-import time
 
 class WXServer(Server):
     def __init__(self,windowarea):
@@ -30,63 +32,63 @@ class WXServer(Server):
         self.windowarea = windowarea
         self.channels = []
 
-    def getHostname(self):
+    def get_hostname(self):
         """Returns the host we are connected to."""
         return self.host
 
     def is_connected(self):
         return self.connection.is_connected()
 
-    def NewChannelWindow(self,channelname):
+    def new_channel_window(self,channelname):
         """Opens a new channel window, sets the caption and stores it."""
 
         # Avoid to create the same window multiple times.
-        if channelname in [w.getChannelname() for w in self.channels]:
+        if channelname in [w.get_channelname() for w in self.channels]:
             raise "WindowChannel %s already exists" % channelname
 
         new = window_channel(self.windowarea,self,channelname)
-#        new.SetCaption(caption)
+#        new.set_caption(caption)
         self.channels.append(new)
-        self.windowarea.ShowWindow(self, new)
+        self.windowarea.show_window(self, new)
         return new
 
-    def RemoveChannelWindow(self, channelname):
+    def remove_channel_window(self, channelname):
         """Removes the channel window if it exists."""
-        win = self.getChannelWindowRef(channelname)
+        win = self.get_channel_window(channelname)
         if not win:
             return
-        self.windowarea.RemoveWindow(self, win)
+        self.windowarea.remove_window(self, win)
         win.Destroy()
         del self.channels[self.channels.index(win)]
 
-    def ChannelClosed(self, channel):
+    def channel_closed(self, channel):
         if channel in self.channels:
             del self.channels[self.channels.index(channel)]
         else:
-            raise "ChannelClosed called for unknown channel!"
+            raise "channel_closed called for unknown channel!"
 
-    def getChannelWindowRef(self, channelname):
+    def get_channel_window(self, channelname):
         """Returns the window_channel object binded to channelname or False if
         it does not match.
         """
         for window in self.channels:
-            if window.getChannelname() == channelname:
+            if window.get_channelname() == channelname:
                 return window
         return False
 
-    def NewStatusWindow(self):
+    def new_status_window(self):
         """Opens a new status window."""
-        s = self.windowarea.AddServer()
-        self.windowarea.ShowWindow(s.statuswindow.section_id, s.statuswindow)
+        s = self.windowarea.add_server()
+        self.windowarea.show_window(s.statuswindow.section_id, s.statuswindow)
         return s
 
-    def TextCommand(self,cmdstring,window):
+    def text_command(self,cmdstring,window):
         if not cmdstring:
             raise "Empty command"
 
         # in a debug window, do nothing
-        if hasattr(window, "getChannelname") and \
-            window.getChannelname() == "debug":
+        if hasattr(window, "get_channelname") and \
+            window.get_channelname() == "debug":
             return
 
         # Strip /
@@ -94,11 +96,11 @@ class WXServer(Server):
             cmdstring = cmdstring[1:]
         else:
             # if it is not a command send the message to the channel
-            if hasattr(window, "getChannelname"):
-                target = window.getChannelname()
+            if hasattr(window, "get_channelname"):
+                target = window.get_channelname()
                 self.connection.privmsg(target, cmdstring)
                 mynick = self.connection.get_nickname()
-                window.addMessage(cmdstring, mynick)
+                window.add_message(cmdstring, mynick)
             return
 
         # Create a list
@@ -124,16 +126,16 @@ class WXServer(Server):
             # If we're already connected to a server, opens a new connection in
             # another status window.
             if self.is_connected():
-                s = self.NewStatusWindow()
+                s = self.new_status_window()
                 s.connect(server, port, nick)
                 self.host = server
-                s.statuswindow.enableChecking()
+                s.statuswindow.enable_checking()
                 return
 
             self.connect(server=server, port=port, nickname=nick)
             self.host = server
             # Ensures checking for new events is enabled.
-            self.statuswindow.enableChecking()
+            self.statuswindow.enable_checking()
 
         elif cmd == "action":
             self.connection.action(target=params[0], action=params[1])
@@ -244,10 +246,10 @@ class WXServer(Server):
             text = " " .join(params[1:])
             self.connection.privmsg(target, text)
             # Displays out message in the window_channel
-            if hasattr(window, "getChannelname"):
-                window.addMessage(text, self.connection.get_nickname(),target)
+            if hasattr(window, "get_channelname"):
+                window.add_message(text, self.connection.get_nickname(),target)
             else:   # window status
-                window.ServerEvent("[%s(%s)] %s" % ("msg", target, text))
+                window.server_event("[%s(%s)] %s" % ("msg", target, text))
 
         elif cmd == "privmsg_many":
             targets = params[0]
@@ -311,22 +313,22 @@ class WXServer(Server):
 
         # Commands used internally for the UI
         elif cmd == "close":
-            window.CloseWindow()
+            window.close_window()
 
         # commands used only for development purposes
         elif cmd == "debug":
-            self.setDebug()
+            self.set_debug()
 
         elif cmd == "nodebug":
-            self.noDebug()
+            self.no_debug()
 
         elif cmd == "check":
-            self.checkEvents()
+            self.check_events()
 
-    def checkEvents(self):
+    def check_events(self):
         """Redirects all received events to the correct windows."""
         # Print events and display them in the rigth windows.
-        for e in self.getEvents():
+        for e in self.get_events():
 
             etype = e.eventtype()
 
@@ -334,45 +336,35 @@ class WXServer(Server):
             if etype == "all_raw_messages": 
                 continue
 
-            if self._debug:
-                # Print event.
-                text="\nEvent: %s\nSource: %s\nTarget: %s\nArguments: %s" % (
-                        etype,
-                        e.source(),
-                        e.target(),
-                        e.arguments()
-                        )
-                print text
-
             # Events to display in the status window.
             if etype == "welcome":
                 self.host = e.source()
-                self.statuswindow.SetCaption(self.host)
+                self.statuswindow.set_caption(self.host)
                 for arg in e.arguments():
-                    self.statuswindow.ServerEvent(arg)
+                    self.statuswindow.server_event(arg)
 
             elif etype == "privnotice":
                 text = ""
                 if e.source() and e.source().startswith("NickServ"):
                     text = "NickServ: " + e.arguments()[0]
-                    self.statuswindow.ServerEvent(text)
+                    self.statuswindow.server_event(text)
                 elif e.source() and e.source().startswith("MemoServ"):
                     text = "MemoServ: " + e.arguments()[0]
-                    self.statuswindow.ServerEvent(text)
+                    self.statuswindow.server_event(text)
                 elif e.source() and e.source().startswith("ChanServ"):
                     text = "ChanServ: " + e.arguments()[0]
-                    self.statuswindow.ServerEvent(text)
+                    self.statuswindow.server_event(text)
                 else:
-                    self.statuswindow.ServerEvent(e.arguments()[0])
+                    self.statuswindow.server_event(e.arguments()[0])
                     
             elif etype == "umode":
-                self.statuswindow.ServerEvent("umode: "+e.arguments()[0])
+                self.statuswindow.server_event("umode: "+e.arguments()[0])
                 
             elif etype in ("motd", "motdstart", "endofmotd"):
-                self.statuswindow.ServerEvent(e.arguments()[0])
+                self.statuswindow.server_event(e.arguments()[0])
 
             elif etype in ("info", "endofinfo"):
-                self.statuswindow.ServerEvent(e.arguments()[0])
+                self.statuswindow.server_event(e.arguments()[0])
 
             # Events to display in the channel windows.
             elif etype in ("topic", "nochanmodes"):
@@ -380,87 +372,87 @@ class WXServer(Server):
                 chan = args.pop(0)  # Channel name where the message comes
                                     # from.
                 # find out the corresponding window
-                window = self.getChannelWindowRef(chan)
+                window = self.get_channel_window(chan)
                 if window:
                     args = " ".join(args)
                     text = "[%s] %s" % (etype, args)
-                    window.ServerEvent(text)
+                    window.server_event(text)
 
             elif etype == "topicinfo":
                 sender = e.arguments()[1]
                 timeago = int(e.arguments()[2])
                 date = time.asctime(time.gmtime(timeago))
 
-                window = self.getChannelWindowRef(e.arguments()[0])
+                window = self.get_channel_window(e.arguments()[0])
                 if window:
                     text = "[%s] %s on %s" % (etype, sender, date)
-                    window.ServerEvent(text)
+                    window.server_event(text)
 
             elif etype == "namreply":
                 chan = e.arguments()[1]
-                window = self.getChannelWindowRef(chan)
+                window = self.get_channel_window(chan)
                 if window:
                     users = e.arguments()[2].split()
                     window.users(users)
 
             elif etype == "pubmsg":
                 chan = e.target()
-                window = self.getChannelWindowRef(chan)
+                window = self.get_channel_window(chan)
                 if window:
                     source = e.source().split("!")[0]
-                    window.addMessage(e.arguments()[0], source)
+                    window.add_message(e.arguments()[0], source)
 
             elif etype == "privmsg":
                 source = e.source().split("!")[0]
                 target = e.target()
                 text = "<%s> %s" % (source, " ".join(e.arguments()))
                 if irclib.is_channel(target):   # XXX is it possible?
-                    win = self.getChannelWindowRef(target)
+                    win = self.get_channel_window(target)
                     if win:
-                        win.ServerEvent(text)
+                        win.server_event(text)
                 else:
-                    self.statuswindow.ServerEvent(text)
+                    self.statuswindow.server_event(text)
 
             elif etype == "join":
                 chan = e.target()
                 src = e.source()
 
                 if irclib.nm_to_n(src) == self.connection.get_nickname():
-                    self.NewChannelWindow(chan)
+                    self.new_channel_window(chan)
                     # Ensures we get the topic info, users list,...
                     self.connection.topic(chan)
                     self.connection.names([chan])
                     return
 
-                window = self.getChannelWindowRef(chan)
+                window = self.get_channel_window(chan)
                 if window:
                     source = e.source().split("!")[0]
                     text = "%s has joined %s" % (source, chan)
-                    window.ServerEvent(text)
+                    window.server_event(text)
                     window.users([source])
 
             elif etype == "part":
                 chan = e.target()
                 src = e.source()
-                window = self.getChannelWindowRef(chan)
+                window = self.get_channel_window(chan)
 
                 if irclib.nm_to_n(src) == self.connection.get_nickname():
                     if window:
-                        self.RemoveChannelWindow(chan)
+                        self.remove_channel_window(chan)
                         return
                 if window:
                     text = "%s has left %s" % (src, chan)
-                    window.ServerEvent(text)
-                    window.delUsers([src.split("!")[0]])
+                    window.server_event(text)
+                    window.del_users([src.split("!")[0]])
 
             elif etype == "quit":
                 # Informs each channel that the user has quit.
                 for chan in self.channels:
-                    chan.userQuit(e)
+                    chan.user_quit(e)
 
             elif etype == "nicknameinuse":
                 text = "%s: %s" % (e.arguments()[0], e.arguments()[1])
-                self.statuswindow.ServerEvent(text)
+                self.statuswindow.server_event(text)
 
             elif etype == "error":
                 # XXX is this event necessary?
@@ -468,10 +460,10 @@ class WXServer(Server):
 
             elif etype == "disconnect":
                 text = "%s (%s)" % (e.arguments()[0], e.source())
-                self.statuswindow.ServerEvent(text)
+                self.statuswindow.server_event(text)
                 self.statuswindow.evt_disconnect()
                 # Stops checking for events.
                 #self.statuswindow.disableChecking()
                 # Closes all channel windows that were opened.
                 #for chan in [c.getChannelname() for c in self.channels]:
-                #    self.RemoveChannelWindow(chan)
+                #    self.remove_channel_window(chan)

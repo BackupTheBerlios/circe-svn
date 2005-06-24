@@ -19,8 +19,8 @@ import time
 
 import irclib
 
-from window_status import window_status
-from window_channel import window_channel
+from window_status import WindowStatus
+from window_channel import WindowChannel
 from circelib.server import Server
 
 class WXServer(Server):
@@ -28,32 +28,32 @@ class WXServer(Server):
         Server.__init__(self)
         c = self.connection
         self.host = c.connected and c.get_server_name() or None
-        self.statuswindow = window_status(windowarea,self)
+        self.statuswindow = WindowStatus(windowarea,self)
         self.windowarea = windowarea
         self.channels = []
 
     def get_hostname(self):
-        """Returns the host we are connected to."""
+        """Return the host we are connected to."""
         return self.host
 
     def is_connected(self):
         return self.connection.is_connected()
 
     def new_channel_window(self,channelname):
-        """Opens a new channel window, sets the caption and stores it."""
+        """Open a new channel window, sets the caption and stores it."""
 
         # Avoid to create the same window multiple times.
         if channelname in [w.get_channelname() for w in self.channels]:
             raise "WindowChannel %s already exists" % channelname
 
-        new = window_channel(self.windowarea,self,channelname)
+        new = WindowChannel(self.windowarea,self,channelname)
 #        new.set_caption(caption)
         self.channels.append(new)
         self.windowarea.show_window(self, new)
         return new
 
     def remove_channel_window(self, channelname):
-        """Removes the channel window if it exists."""
+        """Remove the channel window if it exists."""
         win = self.get_channel_window(channelname)
         if not win:
             return
@@ -68,7 +68,7 @@ class WXServer(Server):
             raise "channel_closed called for unknown channel!"
 
     def get_channel_window(self, channelname):
-        """Returns the window_channel object binded to channelname or False if
+        """Return the WindowChannel object binded to channelname or False if
         it does not match.
         """
         for window in self.channels:
@@ -77,7 +77,7 @@ class WXServer(Server):
         return False
 
     def new_status_window(self):
-        """Opens a new status window."""
+        """Open a new status window."""
         s = self.windowarea.add_server()
         self.windowarea.show_window(s.statuswindow.section_id, s.statuswindow)
         return s
@@ -107,7 +107,7 @@ class WXServer(Server):
         cmdlist = cmdstring.split()
         cmd = cmdlist.pop(0)
         params = cmdlist
-        if self._debug:
+        if self.debug:
             print params
 
         # Find out what command is being executed
@@ -245,7 +245,7 @@ class WXServer(Server):
             target = params[0]
             text = " " .join(params[1:])
             self.connection.privmsg(target, text)
-            # Displays out message in the window_channel
+            # Displays out message in the WindowChannel
             if hasattr(window, "get_channelname"):
                 window.add_message(text, self.connection.get_nickname(),target)
             else:   # window status
@@ -317,10 +317,10 @@ class WXServer(Server):
 
         # commands used only for development purposes
         elif cmd == "debug":
-            self.set_debug()
+            self.setdebug()
 
         elif cmd == "nodebug":
-            self.no_debug()
+            self.nodebug()
 
         elif cmd == "check":
             self.check_events()
@@ -443,7 +443,7 @@ class WXServer(Server):
                 if window:
                     text = "%s has left %s" % (src, chan)
                     window.server_event(text)
-                    window.del_users([src.split("!")[0]])
+                    window.del_user([src.split("!")[0]])
 
             elif etype == "quit":
                 # Informs each channel that the user has quit.

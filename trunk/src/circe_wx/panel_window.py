@@ -17,7 +17,7 @@
 
 import wx
 
-class panel_window(wx.Panel):
+class PanelWindow(wx.Panel):
     def __init__(self,windowarea,caption):
         wx.Panel.__init__(self,windowarea,-1)
         self.windowarea = windowarea

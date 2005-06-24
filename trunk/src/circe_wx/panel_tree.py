@@ -17,7 +17,7 @@
 
 import wx
 
-class panel_tree(wx.Panel):
+class PanelTree(wx.Panel):
     def __init__(self,parent,panelID,treesize=-1):
         self.treesize = (treesize,-1)
         wx.Panel.__init__(self,parent,panelID,wx.DefaultPosition,self.treesize)

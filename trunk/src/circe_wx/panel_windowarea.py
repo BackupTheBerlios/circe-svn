@@ -16,10 +16,10 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import wx
-from window_channel import window_channel
+from window_channel import WindowChannel
 import servermanager
 
-class panel_windowarea(wx.Panel):
+class PanelWindowarea(wx.Panel):
     def __init__(self,parent,panelID):
         wx.Panel.__init__(self,parent,panelID)
         self.window_list = []
@@ -33,8 +33,8 @@ class panel_windowarea(wx.Panel):
         
         #self.testWindow = wx.TextCtrl(self,-1,"Test Window Area. (Window 1)\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
         #self.testWindow2 = wx.TextCtrl(self,-1,"Test Window Area. (Window 2)\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        #self.testWindow = window_channel(self,-1)
-        #self.testWindow2 = window_channel(self,-1)
+        #self.testWindow = WindowChannel(self,-1)
+        #self.testWindow2 = WindowChannel(self,-1)
         #self.add_window(self.testWindow)
         #self.add_window(self.testWindow2)
         #self.show_window(self.testWindow)

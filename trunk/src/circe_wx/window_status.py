@@ -16,21 +16,23 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import wx
-from window_server import window_server
+#from windowserver import windowserver
+from window_base import WindowTextEdit
 
 ID_TXT_EDIT = wx.NewId()
 
-class window_status(window_server):
+class WindowStatus(WindowTextEdit):
     def __init__(self,windowarea,server):
         #server.SetStatusWindow(self)
-        window_server.__init__(self,windowarea,server,"Status")
+#        windowserver.__init__(self,windowarea,server,"Status")
+        WindowTextEdit.__init__(self, windowarea, server, "Status")
 
         self.windowarea.add_window(server,self)
         self.section_id = server
         
-        self._server = server
+        self.server = server
         # Whether to check regularly for new events or not
-        self._checking = False
+        self.checking = False
         # Delay between each checking (in ms)
         self._timer_delay = 500
         
@@ -74,38 +76,38 @@ class window_status(window_server):
 
     def enable_checking(self):
         """Turns on checking for new events."""
-        if self._checking:
+        if self.checking:
             return
         self.timer = wx.Timer(self)
         self.timer.Start(self._timer_delay)
-        self._checking = True
-        if self._server._debug:
+        self.checking = True
+        if self.server.debug:
             print "Automatic checking for new events enabled"
 
     def disable_checking(self):
         """Turns off checking for new events."""
-        if not self._checking:
+        if not self.checking:
             return
         self.timer.Stop()
         del self.timer
-        self._checking = False
-        if self._server._debug:
+        self.checking = False
+        if self.server.debug:
             print "Automatic checking for new events disabled"
 
     def OnTimerEvt(self, evt):
-        if not self._server.is_connected():
-            self.disable_checking()
+        if not self.server.is_connected():
+            self.disablechecking()
             return
-        self._server.check_events()
+        self.server.check_events()
 
-    def is_checking(self):
+    def ischecking(self):
         """Returns True if checking for new events is enabled otherwise False.
         """
-        return self._checking
+        return self.checking
 
     def evt_disconnect(self):
         # Disable checking
-        self.disable_checking()
+        self.disablechecking()
         # Duplicate channel list
         channellist = []
         for chan in self.server.channels:

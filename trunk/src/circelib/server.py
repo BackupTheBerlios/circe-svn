@@ -31,7 +31,7 @@ class Server:
         """Arguments:
             target -- a nick or a channel name
         """
-        self._debug = False
+        self.debug = False
         self.ircobj = irclib.IRC()
         self.ircobj.add_global_handler("all_events", self._store_events)
         self.connection = self.ircobj.server()
@@ -41,33 +41,33 @@ class Server:
         self._events = []
 
     def _store_events(self, c, e):
-        """Adds events to self.new_events."""
+        """Add events to self.new_events."""
         self._events.append(e)
 
 
     def connect(self, server, port, nickname, password=None, username=None,
             ircname=None, localaddress="", localport=0):
-        """Connects/reconnects to a server."""
+        """Connect/reconnect to a server."""
         self.connection.connect(server, port, nickname, password, username,
                 ircname, localaddress, localport)
 
     def get_connection(self):
         return self.connection
 
-    def set_debug(self):
-        """Turns on the debug mode."""
-        self._debug = True
+    def setdebug(self):
+        """Turn on the debug mode."""
+        self.debug = True
         irclib.DEBUG = True
         print "Debug mode on"
 
-    def no_debug(self):
-        """Turns off the debug mode."""
-        self._debug = False
+    def nodebug(self):
+        """Turn off the debug mode."""
+        self.debug = False
         irclib.DEBUG = False
         print "Debug mode off"
 
     def get_events(self):
-        """Gets new events, stores them in self._events and returns them in a
+        """Get new events, store them in self._events and return them in a
         list if there are some new ones.
         """
         self._events = []

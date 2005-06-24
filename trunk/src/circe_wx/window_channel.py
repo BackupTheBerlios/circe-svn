@@ -16,19 +16,22 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import wx
-import lorem
-from window_server import window_server
 from irclib import nm_to_n
+
+import lorem
+#from window_server import window_server
+from window_base import WindowTextEdit
 
 ID_TXT_EDIT = wx.NewId()
 ID_LST_USERS = wx.NewId()
 
-class window_channel(window_server):
+class WindowChannel(WindowTextEdit):
     def __init__(self,windowarea,server,channelname):
-        window_server.__init__(self,windowarea,server,channelname)
+#        window_server.__init__(self,windowarea,server,channelname)
+        WindowTextEdit.__init__(self, windowarea, server, channelname)
         self.windowarea = windowarea
         
-        self._channelname = channelname
+        self.channelname = channelname
         self._users = {} # Store info about users
         
         self.create_controls()
@@ -38,7 +41,7 @@ class window_channel(window_server):
         self.windowarea.add_window(server,self)
 
     def get_channelname(self):
-        return self._channelname
+        return self.channelname
 
     def create_controls(self):
         self.txt_edit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
@@ -52,13 +55,13 @@ class window_channel(window_server):
 
     def create_sizers(self):
         self.sizer_top = wx.BoxSizer(wx.VERTICAL)
-        self.sizer_buffer_and_users = wx.BoxSizer(wx.HORIZONTAL)
+        self.sizer_buffer_andusers = wx.BoxSizer(wx.HORIZONTAL)
         self.SetSizer(self.sizer_top)
 
     def add_controls(self):
-        self.sizer_buffer_and_users.Add(self.txt_buffer,1,wx.EXPAND)
-        self.sizer_buffer_and_users.Add(self.lst_users,0,wx.EXPAND)
-        self.sizer_top.Add(self.sizer_buffer_and_users,1,wx.EXPAND)
+        self.sizer_buffer_andusers.Add(self.txt_buffer,1,wx.EXPAND)
+        self.sizer_buffer_andusers.Add(self.lst_users,0,wx.EXPAND)
+        self.sizer_top.Add(self.sizer_buffer_andusers,1,wx.EXPAND)
         self.sizer_top.Add(self.txt_edit,0,wx.EXPAND)
 
     def txt_edit_evt_char(self, event):
@@ -83,7 +86,7 @@ class window_channel(window_server):
         for u in self._users.keys():
             self.lst_users.Append((u,))
 
-    def del_users(self, users):
+    def del_user(self, users):
         """Deletes some users from the users list.
 
         Arguments:
@@ -92,14 +95,14 @@ class window_channel(window_server):
                      user(s) name(s).
 
         """
-        if type(users) != type([]):
+        if not isinstance(users, list):
             users = [users]
 
         # Deletes left users.
         for u in self._users.keys():
             if u in users:
                 del self._users[u]
-        self.users()
+        self._users()
 
 
     def user_quit(self, event):
@@ -112,7 +115,7 @@ class window_channel(window_server):
         user = nm_to_n(event.source())
 
         if user in self._users.keys():
-            self.del_users(user)
+            self.del_user(user)
             self.server_event("%s has quit: %s" % (user, event.arguments()))
 
 
@@ -133,7 +136,8 @@ class window_channel(window_server):
 
     # Events
     def evt_focus(self):
-        window_server.evt_focus(self)
+#        window_server.evt_focus(self)
+#        self.evt_focus(self)
         self.txt_edit.SetFocus()
         
     def evt_closed(self):

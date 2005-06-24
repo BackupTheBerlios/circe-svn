@@ -19,11 +19,11 @@ import wx
 import circe_globals
 import circe_config
 import servermanager
-from panel_switchbar import panel_switchbar
-from panel_windowarea import panel_windowarea
-from panel_tree import panel_tree
-from window_channel import window_channel
-from window_status import window_status
+from panel_switchbar import PanelSwitchbar
+from panel_windowarea import PanelWindowarea
+from panel_tree import PanelTree
+from window_channel import WindowChannel
+from window_status import WindowStatus
 
 ID_MENU_FILE_ABOUT = wx.NewId()
 ID_MENU_FILE_EXIT = 1002
@@ -49,30 +49,30 @@ class frame_main(wx.Frame):
         self.create_controls()
         self.create_menu()
         self.create_sizers()
-        self.create_switch_bar()
+        self.create_switchbar()
         self.create_tree()
         self.bind_events()
         self.add_controls()
 
         # Run a little test for the window area and the switchbar
-        #self.testWindow = wx.TextCtrl(self.panel_window_area,-1,"Test Window Area. (Window 1)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        #self.testWindow2 = wx.TextCtrl(self.panel_window_area,-1,"Test Window Area. (Window 2)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        #self.testWindow3 = wx.TextCtrl(self.panel_window_area,-1,"Test Window Area. (Window 3)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        #self.testWindow = window_channel(self.panel_window_area,-1,"Window 1")
-        #self.testWindow2 = window_channel(self.panel_window_area,-1,"Window 2")
-        #self.testWindow3 = window_channel(self.panel_window_area,-1,"Window 3")
-        #self.panel_window_area.AddWindow(self.testWindow,self.testWindow.GetCaption())
-        #self.panel_window_area.AddWindow(self.testWindow2,self.testWindow2.GetCaption())
-        #self.panel_window_area.AddWindow(self.testWindow3,self.testWindow3.GetCaption())
-        #self.panel_window_area.show_window(self.testWindow)
+        #self.testWindow = wx.TextCtrl(self.panel_windowarea,-1,"Test Window Area. (Window 1)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        #self.testWindow2 = wx.TextCtrl(self.panel_windowarea,-1,"Test Window Area. (Window 2)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        #self.testWindow3 = wx.TextCtrl(self.panel_windowarea,-1,"Test Window Area. (Window 3)",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
+        #self.testWindow = WindowChannel(self.panel_windowarea,-1,"Window 1")
+        #self.testWindow2 = WindowChannel(self.panel_windowarea,-1,"Window 2")
+        #self.testWindow3 = WindowChannel(self.panel_windowarea,-1,"Window 3")
+        #self.panel_windowarea.AddWindow(self.testWindow,self.testWindow.GetCaption())
+        #self.panel_windowarea.AddWindow(self.testWindow2,self.testWindow2.GetCaption())
+        #self.panel_windowarea.AddWindow(self.testWindow3,self.testWindow3.GetCaption())
+        #self.panel_windowarea.show_window(self.testWindow)
         # Create two servers + status windows
-        s = servermanager.add_server(self.panel_window_area)
-        #w = window_status(self.panel_window_area,s,-1)
-        #s2 = servermanager.add_server(self.panel_window_area)
-        #w2 = window_status(self.panel_window_area,s2,-1)
-        #self.panel_window_area.AddWindow(w)
-        #self.panel_window_area.AddWindow(w2)
-        self.panel_window_area.show_window(s.statuswindow.section_id,s.statuswindow)
+        s = servermanager.add_server(self.panel_windowarea)
+        #w = WindowStatus(self.panel_windowarea,s,-1)
+        #s2 = servermanager.add_server(self.panel_windowarea)
+        #w2 = WindowStatus(self.panel_windowarea,s2,-1)
+        #self.panel_windowarea.AddWindow(w)
+        #self.panel_windowarea.AddWindow(w2)
+        self.panel_windowarea.show_window(s.statuswindow.section_id,s.statuswindow)
         
     def create_menu(self):
         menu_file = wx.Menu() 
@@ -109,46 +109,46 @@ class frame_main(wx.Frame):
         wx.EVT_MENU(self, ID_MENU_VIEW_TREE_ALEFT, self.evt_menu_tree_align_left)
         wx.EVT_MENU(self, ID_MENU_VIEW_TREE_ARIGHT, self.evt_menu_tree_align_right)
 
-    def create_switch_bar(self):
+    def create_switchbar(self):
         sbsize = (circe_config.switchbar_hsize,circe_config.switchbar_vsize)
         if circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT:
             sbalign = wx.VERTICAL
         else:
             sbalign = wx.HORIZONTAL
-        self.panel_switch_bar = panel_switchbar(self.panel_top,-1,sbsize,sbalign)
+        self.panel_switchbar = PanelSwitchbar(self.panel_top,-1,sbsize,sbalign)
         # Temporary, until we find some decent way to interact with
-        # panel_window_area about servers
-        self.panel_switch_bar.add_section(0)
+        # panel_windowarea about servers
+        self.panel_switchbar.add_section(0)
     
-    def align_switch_bar(self):
+    def align_switchbar(self):
         if circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT:
             sbalign = wx.VERTICAL
             sbsize = (circe_config.switchbar_hsize,-1)
         else:
             sbalign = wx.HORIZONTAL
             sbsize = (-1,circe_config.switchbar_vsize)
-        self.panel_switch_bar.set_alignment(sbalign,sbsize)
+        self.panel_switchbar.set_alignment(sbalign,sbsize)
 
     def create_tree(self):
-        self.panel_Tree = panel_tree(self.panel_top,-1,circe_config.tree_size)
+        self.panel_Tree = PanelTree(self.panel_top,-1,circe_config.tree_size)
 
     def create_controls(self):
         self.panel_top = wx.Panel(self,-1)
-        self.panel_window_area = panel_windowarea(self.panel_top,-1)
+        self.panel_windowarea = PanelWindowarea(self.panel_top,-1)
 
     def bind_events(self):
-        self.panel_switch_bar.bind_click(self.evt_switchbar_event)
-        self.panel_window_area.bind_add(self.evt_windowarea_addwindow)
-        self.panel_window_area.bind_del(self.evt_windowarea_delwindow)
-        self.panel_window_area.bind_show(self.evt_windowarea_showwindow)
-        self.panel_window_area.bind_set_caption(self.evt_windowarea_setcaption)
+        self.panel_switchbar.bind_click(self.evt_switchbar_event)
+        self.panel_windowarea.bind_add(self.evt_windowarea_addwindow)
+        self.panel_windowarea.bind_del(self.evt_windowarea_delwindow)
+        self.panel_windowarea.bind_show(self.evt_windowarea_showwindow)
+        self.panel_windowarea.bind_set_caption(self.evt_windowarea_setcaption)
     
     def realize(self):
         self.destroy_sizers()
         self.create_sizers()
         self.add_controls()
         self.Refresh(True)
-        self.panel_window_area.Refresh(True)
+        self.panel_windowarea.Refresh(True)
     
     def destroy_sizers(self):
         self.sizer_top.Clear(False)
@@ -159,34 +159,34 @@ class frame_main(wx.Frame):
             self.sizer_top = wx.BoxSizer()
         else:
             self.sizer_top = wx.BoxSizer(wx.VERTICAL)
-        self.sizer_tree_and_window_area = wx.BoxSizer()
+        self.sizer_tree_and_windowarea = wx.BoxSizer()
         self.panel_top.SetSizer(self.sizer_top,False)
 
     def add_controls(self):
         # switch_bar
         if (circe_config.switchbar_position == wx.LEFT or circe_config.switchbar_position == wx.TOP) and circe_config.switchbar_show == True:
-            self.sizer_top.Add(self.panel_switch_bar,0,wx.EXPAND)
-        self.sizer_top.Add(self.sizer_tree_and_window_area,1,wx.EXPAND)
+            self.sizer_top.Add(self.panel_switchbar,0,wx.EXPAND)
+        self.sizer_top.Add(self.sizer_tree_and_windowarea,1,wx.EXPAND)
         if (circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.BOTTOM) and circe_config.switchbar_show == True:
-            self.sizer_top.Add(self.panel_switch_bar,0,wx.EXPAND)
+            self.sizer_top.Add(self.panel_switchbar,0,wx.EXPAND)
         # Tree
         if circe_config.tree_position == wx.LEFT and circe_config.tree_show == True:
-            self.sizer_tree_and_window_area.Add(self.panel_Tree,0,wx.EXPAND)
+            self.sizer_tree_and_windowarea.Add(self.panel_Tree,0,wx.EXPAND)
         # Windowarea
-        self.sizer_tree_and_window_area.Add(self.panel_window_area,1,wx.EXPAND)
+        self.sizer_tree_and_windowarea.Add(self.panel_windowarea,1,wx.EXPAND)
         # Tree
         if circe_config.tree_position == wx.RIGHT and circe_config.tree_show == True:
-            self.sizer_tree_and_window_area.Add(self.panel_Tree,0,wx.EXPAND)
+            self.sizer_tree_and_windowarea.Add(self.panel_Tree,0,wx.EXPAND)
 
         # Hide disabled controls
         if not circe_config.tree_show:
             self.panel_Tree.Show(False)
         if not circe_config.switchbar_show:
-            self.panel_switch_bar.Show(False)
+            self.panel_switchbar.Show(False)
         self.panel_top.Layout()
     
-    def rebuild_switch_bar(self):
-        self.align_switch_bar()
+    def rebuild_switchbar(self):
+        self.align_switchbar()
         self.realize()
 
     def rebuild_tree(self):
@@ -200,19 +200,19 @@ class frame_main(wx.Frame):
     
     def evt_menu_switchbar_align_left(self,event):
         circe_config.switchbar_position = wx.LEFT
-        self.rebuild_switch_bar()
+        self.rebuild_switchbar()
 
     def evt_menu_switchbar_align_right(self,event):
         circe_config.switchbar_position = wx.RIGHT
-        self.rebuild_switch_bar()
+        self.rebuild_switchbar()
 
     def evt_menu_switchbar_align_top(self,event):
         circe_config.switchbar_position = wx.TOP
-        self.rebuild_switch_bar()
+        self.rebuild_switchbar()
 
     def evt_menu_switchbar_align_bottom(self,event):
         circe_config.switchbar_position = wx.BOTTOM
-        self.rebuild_switch_bar()
+        self.rebuild_switchbar()
 
     def evt_menu_tree_align_left(self,event):
         circe_config.tree_position = wx.LEFT
@@ -223,16 +223,16 @@ class frame_main(wx.Frame):
         self.rebuild_tree()
 
     def evt_switchbar_event(self,section_id,button_id):
-        self.panel_window_area.show_window(section_id,button_id,True)
+        self.panel_windowarea.show_window(section_id,button_id,True)
 
     def evt_windowarea_addwindow(self,section_id,window_id,caption,type=None):
-        self.panel_switch_bar.add_button(section_id,window_id,caption)
+        self.panel_switchbar.add_button(section_id,window_id,caption)
 
     def evt_windowarea_delwindow(self,section_id,window_id):
-        self.panel_switch_bar.remove_button(section_id,window_id)
+        self.panel_switchbar.remove_button(section_id,window_id)
 
     def evt_windowarea_showwindow(self,section_id,window_id):
-        self.panel_switch_bar.select(section_id,window_id)
+        self.panel_switchbar.select(section_id,window_id)
 
     def evt_windowarea_setcaption(self,section_id,window_id,caption):
-        self.panel_switch_bar.set_caption(section_id,window_id,caption)
+        self.panel_switchbar.set_caption(section_id,window_id,caption)

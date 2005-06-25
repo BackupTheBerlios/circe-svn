@@ -76,7 +76,7 @@ class WindowChannel(WindowTextEdit):
             event.Skip()
 
     def users(self, users=[]):
-        """Adds some users to the users list and update it."""
+        """Update the uers list and eventually add the given users."""
         if users:
             for u in users:
                 if u not in self._users.keys():
@@ -87,13 +87,11 @@ class WindowChannel(WindowTextEdit):
             self.lst_users.Append((u,))
 
     def del_user(self, users):
-        """Deletes some users from the users list.
+        """Delete some users from the users list.
 
         Arguments:
-
             users -- either a string or a list of strings representing the
                      user(s) name(s).
-
         """
         if not isinstance(users, list):
             users = [users]
@@ -102,11 +100,11 @@ class WindowChannel(WindowTextEdit):
         for u in self._users.keys():
             if u in users:
                 del self._users[u]
-        self._users()
+        self.users()
 
 
     def user_quit(self, event):
-        """Removes a users from the list and informs that the user has quit."""
+        """Remove a users from the list and informs that the user has quit."""
 
         # Ensures this is a quit event.
         if event.eventtype() != "quit":
@@ -120,14 +118,12 @@ class WindowChannel(WindowTextEdit):
 
 
     def add_message(self, text, from_, to=""):
-        """Formats a message in a pretty way with the given arguments.
+        """Format a message in a pretty way with the given arguments.
 
         Arguments:
-
             text  -- the content of the message
             from_ -- the sender of the message
             to    -- (Optional) target of the message
-
         """
         if to:
             to = "(to %s)" % to

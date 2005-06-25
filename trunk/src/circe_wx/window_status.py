@@ -96,7 +96,7 @@ class WindowStatus(WindowTextEdit):
 
     def OnTimerEvt(self, evt):
         if not self.server.is_connected():
-            self.disablechecking()
+            self.disable_checking()
             return
         self.server.check_events()
 
@@ -107,7 +107,7 @@ class WindowStatus(WindowTextEdit):
 
     def evt_disconnect(self):
         # Disable checking
-        self.disablechecking()
+        self.disable_checking()
         # Duplicate channel list
         channellist = []
         for chan in self.server.channels:

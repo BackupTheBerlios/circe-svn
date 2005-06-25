@@ -134,5 +134,5 @@ class WindowChannel(WindowTextEdit):
         self.txt_edit.SetFocus()
         
     def evt_closed(self):
-        window_server.evt_closed(self)
+        WindowTextEdit.evt_closed(self)
         self.server.channel_closed(self)

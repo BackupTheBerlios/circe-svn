@@ -33,7 +33,7 @@ class PanelWindow(wx.Panel):
     def close_window(self):
         self.evt_closed()
         self.windowarea.remove_window(self.server,self)
-        self.destroy()
+        self.Destroy()
 
     # Events
     def evt_closed(self):

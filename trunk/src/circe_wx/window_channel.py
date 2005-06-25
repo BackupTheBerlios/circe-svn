@@ -19,7 +19,6 @@ import wx
 from irclib import nm_to_n
 
 import lorem
-#from window_server import window_server
 from window_base import WindowTextEdit
 
 ID_TXT_EDIT = wx.NewId()
@@ -27,7 +26,6 @@ ID_LST_USERS = wx.NewId()
 
 class WindowChannel(WindowTextEdit):
     def __init__(self,windowarea,server,channelname):
-#        window_server.__init__(self,windowarea,server,channelname)
         WindowTextEdit.__init__(self, windowarea, server, channelname)
         self.windowarea = windowarea
         
@@ -132,8 +130,7 @@ class WindowChannel(WindowTextEdit):
 
     # Events
     def evt_focus(self):
-#        window_server.evt_focus(self)
-#        self.evt_focus(self)
+        WindowTextEdit.evt_focus(self)
         self.txt_edit.SetFocus()
         
     def evt_closed(self):

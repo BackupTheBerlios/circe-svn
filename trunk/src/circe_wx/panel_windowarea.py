@@ -63,10 +63,7 @@ class PanelWindowarea(wx.Panel):
             if self.func_delwindow is not None:
                 self.func_delwindow(section,window)
                 if len(self.window_list) > 0:
-                    # Lifts another widow otherwise the app keeps showing the
-                    # window we just deleted.
-                    # TODO: Pick the closest available window
-                    #self.show_window(section, self.window_list[0])
+                    self.show_window(section, self.window_list[index-1])
                     pass
         else:
             raise "Window: %s does not exist in windows list" % window

@@ -57,9 +57,7 @@ class WXServer(Server):
         win = self.get_channel_window(channelname)
         if not win:
             return
-        self.windowarea.remove_window(self, win)
-        win.Destroy()
-        del self.channels[self.channels.index(win)]
+        win.close()
 
     def channel_closed(self, channel):
         if channel in self.channels:
@@ -313,7 +311,7 @@ class WXServer(Server):
 
         # Commands used internally for the UI
         elif cmd == "close":
-            window.close_window()
+            window.close()
 
         # commands used only for development purposes
         elif cmd == "debug":
@@ -462,8 +460,3 @@ class WXServer(Server):
                 text = "%s (%s)" % (e.arguments()[0], e.source())
                 self.statuswindow.server_event(text)
                 self.statuswindow.evt_disconnect()
-                # Stops checking for events.
-                #self.statuswindow.disableChecking()
-                # Closes all channel windows that were opened.
-                #for chan in [c.getChannelname() for c in self.channels]:
-                #    self.remove_channel_window(chan)

@@ -18,6 +18,8 @@
 import wx
 from panel_window import PanelWindow
 
+ID_TXT_EDIT = wx.NewId()
+
 class WindowServer(PanelWindow):
     def __init__(self,windowarea,server,caption=None):
         self.windowarea = windowarea
@@ -42,12 +44,37 @@ class WindowTextEdit(WindowServer):
     def __init__(self, windowarea, server, channelname):
         WindowServer.__init__(self, windowarea, server, channelname)
 
+        # Controls (not in a create_controls() method otherwise it is
+        # overridden by subclasses.
+        self.txt_edit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
+
         self.txt_buffer = wx.TextCtrl(self,-1,"",wx.DefaultPosition,
                 wx.DefaultSize,wx.TE_MULTILINE)
         self.txt_buffer.SetEditable(False)
         f = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Monospace")
         self.txt_buffer.SetDefaultStyle(wx.TextAttr("BLACK", wx.NullColour, f))
 
+        self.txt_edit.Bind(wx.EVT_CHAR, self.txt_edit_evt_char)
+
+
+    def txt_edit_evt_char(self, event):
+        """Called when the user enter some text in the entry widget."""
+        key = event.GetKeyCode()
+        if key == 13:
+            # Enter pressed
+            value = self.txt_edit.GetValue()
+            self.txt_edit.SetValue("")
+            self.server.text_command(value,self)
+            # Do nothing after this! We might be destroyed!
+        else:
+            event.Skip()
+
+
     def server_event(self, event):
         """Display an event in the text buffer."""
         self.txt_buffer.AppendText(event+"\n")
+
+
+    # GUI events.
+    def evt_focus(self):
+        self.txt_edit.SetFocus()

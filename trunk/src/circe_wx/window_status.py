@@ -16,15 +16,11 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import wx
-#from windowserver import windowserver
 from window_base import WindowTextEdit
 
-ID_TXT_EDIT = wx.NewId()
 
 class WindowStatus(WindowTextEdit):
     def __init__(self,windowarea,server):
-        #server.SetStatusWindow(self)
-#        windowserver.__init__(self,windowarea,server,"Status")
         WindowTextEdit.__init__(self, windowarea, server, "Status")
 
         self.windowarea.add_window(server,self)
@@ -34,9 +30,9 @@ class WindowStatus(WindowTextEdit):
         # Whether to check regularly for new events or not
         self.checking = False
         # Delay between each checking (in ms)
-        self._timer_delay = 500
+        self.timer_delay = 500
         
-        self.create_controls()
+#        self.create_controls()
         self.create_sizers()
         self.add_controls()
 
@@ -50,10 +46,8 @@ class WindowStatus(WindowTextEdit):
             caption = "Not connected"
         return caption
     
-    def create_controls(self):
-        self.txt_edit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
-        #self.txt_edit.Bind(wx.EVT_CHAR, self.txt_edit_evt_char)
-        wx.EVT_CHAR(self.txt_edit,self.txt_edit_evt_char)
+#    def create_controls(self):
+#        pass
     
     def create_sizers(self):
         self.sizer_top = wx.BoxSizer(wx.VERTICAL)
@@ -63,29 +57,18 @@ class WindowStatus(WindowTextEdit):
         self.sizer_top.Add(self.txt_buffer,1,wx.EXPAND)
         self.sizer_top.Add(self.txt_edit,0,wx.EXPAND)
 
-    def txt_edit_evt_char(self, event):
-        key = event.GetKeyCode()
-        if key == 13:
-            # Enter pressed
-            value = self.txt_edit.GetValue()
-            self.txt_edit.SetValue("")
-            self.server.text_command(value,self)
-            # Do nothing after this! We might be destroyed!
-        else:
-            event.Skip()
-
     def enable_checking(self):
-        """Turns on checking for new events."""
+        """Turn on checking for new events."""
         if self.checking:
             return
         self.timer = wx.Timer(self)
-        self.timer.Start(self._timer_delay)
+        self.timer.Start(self.timer_delay)
         self.checking = True
         if self.server.debug:
             print "Automatic checking for new events enabled"
 
     def disable_checking(self):
-        """Turns off checking for new events."""
+        """Turn off checking for new events."""
         if not self.checking:
             return
         self.timer.Stop()
@@ -109,13 +92,9 @@ class WindowStatus(WindowTextEdit):
         # Disable checking
         self.disable_checking()
         # Duplicate channel list
-        channellist = []
-        for chan in self.server.channels:
-            channellist.append(chan)
+        channellist = list(self.server.channels)
         # Close all channels
         for chan in channellist:
-            chan.close_window()
+            chan.close()
 
-    # Events
-    def evt_focus(self):
-        self.txt_edit.SetFocus()
+    # GUI events.

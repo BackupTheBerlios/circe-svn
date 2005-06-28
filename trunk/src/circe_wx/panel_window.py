@@ -30,14 +30,14 @@ class PanelWindow(wx.Panel):
         self.caption = cap
         self.evt_caption()
 
-    def close_window(self):
+    def close(self):
         self.evt_closed()
         self.windowarea.remove_window(self.server,self)
         self.Destroy()
 
     # Events
     def evt_closed(self):
-        pass
+        print "%s received evt_closed" % self.caption
 
     def evt_caption(self):
         pass

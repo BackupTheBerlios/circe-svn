@@ -21,7 +21,6 @@ from irclib import nm_to_n
 import lorem
 from window_base import WindowTextEdit
 
-ID_TXT_EDIT = wx.NewId()
 ID_LST_USERS = wx.NewId()
 
 class WindowChannel(WindowTextEdit):
@@ -42,14 +41,12 @@ class WindowChannel(WindowTextEdit):
         return self.channelname
 
     def create_controls(self):
-        self.txt_edit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
         self.lst_users = wx.ListCtrl(self,ID_LST_USERS, 
                                     style=wx.LC_REPORT
                                     | wx.LC_SORT_ASCENDING
                                     | wx.LC_NO_HEADER
                                     )
         self.lst_users.InsertColumn(0, "Users")
-        wx.EVT_CHAR(self.txt_edit,self.txt_edit_evt_char)
 
     def create_sizers(self):
         self.sizer_top = wx.BoxSizer(wx.VERTICAL)
@@ -62,16 +59,6 @@ class WindowChannel(WindowTextEdit):
         self.sizer_top.Add(self.sizer_buffer_andusers,1,wx.EXPAND)
         self.sizer_top.Add(self.txt_edit,0,wx.EXPAND)
 
-    def txt_edit_evt_char(self, event):
-        key = event.GetKeyCode()
-        if key == 13:
-            # Enter pressed
-            value = self.txt_edit.GetValue()
-            self.txt_edit.SetValue("")
-            self.server.text_command(value,self)
-            # Do nothing after this! We might be destroyed!
-        else:
-            event.Skip()
 
     def users(self, users=[]):
         """Update the uers list and eventually add the given users."""
@@ -128,11 +115,7 @@ class WindowChannel(WindowTextEdit):
         message = "<%s%s> %s" % (from_, to, text)
         self.server_event(message)
 
-    # Events
-    def evt_focus(self):
-        WindowTextEdit.evt_focus(self)
-        self.txt_edit.SetFocus()
-        
+    # GUI events.
     def evt_closed(self):
         WindowTextEdit.evt_closed(self)
         self.server.channel_closed(self)

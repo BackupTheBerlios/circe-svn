@@ -1,6 +1,6 @@
 Circe
 ------------------------------------------------------------
-Version 0.01
+Version 0.02
 
 Thanks for downloading this early release of Circe.
 Circe at its current state is not practical to use due to its many limitations
@@ -19,6 +19,5 @@ Starting Circe:
 
 Known limitations:
  * Only two fixed status windows.
- * Can't close any windows.
  * Might not work on all IRC servers, freenode is confirmed to work.
- * Many commands not implemented, including /me.
+ * Many commands not implemented.

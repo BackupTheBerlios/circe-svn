@@ -28,9 +28,8 @@ class Server:
 #    ircobj = irclib.IRC()
 
     def __init__(self):
-        """Arguments:
-            target -- a nick or a channel name
-        """
+
+        """Arguments: None"""
         self.debug = False
         self.ircobj = irclib.IRC()
         self.ircobj.add_global_handler("all_events", self._store_events)

@@ -110,7 +110,8 @@ class WXServer(Server):
         if cmd == "server":
             # /server servername [nickname]
             if len(params) < 1:
-                raise TypeError, "/server syntax: /server servername [nick]"
+                window.server_event("/server syntax: /server servername [nick]")
+                return
             server = params[0]
             try:
                 nick = params[1]
@@ -135,38 +136,41 @@ class WXServer(Server):
             # Ensures checking for new events is enabled.
             self.statuswindow.enable_checking()
 
-        elif cmd == "action":
+        elif cmd == "action" or cmd == "me":
             self.connection.action(target=params[0], action=params[1])
         elif cmd == "connect":
             if not self.connection.is_connected():
-                raise "ConnectError", "Use /server command instead"
+                window.server_event("You are not connected to a server. Please use /server instead.")
+                return
             server = params[0]
             try:
                 port = int(params[1])
             except (IndexError,ValueError):
                 port = 6667
-            try:
-                remote_server = params[2]
-            except IndexError: pass
+            #try:
+            #   remote_server = params[2]
+            #except IndexError:
+            #   pass
+
             self.connect(server, port, self.connection.get_nickname())
-        elif cmd == "ctcp": pass # TODO
         elif cmd == "globops":
             self.connection.globops(params[0])
         elif cmd == "info":
             self.connection.info(params and params[0] or "")
         elif cmd == "invite":
             self.connection.invite(nick=params[0], channel=params[1])
-            
+
         elif cmd == "ison":
             if ',' in params[0]:
                 nicks = params[0].split(',')
             elif ' ' in params[0]:
                 nicks = params[0].split(' ')
+            else: nicks = params[0]
             self.connection.ison(nicks)
 
         elif cmd == "join":
             self.connection.join(*params)
-            
+
         elif cmd == "kick":
             try:
                 channel = params[0]
@@ -175,13 +179,14 @@ class WXServer(Server):
             try:
                 nick = params[1]
             except IndexError:
-                nick = self.connection.get_nickname()
+                window.server_event("/kick syntax: /kick [channel] nickname [comment]")
+                return
             try:
                 comment = params[2]
             except IndexError:
                 comment = ""
             self.connection.kick(channel, nick, comment)
-            
+
         elif cmd == "links":
             remote_server = ""
             server_mask = ""
@@ -191,7 +196,7 @@ class WXServer(Server):
                     server_mask = params[1]
 
             self.connection.links(remote_server, server_mask)
-            
+
         elif cmd == "list":
             channels = None
             server = ""
@@ -200,7 +205,7 @@ class WXServer(Server):
                 if len(params) > 1:
                     server = params[1]
             self.connection.list(channels, server)
-            
+
         elif cmd == "lusers":
             self.connection.lusers(params and params[0] or "")
 
@@ -223,8 +228,19 @@ class WXServer(Server):
                 self.connection.names(channels)
 
         elif cmd == "nick":
+            try:
+                params[0]
+            except IndexError:
+                window.server_event("/nick syntax: /nick newnick")
+                return
             self.connection.nick(newnick=params[0])
+
         elif cmd == "notice":
+            try:
+                params[0], params[1]
+            except IndexError:
+                window.server_event("/notice syntax: /notice target message")
+                return
             self.connection.notice(target=params[0], text=params[1])
         elif cmd == "oper":
             self.connection.oper(oper=params[0], password=params[1])
@@ -262,8 +278,9 @@ class WXServer(Server):
             self.connection.pong(target1, target2)
 
         elif cmd in ("msg","privmsg"):
-            if len(params) == 0:
-                raise "MSGError", "You must supply the target and the message"
+            if not params:
+                window.server_event("/msg syntax: /msg target text")
+                return
             target = params[0]
             text = " " .join(params[1:])
             self.connection.privmsg(target, text)
@@ -309,8 +326,13 @@ class WXServer(Server):
         elif cmd == "trace":
             self.connection.trace(params and params[0] or "")
         elif cmd == "user":
+            try:
+                username, realname = params[0], params[1]
+            except (ValueError,IndexError):
+                window.server_event("/user syntax: /user username realname")
+                return
             self.connection.user(username=params[0], realname=params[1])
-            
+
         elif cmd == "userhost":
             if params:
                 if ',' in params[0]:
@@ -321,10 +343,13 @@ class WXServer(Server):
 
         elif cmd == "users":
             self.connection.users(params and params[0] or "")
+
         elif cmd == "version":
             self.connection.version(params and params[0] or "")
+
         elif cmd == "wallops":
             self.connection.wallops(text=params[0])
+
         elif cmd == "who":
             self.connection.who(params and params[0] or "",
                                 len(params) > 1 and params[1] or ""
@@ -336,8 +361,6 @@ class WXServer(Server):
                                     len(params) > 1 and params[1] or "",
                                     len(params) > 2 and params[2] or ""
                                     )
-
-        # Commands used internally for the UI
         elif cmd == "close":
             window.close()
 
@@ -379,10 +402,10 @@ class WXServer(Server):
                         self.statuswindow.server_event(text)
                 else:
                     self.statuswindow.server_event(e.arguments()[0])
-                    
+
             elif etype == "umode":
                 self.statuswindow.server_event("umode: "+e.arguments()[0])
-                
+
             elif etype in ("motd", "motdstart", "endofmotd"):
                 self.statuswindow.server_event(e.arguments()[0])
 

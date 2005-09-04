@@ -1,6 +1,6 @@
 Circe
 ------------------------------------------------------------
-Version 0.01
+Version 0.02
 
 Thanks to all who helped with Circe.
 

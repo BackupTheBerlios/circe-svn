@@ -1,0 +1,5 @@
+- PERHAPS redirect debug messages in the special debug window. This window can be
+  reached as any channel window via the name "debug".
+
+- (wxserver.py) In self.checkEvents() in WXServer add handling for missing
+  events.

@@ -63,8 +63,7 @@ class WXServer(Server):
         if channel in self.channels:
             del self.channels[self.channels.index(channel)]
         else:
-            raise "channel_closed called for unknown channel!"
-
+            return
     def get_channel_window(self, channelname):
         """Return the WindowChannel object binded to channelname or False if
         it does not match.
@@ -82,8 +81,8 @@ class WXServer(Server):
 
     def text_command(self,cmdstring,window):
         if not cmdstring:
-            raise "Empty command"
-
+            return # is raising a exception necessary?
+	
         # in a debug window, do nothing
         if hasattr(window, "get_channelname") and \
             window.get_channelname() == "debug":
@@ -102,23 +101,24 @@ class WXServer(Server):
             return
 
         # Create a list
-        cmdlist = cmdstring.split()
-        cmd = cmdlist.pop(0)
-        params = cmdlist
+        params = cmdstring.split()
+        cmd = params.pop(0)
         if self.debug:
             print params
 
         # Find out what command is being executed
         if cmd == "server":
-            # /server servername nickname
+            # /server servername [nickname]
             if len(params) < 1:
-                raise TypeError, "You should supply two arguments: servername\
-                                    and nick"
+                raise TypeError, "/server syntax: /server servername [nick]"
             server = params[0]
-            nick = params[1]
-            if len(params) > 2:
+            try:
+                nick = params[1]
+            except IndexError:
+                nick = "circe"
+            try:
                 port = int(params[3])
-            else:
+            except (IndexError,ValueError):
                 port = 6667
 
             # If we're already connected to a server, opens a new connection in
@@ -141,10 +141,15 @@ class WXServer(Server):
             if not self.connection.is_connected():
                 raise "ConnectError", "Use /server command instead"
             server = params[0]
-            port = int(params[1])
-#            remote_server = params[2]
+            try:
+                port = int(params[1])
+            except (IndexError,ValueError):
+                port = 6667
+            try:
+                remote_server = params[2]
+            except IndexError: pass
             self.connect(server, port, self.connection.get_nickname())
-            
+        elif cmd == "ctcp": pass # TODO
         elif cmd == "globops":
             self.connection.globops(params[0])
         elif cmd == "info":
@@ -153,18 +158,27 @@ class WXServer(Server):
             self.connection.invite(nick=params[0], channel=params[1])
             
         elif cmd == "ison":
-            nicks = params[0].split(",")
+            if ',' in params[0]:
+                nicks = params[0].split(',')
+            elif ' ' in params[0]:
+                nicks = params[0].split(' ')
             self.connection.ison(nicks)
-            
+
         elif cmd == "join":
             self.connection.join(*params)
             
         elif cmd == "kick":
-            channel = params[0]
-            nick = params[1]
-            if len(params) > 2:
+            try:
+                channel = params[0]
+            except IndexError:
+                channel = window.get_channelname()
+            try:
+                nick = params[1]
+            except IndexError:
+                nick = self.connection.get_nickname()
+            try:
                 comment = params[2]
-            else:
+            except IndexError:
                 comment = ""
             self.connection.kick(channel, nick, comment)
             
@@ -189,25 +203,24 @@ class WXServer(Server):
             
         elif cmd == "lusers":
             self.connection.lusers(params and params[0] or "")
-            
+
         elif cmd == "mode":
             command = " ".join(params[1:])
             self.connection.mode(target=params[0], command=command)
-            
+
         elif cmd == "motd":
             self.connection.motd(params and params[0] or "")
-            
+
         elif cmd == "names":
-            if params:
+            if params[0]:
                 if "," in params[0]:
                     # Assumes channels are in comma separated list.
                     channels = params[0].split(",")
-                else:
+                elif ' ' in params[0]:
                     # Channels given as multiple args "#chan1 #chan2 #chan3"
-                    channels = params
+                    channels = params[0]
 
                 self.connection.names(channels)
-
 
         elif cmd == "nick":
             self.connection.nick(newnick=params[0])
@@ -217,19 +230,30 @@ class WXServer(Server):
             self.connection.oper(oper=params[0], password=params[1])
 
         elif cmd == "part":
-            chans = params[0].split(",")
-            self.connection.part(params)
+            try:
+                params[0]
+            except IndexError:
+                chans = ['%s' % window.get_channelname()]
+                self.connection.part(chans)
+                return
+            if ',' in params[0]:
+                chans = params[0].split(",")
+            elif ' ' in params[0]:
+                chans = params[0].split(' ')
+            else:
+                chans = [params[0]]
+            self.connection.part(chans)
 
         elif cmd == "pass":
             self.connection.pass_(password=params[0])
-            
+
         elif cmd == "ping":
             target1 = params[0]
             target2 = ""
             if len(params) > 1:
                 target2 = params[1]
             self.connection.ping(target1, target2)
-            
+
         elif cmd == "pong":
             target1 = params[0]
             target2 = ""
@@ -256,7 +280,7 @@ class WXServer(Server):
 
         elif cmd == "quit":
             self.connection.quit(" ".join(params) or "")
-            
+
         elif cmd == "sconnect":
             self.connection.sconnect(params[0],
                                     len(params) > 1 and params[1] or "",
@@ -288,7 +312,11 @@ class WXServer(Server):
             self.connection.user(username=params[0], realname=params[1])
             
         elif cmd == "userhost":
-            nicks = params[0].split(",")
+            if params:
+                if ',' in params[0]:
+                    nicks = params[0].split(",")
+                elif ' ' in params[0]:
+                    nicks = params[0].split(" ")
             self.connection.userhost(nicks)
 
         elif cmd == "users":
@@ -343,15 +371,12 @@ class WXServer(Server):
 
             elif etype == "privnotice":
                 text = ""
-                if e.source() and e.source().startswith("NickServ"):
-                    text = "NickServ: " + e.arguments()[0]
-                    self.statuswindow.server_event(text)
-                elif e.source() and e.source().startswith("MemoServ"):
-                    text = "MemoServ: " + e.arguments()[0]
-                    self.statuswindow.server_event(text)
-                elif e.source() and e.source().startswith("ChanServ"):
-                    text = "ChanServ: " + e.arguments()[0]
-                    self.statuswindow.server_event(text)
+                source = e.source()
+                prefixes = ["Nick", "Memo", "Chan"]
+                for prefix in prefixes:
+                    if source and source.startswith("%sServ" % prefix):
+                        text = "%sServ: %s" % (prefix, e.arguments()[0])
+                        self.statuswindow.server_event(text)
                 else:
                     self.statuswindow.server_event(e.arguments()[0])
                     
@@ -369,12 +394,19 @@ class WXServer(Server):
                 args = e.arguments()
                 chan = args.pop(0)  # Channel name where the message comes
                                     # from.
+                topic = [] 
                 # find out the corresponding window
                 window = self.get_channel_window(chan)
                 if window:
                     args = " ".join(args)
-                    text = "[%s] %s" % (etype, args)
-                    window.server_event(text)
+                    if etype == "topic":
+                        text = "Topic for %s is: %s" % (chan, args)
+                    else:
+                        text = "[%s] %s" % (etype, args)
+                    if etype == "topic":
+                        topic.append(text)
+                    else:
+                        window.server_event(text)
 
             elif etype == "topicinfo":
                 sender = e.arguments()[1]
@@ -383,8 +415,10 @@ class WXServer(Server):
 
                 window = self.get_channel_window(e.arguments()[0])
                 if window:
-                    text = "[%s] %s on %s" % (etype, sender, date)
-                    window.server_event(text)
+                    text = "Topic for %s set by %s on %s" % (e.arguments()[0], sender, date)
+                    topic.append(text)
+                    window.server_event("\n".join(topic))
+                topic = []
 
             elif etype == "namreply":
                 chan = e.arguments()[1]
@@ -404,7 +438,7 @@ class WXServer(Server):
                 source = e.source().split("!")[0]
                 target = e.target()
                 text = "<%s> %s" % (source, " ".join(e.arguments()))
-                if irclib.is_channel(target):   # XXX is it possible?
+                if irclib.is_channel(target):
                     win = self.get_channel_window(target)
                     if win:
                         win.server_event(text)
@@ -453,7 +487,6 @@ class WXServer(Server):
                 self.statuswindow.server_event(text)
 
             elif etype == "error":
-                # XXX is this event necessary?
                 pass
 
             elif etype == "disconnect":

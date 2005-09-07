@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<statsTarget><link>http://cia.navi.cx/stats/project/Circe</link><counters><counter name="thisWeek" lastEventTime="1126119217" firstEventTime="1126119217">1</counter><counter name="forever" lastEventTime="1126119217" firstEventTime="1084062791">137</counter><counter name="lastWeek" lastEventTime="1125861588" firstEventTime="1125840455">4</counter><counter name="today" lastEventTime="1126119217" firstEventTime="1126119217">1</counter><counter name="thisMonth" lastEventTime="1126119217" firstEventTime="1125840455">5</counter></counters><metadata></metadata><recentMessages>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>150</revision><author>kab</author><log>Added support for a default quit message, and fixed bug #4968 (perhaps incomplete fix)
+</log><diffLines>186</diffLines><files><file>trunk/src/circe_globals.py</file><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1126119217</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>149</revision><author>kab</author><log>preparing for 0.02 release, partially fix bug #004039
+</log><diffLines>290</diffLines><files><file>trunk/src/CREDITS.txt</file><file>trunk/src/README.txt</file><file>trunk/src/circe_globals.py</file><file>trunk/src/circe_wx/wxserver.py</file><file>trunk/src/circelib/server.py</file></files></commit></body><timestamp>1125861588</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>148</revision><author>kab</author><log>large amount of bug fixes, also enchanced topic
+</log><diffLines>964</diffLines><files><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1125856004</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>147</revision><author>kab</author><log>readded src/
+</log><diffLines>3</diffLines><files><file>trunk/src/</file></files></commit></body><timestamp>1125840906</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>146</revision><author>kab</author><log>deleted old src/ directory
+</log><diffLines>1</diffLines><files><file>trunk/src/</file></files></commit></body><timestamp>1125840455</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>125</revision><author>alst</author><log>When receiving TOPICINFO event, display time in a human readable format.
+
+</log><diffLines>68</diffLines><files><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1115494243</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>123</revision><author>anjel</author><log>Updated copyright notices for first release.
+</log><diffLines>331</diffLines><files><file>trunk/src/circe.py</file><file>trunk/src/circe_config.py</file><file>trunk/src/circe_globals.py</file><file>trunk/src/circe_wx/__init__.py</file><file>trunk/src/circe_wx/frame_main.py</file><file>trunk/src/circe_wx/images.py</file><file>trunk/src/circe_wx/panel_switchbar.py</file><file>trunk/src/circe_wx/panel_tree.py</file><file>trunk/src/circe_wx/panel_window.py</file><file>trunk/src/circe_wx/panel_windowarea.py</file><file>trunk/src/circe_wx/servermanager.py</file><file>trunk/src/circe_wx/window_channel.py</file><file>trunk/src/circe_wx/window_server.py</file><file>trunk/src/circe_wx/window_status.py</file><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1115402879</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>121</revision><author>alst</author><log>Improved users list appearence and sorting of users alphabetically.
+
+</log><diffLines>90</diffLines><files><file>trunk/src/TODO</file><file>trunk/src/circe_wx/window_channel.py</file><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1114890140</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>120</revision><author>alst</author><log>Users connected to a channel are displayed in the channel window.
+
+</log><diffLines>114</diffLines><files><file>trunk/src/circe_wx/window_channel.py</file><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1114888024</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>118</revision><author>alst</author><log>Added handling for nicknameinuse, error and disconnect events.
+
+</log><diffLines>22</diffLines><files><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1114285694</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>117</revision><author>alst</author><log>Window closing now works.
+
+</log><diffLines>167</diffLines><files><file>trunk/src/circe_wx/panel_switchbar.py</file><file>trunk/src/circe_wx/panel_windowarea.py</file><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1114281156</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>116</revision><author>alst</author><log>All the commands typed by the user are processed correctly but it still needs some testing.
+
+</log><diffLines>231</diffLines><files><file>trunk/src/TODO</file><file>trunk/src/circe_wx/window_channel.py</file><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1113656025</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>115</revision><author>alst</author><log>Updated todo tasks.
+
+</log><diffLines>23</diffLines><files><file>trunk/src/TODO</file></files></commit></body><timestamp>1113245561</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>114</revision><author>alst</author><log>Added support for a bit more commands.
+
+</log><diffLines>353</diffLines><files><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1113244098</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>113</revision><author>anjel</author><log>Added more GUI events. Switchbar sections now work. Switchbar captions now work. General cleanup of GUI code. Removing windows is unfinished.
+</log><diffLines>356</diffLines><files><file>trunk/src/circe_wx/frame_main.py</file><file>trunk/src/circe_wx/panel_switchbar.py</file><file>trunk/src/circe_wx/panel_window.py</file><file>trunk/src/circe_wx/panel_windowarea.py</file><file>trunk/src/circe_wx/window_channel.py</file><file>trunk/src/circe_wx/window_server.py</file><file>trunk/src/circe_wx/window_status.py</file><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1112987732</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>112</revision><author>anjel</author><log>Checking for new server events now done using EVT_IDLE instead of a timer.
+</log><diffLines>58</diffLines><files><file>trunk/src/circe_wx/window_status.py</file></files></commit></body><timestamp>1112950702</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>111</revision><author>anjel</author><log>Made window_status.py compatible with wxPython 2.4.
+</log><diffLines>24</diffLines><files><file>trunk/src/circe_wx/window_status.py</file></files></commit></body><timestamp>1112948765</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>110</revision><author>alst</author><log>Added a TODO file.
+
+</log><diffLines>11</diffLines><files><file>trunk/src/TODO</file></files></commit></body><timestamp>1112543736</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>109</revision><author>alst</author><log>Added automatic checking for new events! Circe is quite userfriendly now :)
+
+</log><diffLines>146</diffLines><files><file>trunk/src/circe_wx/window_status.py</file><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1112542317</timestamp></message>
+<message><generator><name>Python Subversion client for CIA</name><version>1.12</version></generator><source><project>Circe</project></source><body><commit><revision>108</revision><author>alst</author><log>Method checkEvents() in CirceIRCClient replaced with getEvents(). New method checkEvents() in WXServer to redirect received messages in the correct windows.
+
+</log><diffLines>271</diffLines><files><file>trunk/src/circe_wx/window_channel.py</file><file>trunk/src/circe_wx/wxserver.py</file></files></commit></body><timestamp>1112532259</timestamp></message></recentMessages></statsTarget>

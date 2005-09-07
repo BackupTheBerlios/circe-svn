@@ -82,7 +82,7 @@ class WXServer(Server):
     def text_command(self,cmdstring,window):
         if not cmdstring:
             return # is raising a exception necessary?
-	
+    
         # in a debug window, do nothing
         if hasattr(window, "get_channelname") and \
             window.get_channelname() == "debug":
@@ -137,6 +137,11 @@ class WXServer(Server):
             self.statuswindow.enable_checking()
 
         elif cmd == "action" or cmd == "me":
+            try:
+                params[0], params[1]
+            except IndexError:
+                window.server_event('/%s syntax: /%s target action' % (cmd, cmd))
+                return
             self.connection.action(target=params[0], action=params[1])
         elif cmd == "connect":
             if not self.connection.is_connected():
@@ -147,10 +152,6 @@ class WXServer(Server):
                 port = int(params[1])
             except (IndexError,ValueError):
                 port = 6667
-            #try:
-            #   remote_server = params[2]
-            #except IndexError:
-            #   pass
 
             self.connect(server, port, self.connection.get_nickname())
         elif cmd == "globops":
@@ -158,9 +159,17 @@ class WXServer(Server):
         elif cmd == "info":
             self.connection.info(params and params[0] or "")
         elif cmd == "invite":
+            try:
+                params[0], params[1]
+            except IndexError:
+                window.server_event('/invite syntax: /invite nick channel')
+                return
             self.connection.invite(nick=params[0], channel=params[1])
 
         elif cmd == "ison":
+            if not params:
+                window.server_event('/ison syntax: /ison nick [...]')
+                return
             if ',' in params[0]:
                 nicks = params[0].split(',')
             elif ' ' in params[0]:
@@ -168,10 +177,10 @@ class WXServer(Server):
             else: nicks = params[0]
             self.connection.ison(nicks)
 
-        elif cmd == "join":
+        elif cmd == "join" or cmd == "j":
             self.connection.join(*params)
 
-        elif cmd == "kick":
+        elif cmd == "kick" or cmd == "k":
             try:
                 channel = params[0]
             except IndexError:
@@ -210,8 +219,12 @@ class WXServer(Server):
             self.connection.lusers(params and params[0] or "")
 
         elif cmd == "mode":
+            target = params[0]
             command = " ".join(params[1:])
-            self.connection.mode(target=params[0], command=command)
+            if not target or not command:
+                window.server_event('/mode target command(s)')
+                return
+            self.connection.mode(target=target, command=command)
 
         elif cmd == "motd":
             self.connection.motd(params and params[0] or "")
@@ -223,13 +236,13 @@ class WXServer(Server):
                     channels = params[0].split(",")
                 elif ' ' in params[0]:
                     # Channels given as multiple args "#chan1 #chan2 #chan3"
-                    channels = params[0]
+                    channels = params[0].split()
 
                 self.connection.names(channels)
 
         elif cmd == "nick":
             try:
-                params[0]
+                nick = params
             except IndexError:
                 window.server_event("/nick syntax: /nick newnick")
                 return
@@ -237,12 +250,17 @@ class WXServer(Server):
 
         elif cmd == "notice":
             try:
-                params[0], params[1]
+                target, text = params
             except IndexError:
                 window.server_event("/notice syntax: /notice target message")
                 return
             self.connection.notice(target=params[0], text=params[1])
         elif cmd == "oper":
+            try:
+                oper, password = params
+            except IndexError:
+                window.server_event("/oper syntax: /oper oper pass")
+                return
             self.connection.oper(oper=params[0], password=params[1])
 
         elif cmd == "part":
@@ -261,17 +279,30 @@ class WXServer(Server):
             self.connection.part(chans)
 
         elif cmd == "pass":
+            try:
+                params[0]
+            except IndexError:
+                window.server_event("/pass syntax: /pass password")
+                return
             self.connection.pass_(password=params[0])
 
         elif cmd == "ping":
-            target1 = params[0]
+            try:
+                target1 = params[0]
+            except IndexError:
+                window.server_event("/ping syntax: from [to]")
+                return
             target2 = ""
             if len(params) > 1:
                 target2 = params[1]
             self.connection.ping(target1, target2)
 
         elif cmd == "pong":
-            target1 = params[0]
+            try:
+                target1 = params[0]
+            except IndexError:
+                window.server_event("/pong syntax: from [to]")
+                return
             target2 = ""
             if len(params) > 1:
                 target2 = params[1]
@@ -296,7 +327,12 @@ class WXServer(Server):
             self.connection.privmsg_many(targets, text)
 
         elif cmd == "quit":
-            self.connection.quit(" ".join(params) or "")
+            if not params:
+                import circe_globals
+                self.connection.quit(circe_globals.QUITMSG)
+                return
+            else:
+                self.connection.quit(" ".join(params))
 
         elif cmd == "sconnect":
             self.connection.sconnect(params[0],
@@ -331,7 +367,7 @@ class WXServer(Server):
             except (ValueError,IndexError):
                 window.server_event("/user syntax: /user username realname")
                 return
-            self.connection.user(username=params[0], realname=params[1])
+            self.connection.user(username=username, realname=realname)
 
         elif cmd == "userhost":
             if params:

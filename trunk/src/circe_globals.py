@@ -17,5 +17,5 @@
 
 APPNAME = "Circe"
 APPTAG = "Work In Progress"
-VERSION = "0.02"
+VERSION = "0.0.2"
 QUITMSG = "Circe: http://circe.berlios.de/"

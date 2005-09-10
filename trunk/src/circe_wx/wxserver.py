@@ -65,7 +65,7 @@ class WXServer(Server):
         else:
             return
     def get_channel_window(self, channelname):
-        """Return the WindowChannel object binded to channelname or False if
+        """Return the WindowChannel object bound to channelname or False if
         it does not match.
         """
         for window in self.channels:
@@ -138,9 +138,13 @@ class WXServer(Server):
 
         elif cmd == "action" or cmd == "me":
             try:
-                params[0], params[1]
+                params[0]
             except IndexError:
-                window.server_event('/%s syntax: /%s target action' % (cmd, cmd))
+                params[0] = window.get_channelname()
+            try:
+                params[1]
+            except IndexError:
+                window.server_event('/%s syntax: /%s [target] action' % (cmd, cmd))
                 return
             self.connection.action(target=params[0], action=params[1])
         elif cmd == "connect":
@@ -420,6 +424,14 @@ class WXServer(Server):
             # Skip raw messages.
             if etype == "all_raw_messages": 
                 continue
+
+            if etype == "action":
+                target = e.target()
+                source = e.source()
+                action = ' '.join(e.arguments()[1:])
+                window = self.get_channel_window(target)
+                if not window: continue                
+                window.server_event('* %s %s' % (source, action))
 
             # Events to display in the status window.
             if etype == "welcome":

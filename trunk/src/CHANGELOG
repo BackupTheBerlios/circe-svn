@@ -1,0 +1,8 @@
+Wednesday September 7, 2005 - Released Circe 0.0.2
+New features:
+- Major change to circe_wx/wxserver.py to fix bug #4968.
+
+Saturday September 10, 2005 - Released Circe 0.0.3 alpha 1
+New features:
+- Added /me handling. Aliased to /action.
+

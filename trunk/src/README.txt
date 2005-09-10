@@ -1,6 +1,6 @@
 Circe
 ------------------------------------------------------------
-Version 0.02
+Version 0.03 alpha 1
 
 Thanks for downloading this early release of Circe.
 Circe at its current state is not practical to use due to its many limitations

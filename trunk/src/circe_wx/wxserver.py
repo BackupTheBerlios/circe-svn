@@ -139,14 +139,13 @@ class WXServer(Server):
         elif cmd == "action" or cmd == "me":
             try:
                 params[0]
+                if params[0][0] != '#':
+                    raise IndexError
             except IndexError:
-                params[0] = window.get_channelname()
-            try:
-                params[1]
-            except IndexError:
-                window.server_event('/%s syntax: /%s [target] action' % (cmd, cmd))
-                return
-            self.connection.action(target=params[0], action=params[1])
+                params.insert(0, window.get_channelname())
+            print params[1:]
+            self.connection.action(target=params[0], action=' '.join(params[1:]))
+            window.server_event('* %s %s' % (self.connection.get_nickname(), ' '.join(params[1:])))
         elif cmd == "connect":
             if not self.connection.is_connected():
                 window.server_event("You are not connected to a server. Please use /server instead.")
@@ -427,10 +426,10 @@ class WXServer(Server):
 
             if etype == "action":
                 target = e.target()
-                source = e.source()
-                action = ' '.join(e.arguments()[1:])
+                source = irclib.nm_to_n(e.source())
+                action = e.arguments()[1:]
                 window = self.get_channel_window(target)
-                if not window: continue                
+                if not window: continue
                 window.server_event('* %s %s' % (source, action))
 
             # Events to display in the status window.

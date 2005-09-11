@@ -111,8 +111,8 @@ class WindowChannel(WindowTextEdit):
             to    -- (Optional) target of the message
         """
         if to:
-            to = "(to %s)" % to
-        message = "<%s%s> %s" % (from_, to, text)
+            to = "(to %s)" % to	
+        message = "<%s %s> %s" % (from_, to, text)
         self.server_event(message)
 
     # GUI events.

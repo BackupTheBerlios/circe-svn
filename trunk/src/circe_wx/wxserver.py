@@ -105,7 +105,7 @@ class WXServer(Server):
         cmd = params.pop(0)
         if self.debug:
             print params
-
+        cmd = cmd.lower()
         # Find out what command is being executed
         if cmd == "server":
             # /server servername [nickname]
@@ -536,16 +536,18 @@ class WXServer(Server):
             elif etype == "part":
                 chan = e.target()
                 src = e.source()
+                arguments = e.arguments()
+                nickname = irclib.nm_to_n(src)
                 window = self.get_channel_window(chan)
 
-                if irclib.nm_to_n(src) == self.connection.get_nickname():
+                if nickname == self.connection.get_nickname():
                     if window:
                         self.remove_channel_window(chan)
                         return
                 if window:
-                    text = "%s has left %s" % (src, chan)
+                    text = "%s has left %s: %s " % (src, chan, ' '.join(arguments))
                     window.server_event(text)
-                    window.del_user([src.split("!")[0]])
+                    window.del_user([nickname])
 
             elif etype == "quit":
                 # Informs each channel that the user has quit.

@@ -143,7 +143,6 @@ class WXServer(Server):
                     raise IndexError
             except IndexError:
                 params.insert(0, window.get_channelname())
-            print params[1:]
             self.connection.action(target=params[0], action=' '.join(params[1:]))
             window.server_event('* %s %s' % (self.connection.get_nickname(), ' '.join(params[1:])))
         elif cmd == "connect":

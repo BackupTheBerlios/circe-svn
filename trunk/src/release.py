@@ -2,17 +2,6 @@
 
 import shutil, os, tarfile, sys, ftplib, cStringIO as StringIO
 
-def upload(path):
-    ftp = ftplib.FTP('ftp.berlios.de')
-    ftp.set_debuglevel(3)
-    ftp.login()
-    ftp.cwd('incoming')
-    sio = StringIO.StringIO()
-    ftp.retrlines("LIST", sio.write)
-    print sio.getvalue()
-    ftp.storbinary("STOR %s" % os.path.basename(path), open(path).read)
-    ftp.quit()
-    print "%s uploaded to ftp://ftp.berlios.de/incoming" % path
 def export(src, dest):
     shutil.copytree(src, dest)
     
@@ -47,6 +36,7 @@ s = open('setup.py', 'w')
 s.write(d % (rn, vn))
 s.close()
 os.chdir(os.environ["HOME"])
+os.system('bash')
 tf = tarfile.open(tfpath, 'w:gz')
 tf.add(path)
 tf.close()

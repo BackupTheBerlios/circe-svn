@@ -6,3 +6,6 @@ Saturday September 10, 2005 - Released Circe 0.0.3 alpha 1
 New features:
 - Added /me handling. Aliased to /action.
 
+Monday September 12, 2005 - Released Circe 0.0.3 alpha 2
+New features:
+- Added setup.py

@@ -172,11 +172,12 @@ class WXServer(Server):
             if not params:
                 window.server_event('/ison syntax: /ison nick [...]')
                 return
+            # The user separated the parameters by a comma
             if ',' in params[0]:
                 nicks = params[0].split(',')
-            elif ' ' in params[0]:
-                nicks = params[0].split(' ')
-            else: nicks = params[0]
+            # The parameters have been split in a list
+            else:
+                nicks = params
             self.connection.ison(nicks)
 
         elif cmd == "join" or cmd == "j":

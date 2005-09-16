@@ -253,7 +253,7 @@ class WXServer(Server):
         elif cmd == "notice":
             try:
                 target, text = params
-            except IndexError:
+            except ValueError:
                 window.server_event("/notice syntax: /notice target message")
                 return
             self.connection.notice(target=params[0], text=params[1])

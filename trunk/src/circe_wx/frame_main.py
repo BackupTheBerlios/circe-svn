@@ -116,9 +116,6 @@ class frame_main(wx.Frame):
         else:
             sbalign = wx.HORIZONTAL
         self.panel_switchbar = PanelSwitchbar(self.panel_top,-1,sbsize,sbalign)
-        # Temporary, until we find some decent way to interact with
-        # panel_windowarea about servers
-        self.panel_switchbar.add_section(0)
     
     def align_switchbar(self):
         if circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT:

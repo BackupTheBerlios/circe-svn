@@ -1,24 +1,28 @@
 Circe
 ------------------------------------------------------------
-Version 0.02
+Version 0.0.3
 
 Thanks to all who helped with Circe.
 
 anjel
 anjel@developer.berlios.de
-Project founder and developer of wxPython code
+Project founder.
+
+kbrooks
+kab@users.berlios.de
+Developer, current maintainer.
 
 alst
 alst@developer.berlios.de
-Developer of python-irclib integration code and wxPython code
+Developer of python-irclib integration code and wxPython code.
 
 nick125
 nick125@developer.berlios.de
-Developer of a irclib which was eventually replaced by python-irclib
+Developer of a irclib which was eventually replaced by python-irclib.
 
 ivion
 ivion@developer.berlios.de
 Help with the Subversion server and the website. Testing and suggestions.
 
-And of course many thanks to the developers of Python and the libraries used
+And of course many thanks to the developers of Python and the various libraries used
 by Circe.

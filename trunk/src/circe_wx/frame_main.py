@@ -81,14 +81,14 @@ class frame_main(wx.Frame):
         menu_file.Append(ID_MENU_FILE_EXIT, "E&xit", "Exit %s" % (circe_globals.APPNAME))
         
         menu_switchbar = wx.Menu()
-        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ALEFT, "Align switch_bar &Left")
-        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ARIGHT, "Align switch_bar &Right")
-        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ATOP, "Align switch_bar &Top")
-        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ABOTTOM, "Align switch_bar &Bottom")
+        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ALEFT, "Align Switchbar &Left")
+        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ARIGHT, "Align Switchbar &Right")
+        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ATOP, "Align Switchbar &Top")
+        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ABOTTOM, "Align Switchbar &Bottom")
         
         menu_tree = wx.Menu()
-        menu_tree.Append(ID_MENU_VIEW_TREE_ALEFT, "Align Tree &Left")
-        menu_tree.Append(ID_MENU_VIEW_TREE_ARIGHT, "Align Tree &Right")
+        menu_tree.Append(ID_MENU_VIEW_TREE_ALEFT, "Align Treebar &Left")
+        menu_tree.Append(ID_MENU_VIEW_TREE_ARIGHT, "Align Treebar &Right")
         
         menu_view = wx.Menu()
         menu_view.AppendMenu(ID_MENU_VIEW_SWITCHBAR, "&switch_bar", menu_switchbar)

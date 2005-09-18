@@ -39,6 +39,10 @@ class PanelWindowarea(wx.Panel):
         #self.add_window(self.testWindow2)
         #self.show_window(self.testWindow)
         #self.show_window(self.testWindow2)
+    
+    def new_server(self):
+        s = servermanager.add_server(self)
+        self.show_window(s.statuswindow.section_id,s.statuswindow)
 
     def add_server(self):
         """Create a new window status to make a new connection."""
@@ -63,8 +67,7 @@ class PanelWindowarea(wx.Panel):
             if self.func_delwindow is not None:
                 self.func_delwindow(section,window)
                 if len(self.window_list) > 0:
-                    self.show_window(section, self.window_list[index-1])
-                    pass
+                    self.show_window(self.window_list[index-1].server, self.window_list[index-1])
         else:
             raise "Window: %s does not exist in windows list" % window
     

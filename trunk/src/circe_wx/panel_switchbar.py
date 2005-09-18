@@ -222,6 +222,8 @@ class PanelSwitchbar(wx.Panel):
     def select(self,section_id,button_id):
         """select a button and deselects everything else, this doesn't raise an event"""
         button = self.get_button(section_id,button_id)
+        if button == None:
+            return
         self.unselect_all_except(section_id,button_id)
         self.select_button(section_id,button_id)
         button.previous_button = self.currentbutton

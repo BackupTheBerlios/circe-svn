@@ -135,6 +135,12 @@ class WXServer(Server):
             self.host = server
             # Ensures checking for new events is enabled.
             self.statuswindow.enable_checking()
+        
+        elif cmd == "newserver":
+            self.windowarea.new_server()
+        
+        elif cmd == "echo":
+            window.server_event(" " .join(params))
 
         elif cmd == "action" or cmd == "me":
             try:

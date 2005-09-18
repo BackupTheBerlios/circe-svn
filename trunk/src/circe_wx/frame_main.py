@@ -91,7 +91,7 @@ class frame_main(wx.Frame):
         menu_tree.Append(ID_MENU_VIEW_TREE_ARIGHT, "Align Treebar &Right")
         
         menu_view = wx.Menu()
-        menu_view.AppendMenu(ID_MENU_VIEW_SWITCHBAR, "&switch_bar", menu_switchbar)
+        menu_view.AppendMenu(ID_MENU_VIEW_SWITCHBAR, "&Switchbar", menu_switchbar)
         menu_view.AppendMenu(ID_MENU_VIEW_TREE, "&Treebar", menu_tree)
         
         menu_bar = wx.MenuBar() 

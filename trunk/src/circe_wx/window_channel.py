@@ -99,7 +99,7 @@ class WindowChannel(WindowTextEdit):
 
         if user in self._users.keys():
             self.del_user(user)
-            self.server_event("%s has quit: %s" % (user, event.arguments()))
+            self.server_event("%s has quit: %s" % (user, " ".join(event.arguments())))
 
 
     def add_message(self, text, from_, to=""):

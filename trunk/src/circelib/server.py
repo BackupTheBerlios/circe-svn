@@ -44,11 +44,26 @@ class Server:
         self._events.append(e)
 
 
-    def connect(self, server, port, nickname, password=None, username=None,
-            ircname=None, localaddress="", localport=0):
+    def connect(self, cmd, window, **kwargs):
         """Connect/reconnect to a server."""
-        self.connection.connect(server, port, nickname, password, username,
-                ircname, localaddress, localport)
+        try:
+            kwargs['server']
+        except KeyError:
+            window.server_event('/%s syntax: /%s servername [port] [nickname]' % cmd)
+            return
+        try:
+            kwargs['port']
+            try: 
+                int(kwargs['port'])
+            except ValueError:
+                raise KeyError
+        except KeyError:
+            kwargs['port'] = 6667
+        try:
+            kwargs['nickname']
+        except KeyError:
+            kwargs['nickname'] = "circe"
+        self.connection.connect(**kwargs)
 
     def get_connection(self):
         return self.connection

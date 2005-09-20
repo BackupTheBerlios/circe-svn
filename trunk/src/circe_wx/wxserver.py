@@ -110,32 +110,40 @@ class WXServer(Server):
         if cmd == "server":
             # /server servername [nickname]
             if len(params) < 1:
-                window.server_event("/server syntax: /server servername [nick]")
+                window.server_event("/server syntax: /server servername [port] [nick] [channels]")
                 return
-            server = params[0]
+            d = {}
+            server = d['server'] = params[0]
             try:
-                nick = params[1]
+                port = d['port'] = int(params[1])
+            except (IndexError, ValueError):
+                port = d['port'] = 6667
+            try:
+                nickname = d['nickname'] = params[2]
             except IndexError:
-                nick = "circe"
-            try:
-                port = int(params[3])
-            except (IndexError,ValueError):
-                port = 6667
-
+                nickname = d['nickname'] = "circe"
+           
             # If we're already connected to a server, opens a new connection in
             # another status window.
             if self.is_connected():
                 s = self.new_status_window()
-                s.connect(server, port, nick)
+                s.connect(cmd, window, **d)
                 self.host = server
                 s.statuswindow.enable_checking()
+                channels = params[3:]
+                if not channels:
+                    return
+                self.connection.join(*channels)
                 return
 
-            self.connect(server=server, port=port, nickname=nick)
+            self.connect(cmd, window, **d)
             self.host = server
             # Ensures checking for new events is enabled.
             self.statuswindow.enable_checking()
-        
+            channels = params[3:]
+            if not channels:
+                return
+            self.connection.join(*channels)
         elif cmd == "newserver":
             self.windowarea.new_server()
         

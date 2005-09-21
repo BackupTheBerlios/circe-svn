@@ -9,3 +9,10 @@ New features:
 Monday September 12, 2005 - Released Circe 0.0.3 alpha 2
 New features:
 - Added setup.py
+
+Wednesday September 21, 2005 - Released Circe 0.0.3 alpha 3
+New features:
+- Added /action, /echo
+- Fixed bug #5099
+- Fixed quit messages.
+- Fixed view menu.

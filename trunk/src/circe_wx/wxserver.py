@@ -542,7 +542,7 @@ class WXServer(Server):
 
                 window = self.get_channel_window(chan)
                 if window:
-                    source = e.source().split("!")[0]
+                    source = irclib.nm_to_n(src)
                     text = "%s has joined %s" % (source, chan)
                     window.server_event(text)
                     window.users([source])
@@ -571,6 +571,9 @@ class WXServer(Server):
             elif etype == "nicknameinuse":
                 text = "%s: %s" % (e.arguments()[0], e.arguments()[1])
                 self.statuswindow.server_event(text)
+            elif etype == "nick":
+                for chan in self.channels:
+                    chan.nick_changed(e)
 
             elif etype == "error":
                 pass

@@ -60,8 +60,9 @@ class WindowChannel(WindowTextEdit):
         self.sizer_top.Add(self.txt_edit,0,wx.EXPAND)
 
 
-    def users(self, users=[]):
+    def users(self, users=None):
         """Update the uers list and eventually add the given users."""
+        if not users: users = []
         if users:
             for u in users:
                 if u not in self._users.keys():
@@ -101,7 +102,16 @@ class WindowChannel(WindowTextEdit):
             self.del_user(user)
             self.server_event("%s has quit: %s" % (user, " ".join(event.arguments())))
 
-
+    def nick_changed(self, event):
+        if event.eventtype() != "nick":
+            return
+        old = nm_to_n(event.source())
+        new = event.target()
+        users = self._users
+        if old in users:
+            self.del_user(old)
+            self.users([new])
+            self.server_event("%s is now known as %s" % (old, new))
     def add_message(self, text, from_, to=""):
         """Format a message in a pretty way with the given arguments.
 

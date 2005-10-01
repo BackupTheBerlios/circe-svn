@@ -559,7 +559,11 @@ class WXServer(Server):
                         self.remove_channel_window(chan)
                         return
                 if window:
-                    text = "%s has left %s: %s " % (src, chan, ' '.join(arguments))
+                    args = ' '.join(arguments)
+                    if not args:
+                        text = "%s has left %s" % (src, chan)
+                    else:
+                        text = "%s has left %s: %s" % (src, chan, args)
                     window.server_event(text)
                     window.del_user([nickname])
 

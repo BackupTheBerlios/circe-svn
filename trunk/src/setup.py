@@ -6,5 +6,5 @@ setup(
     name="%s",
     version="%s",
     packages=['circelib', 'circe_wx'],
-    scripts=['circe']
+    scripts=['bin/circe.py']
 )

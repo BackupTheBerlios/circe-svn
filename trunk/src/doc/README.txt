@@ -1,6 +1,6 @@
 Circe
 ------------------------------------------------------------
-Version 0.0.3 alpha 3
+Version 0.0.3 alpha 4
 
 Thanks for downloading this early release of Circe.
 Circe at its current state is not practical to use due to its many limitations
@@ -19,7 +19,7 @@ backwards compatibility somewhere please inform us about it.
 Installing Circe:
  * Run "python setup.py install" to install Circe.
 Starting Circe:
- * Simply run "python circe.py" or double-click it. :)
+ * Simply run "python bin/circe.py" (or navigate to bin, double click on circe.py under Windows)
 
 These are the platforms Circe is known to work under:
  * Linux

@@ -17,7 +17,7 @@
 
 import wx
 import circe_globals
-import circe_config
+import config as circe_config
 import servermanager
 from panel_switchbar import PanelSwitchbar
 from panel_windowarea import PanelWindowarea

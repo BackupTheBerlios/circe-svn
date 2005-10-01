@@ -1,0 +1,14 @@
+Release Notes for Circe
+
+Circe version 0.0.3 alpha 3:
+    Commands added:
+        /newserver (creates a new server tab)
+        /echo (echoes the parameters you pass to it)
+    Commands fixed:
+        /ison (parameters truncated)
+        /notice (*)
+    Other changes:
+        Made quit messages sent by people less ugly.
+        Refactored code a bit.
+        Fixed the text in the View menu (not intutive)
+        Fixed bug #5099 (nickname changes didn't show in current window and userlist)

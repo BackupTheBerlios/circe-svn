@@ -100,7 +100,8 @@ class WindowChannel(WindowTextEdit):
 
         if user in self._users.keys():
             self.del_user(user)
-            self.server_event("%s has quit: %s" % (user, " ".join(event.arguments())))
+            msg = event.arguments()
+            self.server_event("%s has quit (%s)" % (user, msg))
 
     def nick_changed(self, event):
         if event.eventtype() != "nick":

@@ -478,7 +478,7 @@ class WXServer(Server):
                 args = e.arguments()
                 chan = args.pop(0)  # Channel name where the message comes
                                     # from.
-                topic = [] 
+                topic = [] # store topic in here
                 # find out the corresponding window
                 window = self.get_channel_window(chan)
                 if window:
@@ -561,9 +561,9 @@ class WXServer(Server):
                 if window:
                     args = ' '.join(arguments)
                     if not args:
-                        text = "%s has left %s" % (src, chan)
+                        text = "%s (%s) has left %s" % (nickname, src, chan)
                     else:
-                        text = "%s has left %s: %s" % (src, chan, args)
+                        text = "%s (%s) has left %s: %s" % (nickname, src, chan, args)
                     window.server_event(text)
                     window.del_user([nickname])
 

@@ -16,6 +16,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import wx
+from wx.lib.dialogs import ScrolledMessageDialog
 import circe_globals
 import config as circe_config
 import servermanager
@@ -190,8 +191,12 @@ class frame_main(wx.Frame):
         self.realize()
 
     def evt_menu_About(self,event):
-        wx.MessageBox(circe_globals.APPNAME + " version " + circe_globals.VERSION,"About")
-    
+        data = []
+        data.append("%s version %s\n" % (circe_globals.APPNAME, circe_globals.VERSION))
+        data.append("Site: %s\n" % (circe_globals.HOMEPAGE))
+        data.append(circe_globals.IMPORTANT_DATA)
+        dialog = ScrolledMessageDialog(self, ''.join(data), "About")
+        dialog.Show() # We don't show it modally -- a bit overkill to do so. 
     def evt_menu_Exit(self,event):
         self.Close()
     

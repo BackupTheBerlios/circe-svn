@@ -14,8 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+import wx
 
 APPNAME = "Circe"
 APPTAG = "Work In Progress"
 VERSION = "0.0.3a4"
+VERSION_STRING = "%s version 0.0.3 alpha 4" % APPNAME
 QUITMSG = "Circe: http://circe.berlios.de/"
+HOMEPAGE = "http://circe.berlios.de"
+IMPORTANT_DATA = """wxPython version: %s""" % wx.VERSION_STRING

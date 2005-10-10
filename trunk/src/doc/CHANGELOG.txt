@@ -16,3 +16,12 @@ New features:
 - Fixed bug #5099
 - Fixed quit messages.
 - Fixed view menu.
+W X Y, Z - Released Circe 0.0.3 alpha 4
+New features:
+- Changed the File > About dialog box to be more professional. (Add logo, add scrolled message dialog)
+- Added desktop icon to Circe (Linux only)
+
+Removed features:
+- View menu (but you can re-enable it by uncommenting all the lines that are commented which relate to the View menu 
+in circe_wx/frame_main.py)
+

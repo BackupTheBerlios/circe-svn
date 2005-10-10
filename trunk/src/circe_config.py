@@ -28,8 +28,4 @@ tree_show = False
 tree_position = wx.RIGHT
 tree_size = 100
 
-def saveconfig():
-    pass
 
-def loadconfig():
-    pass

@@ -19,7 +19,7 @@ import wx
 APPNAME = "Circe"
 APPTAG = "Work In Progress"
 VERSION = "0.0.3a4"
-VERSION_STRING = "%s version 0.0.3 alpha 4" % APPNAME
+
 QUITMSG = "Circe: http://circe.berlios.de/"
 HOMEPAGE = "http://circe.berlios.de"
 IMPORTANT_DATA = """wxPython version: %s""" % wx.VERSION_STRING

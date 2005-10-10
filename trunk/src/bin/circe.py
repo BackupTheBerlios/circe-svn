@@ -40,26 +40,16 @@ if not os.path.exists(config_file):
 
 from circe_wx.frame_main import frame_main
 import config
-from circelib.debug import *
 
 def handle_exc(message):
-    debug(message)
-    if hasattr(config, "debug") and \
-    config.debug is not None:
-      if os.path.exists(config.debug):
-        fp = open(config.debug, "a")
-      else:
-        fp = open(config.debug, "w")
-    else:
-      fp = sys.stdout
-    fp = DebugLog(fp)
-    fp.write(message)
-    traceback.print_exc(file=fp)
+    print message
+    traceback.print_exc()
 
-class CirceApp(wx.App): 
+class CirceApp(wx.App):
     def OnInit(self):
         WXVER = "2.6"
-        major, patchlevel = wx.VERSION_STRING.split('.')[0:2]
+        version = wx.VERSION_STRING.split('.')
+        major, patchlevel = version[0], version[1]
         NOW = '.'.join([major, patchlevel])
         if NOW != WXVER:
             result = wx.MessageBox(
@@ -70,7 +60,6 @@ class CirceApp(wx.App):
               wx.YES_NO)
             if result == wx.NO:
                 return True
-
         try:
             self.mainFrame = frame_main()
             self.mainFrame.Show(True)

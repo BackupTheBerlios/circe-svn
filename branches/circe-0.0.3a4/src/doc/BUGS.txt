@@ -1,0 +1,2 @@
+Known bugs:
+Image overlaps scrolled box in Help > About

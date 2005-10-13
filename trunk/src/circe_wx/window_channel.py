@@ -119,9 +119,15 @@ class WindowChannel(WindowTextEdit):
             from_ -- the sender of the message
             to    -- (Optional) target of the message
         """
+
+        import config
+        try: ts = config.time_format
+        except (AttributeError, KeyError): ts = '%I:%M:%S'
+        import time
+        ts = time.strftime(ts)
         if to:
-            to = "(to %s)" % to	
-        message = "<%s %s> %s" % (from_, to, text)
+            to = " (to %s)" % to	
+        message = "[%s] <%s%s> %s" % (ts, from_, to, text)
         self.server_event(message)
 
     # GUI events.

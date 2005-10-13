@@ -81,7 +81,7 @@ class WXServer(Server):
 
     def text_command(self,cmdstring,window):
         if not cmdstring:
-            return # is raising a exception necessary?
+            return
     
         # in a debug window, do nothing
         if hasattr(window, "get_channelname") and \
@@ -441,13 +441,17 @@ class WXServer(Server):
             if etype == "action":
                 target = e.target()
                 source = irclib.nm_to_n(e.source())
-                action = e.arguments()[1:]
+                action = e.arguments()
+                if len(action) > 1:
+                    action = action[1:]
+                action = ' '.join(action)
                 window = self.get_channel_window(target)
                 if not window: continue
-                window.server_event('* %s %s' % (source, action))
+                to_server  = '* %s %s' % (source, action)
+                window.server_event(to_server)
 
             # Events to display in the status window.
-            if etype == "welcome":
+            elif etype == "welcome":
                 self.host = e.source()
                 self.statuswindow.set_caption(self.host)
                 for arg in e.arguments():
@@ -521,7 +525,11 @@ class WXServer(Server):
             elif etype == "privmsg":
                 source = e.source().split("!")[0]
                 target = e.target()
-                text = "<%s> %s" % (source, " ".join(e.arguments()))
+                import config
+                try: ts = config.time_format
+                except KeyError: ts = '%I:%M:%S'
+                
+                text = "[%s] <%s> %s" % (ts, source, " ".join(e.arguments()))
                 if irclib.is_channel(target):
                     win = self.get_channel_window(target)
                     if win:

@@ -22,6 +22,4 @@ New features:
 - Added desktop icon to Circe (Linux only)
 
 Removed features:
-- View menu (but you can re-enable it by uncommenting all the lines that are commented which relate to the View menu 
-in circe_wx/frame_main.py)
-
+- View menu

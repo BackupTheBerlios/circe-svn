@@ -31,8 +31,10 @@ from panel_tree import PanelTree
 from window_channel import WindowChannel
 from window_status import WindowStatus
 
+ID_MENU_FILE_NEWSERVER = wx.NewId()
 ID_MENU_HELP_ABOUT = wx.NewId()
-ID_MENU_FILE_EXIT = 1002
+ID_MENU_FILE_EXIT = wx.NewId()
+
 ID_TOOLBAR_CHANNEL = 1401
 ID_TOOLBAR_TOOLS = 1401
 
@@ -58,6 +60,7 @@ class frame_main(wx.Frame):
         
     def create_menu(self):
         menu_file = wx.Menu()
+        menu_file.Append(ID_MENU_FILE_NEWSERVER, "New &server", "Create a new server tab.")
         menu_file.Append(ID_MENU_FILE_EXIT, "E&xit", "Exit %s" % (circe_globals.APPNAME))
         menu_help = wx.Menu()
         menu_help.Append(ID_MENU_HELP_ABOUT, "&About", "About %s" % (circe_globals.APPNAME))
@@ -70,7 +73,7 @@ class frame_main(wx.Frame):
         
         wx.EVT_MENU(self, ID_MENU_HELP_ABOUT, self.evt_menu_About)
         wx.EVT_MENU(self, ID_MENU_FILE_EXIT, self.evt_menu_Exit)
-
+        wx.EVT_MENU(self, ID_MENU_FILE_NEWSERVER, self.evt_menu_NewServer)
     def create_switchbar(self):
         sbsize = (circe_config.switchbar_hsize,circe_config.switchbar_vsize)
         if circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT:
@@ -172,6 +175,10 @@ class frame_main(wx.Frame):
 
     def evt_menu_Exit(self,event):
         self.Close()
+
+    def evt_menu_NewServer(self, event):
+        s = servermanager.add_server(self.panel_windowarea)
+        self.panel_windowarea.show_window(s.statuswindow.section_id,s.statuswindow)
 
     def evt_switchbar_event(self,section_id,button_id):
         self.panel_windowarea.show_window(section_id,button_id,True)

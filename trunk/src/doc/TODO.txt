@@ -6,6 +6,7 @@ Features projected for 0.0.3:
   or "Chatting with User") and at least a Close button. Kind of like XChat.
   Accomplishing this might need a more structured inheritance of sizers
   throughout window_base and its subclasses.
+- Removal of lorem.py (DONE)
 
 Features projected for the future:
 - (wxserver.py) In self.checkEvents() in WXServer add handling for missing

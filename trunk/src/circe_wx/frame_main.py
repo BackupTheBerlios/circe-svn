@@ -19,7 +19,7 @@
 # System
 import wx, wxPython
 from wx.lib.dialogs import ScrolledMessageDialog
-import os
+import os, sys
 
 # Circe
 import circe_globals
@@ -104,7 +104,8 @@ class frame_main(wx.Frame):
         self.panel_windowarea.bind_del(self.evt_windowarea_delwindow)
         self.panel_windowarea.bind_show(self.evt_windowarea_showwindow)
         self.panel_windowarea.bind_set_caption(self.evt_windowarea_setcaption)
-    
+        self.Bind(wx.EVT_CLOSE, self.evt_window_del)
+
     def realize(self):
         self.destroy_sizers()
         self.create_sizers()
@@ -194,6 +195,10 @@ class frame_main(wx.Frame):
 
     def evt_windowarea_setcaption(self,section_id,window_id,caption):
         self.panel_switchbar.set_caption(section_id,window_id,caption)
+
+    def evt_window_del(self,*a):
+        for server in servermanager.servers: server.connection.quit(circe_globals.QUITMSG)
+        sys.exit()
 
 class About(wxPython.wx.wxDialog):
 	def __init__(self,event):

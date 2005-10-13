@@ -22,7 +22,8 @@ __revision__ = "$Id: circe.py 123 2005-05-06 18:03:00Z anjel $"
 import wx
 import traceback
 import sys, os
-
+import platform
+# Importing section
 currpath = os.path.join(os.getcwd(), __file__)
 currpath = os.path.abspath(os.path.join(currpath, '../..'))
 sys.path.insert(0, currpath)
@@ -33,12 +34,20 @@ if not os.path.exists(config_dir):
 
 sys.path.insert(0, config_dir)
 
-config_file = os.path.join(config_dir, 'config.py')
-if not os.path.exists(config_file):
-    import circe_config
-    sys.modules["config"] = circe_config # for backwards compatibilty
+if platform.system() == "Linux":
+    config_file = os.path.join(config_dir, 'config')
+else:
+    config_file = os.path.join(config_dir, 'config.ini')
 
+if not os.path.exists(config_file):
+    import circe_config as config
+    sys.modules["config"] = config
+else:
+    config = config_engine.Config(configfile=config_file)
+    sys.modules["config"] = config
+    import config
 from circe_wx.frame_main import frame_main
+
 import config
 
 def handle_exc(message):
@@ -59,7 +68,7 @@ class CirceApp(wx.App):
               "wxPython Version Warning",
               wx.YES_NO)
             if result == wx.NO:
-                return True
+                return False # Exit
         try:
             self.mainFrame = frame_main()
             self.mainFrame.Show(True)

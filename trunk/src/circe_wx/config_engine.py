@@ -21,8 +21,10 @@ import ConfigParser # we need some way to work with those damn INI config files 
 import os
 
 class Config:
-    def __init__(self, configsection="Config", configfile="~/.circe/config"):
+    def __init__(self, configsection="Config", configfile=None):
         self.config = ConfigParser.ConfigParser()
+        if configfile is None:
+            raise ValueError, 'Config(section, file): You did not specify the file.'
         self.configfile = os.path.expanduser(configfile)
         self.config.readfp(open(self.configfile, "r"))
         self.section = configsection
@@ -40,3 +42,7 @@ class Config:
             self.config.write(open(self.configfile, "w"))
         except:
             raise KeyError, k
+   
+    __getattr__ = __getitem__
+    __setattr__ =  __setitem__
+    __delattr__ = __delitem__

@@ -17,7 +17,7 @@
 
 # Imports
 # System
-import wx
+import wx, wxPython
 from wx.lib.dialogs import ScrolledMessageDialog
 import os
 
@@ -71,7 +71,7 @@ class frame_main(wx.Frame):
 
         self.SetMenuBar(menu_bar)
         
-        wx.EVT_MENU(self, ID_MENU_HELP_ABOUT, self.evt_menu_About)
+        wx.EVT_MENU(self, ID_MENU_HELP_ABOUT, About)
         wx.EVT_MENU(self, ID_MENU_FILE_EXIT, self.evt_menu_Exit)
         wx.EVT_MENU(self, ID_MENU_FILE_NEWSERVER, self.evt_menu_NewServer)
     def create_switchbar(self):
@@ -169,8 +169,8 @@ class frame_main(wx.Frame):
         sizer.Add(self.bitmap)
         sizer.Add(dialog)
 
-        sizer.Fit(dialog)
-        dialog.SetSizer(sizer)
+#        sizer.Fit(dialog)
+#        dialog.SetSizer(sizer)
         dialog.Show()
 
     def evt_menu_Exit(self,event):
@@ -194,3 +194,23 @@ class frame_main(wx.Frame):
 
     def evt_windowarea_setcaption(self,section_id,window_id,caption):
         self.panel_switchbar.set_caption(section_id,window_id,caption)
+
+class About(wxPython.wx.wxDialog):
+	def __init__(self,event):
+		wxPython.wx.wxDialog.__init__ (self,None,-1, 'About Circe', size = (200,200))
+		self.panel = wxPython.wx.wxPanel(self, -1)
+	        self.logo = wx.BitmapFromImage(wx.Image(os.path.join("images","circe.png"), wx.BITMAP_TYPE_PNG))
+	        self.bitmap = wx.StaticBitmap(self.panel, -1)
+	        self.bitmap.SetBitmap(self.logo)
+		self.appname_label = wxPython.wx.wxStaticText(self.panel, -1, "%s %s\n" % (circe_globals.APPNAME, circe_globals.VERSION))
+		self.ok_button = wxPython.wx.wxButton(self.panel, 100,"Ok")
+		self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+		self.sizer.Add(self.bitmap, 0, wxPython.wx.wxALIGN_CENTER)
+		self.sizer.Add(self.ok_button, 1, wxPython.wx.wxALIGN_CENTER)
+		self.panel.SetSizerAndFit(self.sizer)
+		self.sizer.Fit(self)
+		wxPython.wx.EVT_BUTTON(self.panel, 100, self.click)
+		self.ShowModal()
+	def click(self,event):
+		self.EndModal(wx.ID_OK)
+

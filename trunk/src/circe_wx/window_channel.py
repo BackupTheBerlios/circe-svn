@@ -17,8 +17,6 @@
 
 import wx
 from irclib import nm_to_n
-
-import lorem
 from window_base import WindowTextEdit
 
 ID_LST_USERS = wx.NewId()

@@ -35,6 +35,8 @@ class Config:
         self.config.set(self.section, k, v)
         self.config.write(open(self.configfile, "w"))
     def __delitem__(self, k):
-        self.config.remove_option(self.section, k)
-        self.config.write(open(self.configfile, "w"))
-
+        try:
+            self.config.remove_option(self.section, k)
+            self.config.write(open(self.configfile, "w"))
+        except:
+            raise KeyError, k

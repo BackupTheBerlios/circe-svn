@@ -20,6 +20,7 @@
 import wx
 from wx.lib.dialogs import ScrolledMessageDialog
 import os
+
 # Circe
 import circe_globals
 import config as circe_config
@@ -32,14 +33,6 @@ from window_status import WindowStatus
 
 ID_MENU_HELP_ABOUT = wx.NewId()
 ID_MENU_FILE_EXIT = 1002
-#ID_MENU_VIEW_SWITCHBAR = 1650
-#ID_MENU_VIEW_SWITCHBAR_ALEFT = 1651
-#ID_MENU_VIEW_SWITCHBAR_ARIGHT = 1652
-#ID_MENU_VIEW_SWITCHBAR_ATOP = 1653
-#ID_MENU_VIEW_SWITCHBAR_ABOTTOM = 1654
-#ID_MENU_VIEW_TREE = 1660
-#ID_MENU_VIEW_TREE_ALEFT = 1661
-#ID_MENU_VIEW_TREE_ARIGHT = 1662
 ID_TOOLBAR_CHANNEL = 1401
 ID_TOOLBAR_TOOLS = 1401
 
@@ -68,35 +61,15 @@ class frame_main(wx.Frame):
         menu_file.Append(ID_MENU_FILE_EXIT, "E&xit", "Exit %s" % (circe_globals.APPNAME))
         menu_help = wx.Menu()
         menu_help.Append(ID_MENU_HELP_ABOUT, "&About", "About %s" % (circe_globals.APPNAME))
-#        menu_switchbar = wx.Menu()
-#        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ALEFT, "Align Switchbar &Left")
-#        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ARIGHT, "Align Switchbar &Right")
-#        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ATOP, "Align Switchbar &Top")
-#        menu_switchbar.Append(ID_MENU_VIEW_SWITCHBAR_ABOTTOM, "Align Switchbar &Bottom")
-        
-#        menu_tree = wx.Menu()
-#        menu_tree.Append(ID_MENU_VIEW_TREE_ALEFT, "Align Treebar &Left")
-#        menu_tree.Append(ID_MENU_VIEW_TREE_ARIGHT, "Align Treebar &Right")
-        
-#        menu_view = wx.Menu()
-#        menu_view.AppendMenu(ID_MENU_VIEW_SWITCHBAR, "&Switchbar", menu_switchbar)
-#        menu_view.AppendMenu(ID_MENU_VIEW_TREE, "&Treebar", menu_tree)
         
         menu_bar = wx.MenuBar() 
         menu_bar.Append(menu_file, "&File")
-#        menu_bar.Append(menu_view, "&View")
         menu_bar.Append(menu_help, "&Help")
 
         self.SetMenuBar(menu_bar)
         
         wx.EVT_MENU(self, ID_MENU_HELP_ABOUT, self.evt_menu_About)
         wx.EVT_MENU(self, ID_MENU_FILE_EXIT, self.evt_menu_Exit)
-#        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ALEFT, self.evt_menu_switchbar_align_left)
-#        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ARIGHT, self.evt_menu_switchbar_align_right)
-#        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ATOP, self.evt_menu_switchbar_align_top)
-#        wx.EVT_MENU(self, ID_MENU_VIEW_SWITCHBAR_ABOTTOM, self.evt_menu_switchbar_align_bottom)
-#        wx.EVT_MENU(self, ID_MENU_VIEW_TREE_ALEFT, self.evt_menu_tree_align_left)
-#       wx.EVT_MENU(self, ID_MENU_VIEW_TREE_ARIGHT, self.evt_menu_tree_align_right)
 
     def create_switchbar(self):
         sbsize = (circe_config.switchbar_hsize,circe_config.switchbar_vsize)
@@ -199,30 +172,6 @@ class frame_main(wx.Frame):
 
     def evt_menu_Exit(self,event):
         self.Close()
-    
-    def evt_menu_switchbar_align_left(self,event):
-        circe_config.switchbar_position = wx.LEFT
-        self.rebuild_switchbar()
-
-    def evt_menu_switchbar_align_right(self,event):
-        circe_config.switchbar_position = wx.RIGHT
-        self.rebuild_switchbar()
-
-    def evt_menu_switchbar_align_top(self,event):
-        circe_config.switchbar_position = wx.TOP
-        self.rebuild_switchbar()
-
-    def evt_menu_switchbar_align_bottom(self,event):
-        circe_config.switchbar_position = wx.BOTTOM
-        self.rebuild_switchbar()
-
-    def evt_menu_tree_align_left(self,event):
-        circe_config.tree_position = wx.LEFT
-        self.rebuild_tree()
-
-    def evt_menu_tree_align_right(self,event):
-        circe_config.tree_position = wx.RIGHT
-        self.rebuild_tree()
 
     def evt_switchbar_event(self,section_id,button_id):
         self.panel_windowarea.show_window(section_id,button_id,True)

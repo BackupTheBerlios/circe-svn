@@ -21,16 +21,20 @@ import ConfigParser # we need some way to work with those damn INI config files 
 import os
 
 class Config:
-	def __init__(self, configsection="Config", configfile="~/.circe/config"):
-		self.config = ConfigParser.ConfigParser()
-		self.configfile = os.path.expanduser(configfile)
-		self.config.readfp(open(self.configfile, "r"))
-		self.section = configsection
-	def __getitem__(self, k):
-		try:
-			return self.config.get(self.section, k)
-		except:
-			raise KeyError, k
-	def __setitem__(self, k, v):
-		self.config.set(self.section, k, v)
-		self.config.write(open(self.configfile, "w"))
+    def __init__(self, configsection="Config", configfile="~/.circe/config"):
+        self.config = ConfigParser.ConfigParser()
+        self.configfile = os.path.expanduser(configfile)
+        self.config.readfp(open(self.configfile, "r"))
+        self.section = configsection
+    def __getitem__(self, k):
+        try:
+            return self.config.get(self.section, k)
+        except:
+            raise KeyError, k
+    def __setitem__(self, k, v):
+        self.config.set(self.section, k, v)
+        self.config.write(open(self.configfile, "w"))
+    def __delitem__(self, k):
+        self.config.remove_option(self.section, k)
+        self.config.write(open(self.configfile, "w"))
+

@@ -52,7 +52,7 @@ class WindowTextEdit(WindowServer):
                 wx.DefaultSize,wx.TE_MULTILINE)
         self.txt_buffer.SetEditable(False)
         f = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Monospace")
-        self.txt_buffer.SetDefaultStyle(wx.TextAttr("BLACK", wx.NullColour, f))
+        self.txt_buffer.SetDefaultStyle(wx.TextAttr(wx.NullColour, wx.NullColour, f))
 
         self.txt_edit.Bind(wx.EVT_CHAR, self.txt_edit_evt_char)
 

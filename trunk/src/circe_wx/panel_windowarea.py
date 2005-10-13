@@ -31,15 +31,6 @@ class PanelWindowarea(wx.Panel):
         self.create_sizers()
         self.add_controls()
         
-        #self.testWindow = wx.TextCtrl(self,-1,"Test Window Area. (Window 1)\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        #self.testWindow2 = wx.TextCtrl(self,-1,"Test Window Area. (Window 2)\nModify circe_config.toolbar_position to change toolbar alignment.",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE)
-        #self.testWindow = WindowChannel(self,-1)
-        #self.testWindow2 = WindowChannel(self,-1)
-        #self.add_window(self.testWindow)
-        #self.add_window(self.testWindow2)
-        #self.show_window(self.testWindow)
-        #self.show_window(self.testWindow2)
-    
     def new_server(self):
         s = servermanager.add_server(self)
         self.show_window(s.statuswindow.section_id,s.statuswindow)

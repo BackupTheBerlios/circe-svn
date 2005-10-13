@@ -31,8 +31,6 @@ class SwitchSection:
         else:
             self.buttons[button_id] = SwitchButton(self.section_id,button_id,self.parent,text,icon)
             self.buttons[button_id].Show(False)
-            # Bind event
-            #print "Binding with: ",self.buttons[button_id].event_id
             wx.EVT_BUTTON(self.parent,self.buttons[button_id].event_id,self.button_event)
     
     def remove_button(self,button_id):
@@ -101,8 +99,6 @@ class PanelSwitchbar(wx.Panel):
         
         self.create_sizers()
         
-        #self.add_controls()
-        #self.Layout()
         self.realize()
 
         wx.EVT_SIZE(self,self.OnSize)
@@ -251,7 +247,6 @@ class PanelSwitchbar(wx.Panel):
 
     def button_event(self,section_id,button_id):
         """Called whenever a button is clicked"""
-        #print "Button event: section_id:",section_id," button_id:", button_id
         self.toggle_button(section_id,button_id)
         if self.func_click is not None:
             self.func_click(self.currentbutton[0],self.currentbutton[1])

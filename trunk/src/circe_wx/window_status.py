@@ -32,7 +32,6 @@ class WindowStatus(WindowTextEdit):
         # Delay between each checking (in ms)
         self.timer_delay = 500
         
-#        self.create_controls()
         self.create_sizers()
         self.add_controls()
 
@@ -45,9 +44,6 @@ class WindowStatus(WindowTextEdit):
         else:
             caption = "Not connected"
         return caption
-    
-#    def create_controls(self):
-#        pass
     
     def create_sizers(self):
         self.sizer_top = wx.BoxSizer(wx.VERTICAL)

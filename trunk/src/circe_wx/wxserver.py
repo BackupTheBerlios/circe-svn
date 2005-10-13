@@ -47,7 +47,6 @@ class WXServer(Server):
             raise "WindowChannel %s already exists" % channelname
 
         new = WindowChannel(self.windowarea,self,channelname)
-#        new.set_caption(caption)
         self.channels.append(new)
         self.windowarea.show_window(self, new)
         return new

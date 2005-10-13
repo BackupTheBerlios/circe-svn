@@ -197,7 +197,11 @@ class frame_main(wx.Frame):
         self.panel_switchbar.set_caption(section_id,window_id,caption)
 
     def evt_window_del(self,*a):
-        for server in servermanager.servers: server.connection.quit(circe_globals.QUITMSG)
+        for server in servermanager.servers: 
+            try:    
+                server.connection.quit(circe_globals.QUITMSG)
+            except:
+                pass
         sys.exit()
 
 class About(wxPython.wx.wxDialog):

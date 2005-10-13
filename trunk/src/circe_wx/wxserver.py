@@ -257,13 +257,14 @@ class WXServer(Server):
                 self.connection.names(channels)
 
         elif cmd == "nick":
+            oldnick=self.connection.get_nickname()
             try:
                 nick = params
             except IndexError:
                 window.server_event("/nick syntax: /nick newnick")
                 return
             self.connection.nick(newnick=params[0])
-
+            window.server_event("%s is now known as %s" % (oldnick, params[0]))
         elif cmd == "notice":
             try:
                 target, text = params

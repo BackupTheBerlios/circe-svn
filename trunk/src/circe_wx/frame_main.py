@@ -170,8 +170,6 @@ class frame_main(wx.Frame):
         sizer.Add(self.bitmap)
         sizer.Add(dialog)
 
-#        sizer.Fit(dialog)
-#        dialog.SetSizer(sizer)
         dialog.Show()
 
     def evt_menu_Exit(self,event):

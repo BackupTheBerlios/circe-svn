@@ -15,11 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#from circelib.circelib import Server
 import wxserver
 
 servers = []
-        
+class NonExistantServer(): pass
 def add_server(*options):
     s = wxserver.WXServer(*options)
     servers.append(s)
@@ -28,3 +27,5 @@ def add_server(*options):
 def remove_server(s):
     if s in servers:
         del servers[s]
+    else: 
+        raise NonExistantServer

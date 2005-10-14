@@ -95,9 +95,10 @@ class WXServer(Server):
             if hasattr(window, "get_channelname"):
                 target = window.get_channelname()
                 for line in cmdstring.split("\n"):
-                    self.connection.privmsg(target, line)
-                    mynick = self.connection.get_nickname()
-                    window.add_message(line, mynick)
+                    if line.strip().strip("\n"):
+                        self.connection.privmsg(target, line)
+                        mynick = self.connection.get_nickname()
+                        window.add_message(line, mynick)
             return
 
         # Create a list

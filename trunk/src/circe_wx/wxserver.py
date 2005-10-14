@@ -383,6 +383,8 @@ class WXServer(Server):
 			window.sever_event("%s has changed the topic of %s: %s" % (self.connection.get_nickname(), param[0], " ".join(param[1:])))
                     else:
                         self.connection.topic(channel=window.get_channelname())
+                elif len(params) == 1 and params[0].startswith("#"):
+                        self.connection.topic(channel=params[0])
                 else:
                     self.connection.topic(channel=window.get_channelname(), new_topic=new_topic)
                     window.server_event("%s has changed the topic of %s: %s" % (self.connection.get_nickname(), window.get_channelname(), new_topic))
@@ -595,7 +597,7 @@ class WXServer(Server):
                 # Informs each channel that the user has quit.
                 for chan in self.channels:
                     chan.user_quit(e)
-
+                    print e
             elif etype == "nicknameinuse":
                 text = "%s: %s" % (e.arguments()[0], e.arguments()[1])
                 self.statuswindow.server_event(text)

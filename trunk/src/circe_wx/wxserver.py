@@ -374,11 +374,21 @@ class WXServer(Server):
             self.connection.time(server)
             
         elif cmd == "topic":
-            new_topic = " ".join(params[1:])
+            new_topic = " ".join(params[0:])
             if new_topic:
-                self.connection.topic(channel=params[0], new_topic=new_topic)
+                if params[0] in self.channels:
+                    new_topic = " ".join(params[1:])
+                    if new_topic:
+                        self.connection.topic(channel=param[0], new_topic=" ".join(param[1:]))
+			window.sever_event("%s has changed the topic of %s: %s" % (self.connection.get_nickname(), param[0], " ".join(param[1:])))
+                    else:
+                        self.connection.topic(channel=window.get_channelname())
+                else:
+                    self.connection.topic(channel=window.get_channelname(), new_topic=new_topic)
+                    window.server_event("%s has changed the topic of %s: %s" % (self.connection.get_nickname(), window.get_channelname(), new_topic))
+
             else:
-                self.connection.topic(channel=params[0])
+                self.connection.topic(channel=window.get_channelname())
         elif cmd == "trace":
             self.connection.trace(params and params[0] or "")
         elif cmd == "user":

@@ -134,7 +134,6 @@ class WXServer(Server):
                     return
                 self.connection.join(*channels)
                 return
-
             self.connect(cmd, window, **d)
             self.host = server
             # Ensures checking for new events is enabled.
@@ -426,7 +425,8 @@ class WXServer(Server):
 
         elif cmd == "check":
             self.check_events()
-
+	elif cmd == "clear":
+            window.txt_buffer_clr()
     def check_events(self):
         """Redirects all received events to the correct windows."""
         # Print events and display them in the rigth windows.

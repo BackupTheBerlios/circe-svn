@@ -78,3 +78,7 @@ class WindowTextEdit(WindowServer):
     # GUI events.
     def evt_focus(self):
         self.txt_edit.SetFocus()
+
+    def txt_buffer_clr(self, *a):
+        """clear the text buffer"""
+	self.txt_buffer.SetValue("")

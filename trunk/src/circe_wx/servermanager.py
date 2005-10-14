@@ -18,7 +18,9 @@
 import wxserver
 
 servers = []
-class NonExistantServer(): pass
+
+class NonExistantServer: pass
+
 def add_server(*options):
     s = wxserver.WXServer(*options)
     servers.append(s)

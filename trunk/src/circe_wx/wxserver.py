@@ -375,8 +375,10 @@ class WXServer(Server):
             
         elif cmd == "topic":
             new_topic = " ".join(params[1:])
-            self.connection.topic(channel=params[0], new_topic=new_topic)
-
+            if new_topic:
+                self.connection.topic(channel=params[0], new_topic=new_topic)
+            else:
+                self.connection.topic(channel=params[0])
         elif cmd == "trace":
             self.connection.trace(params and params[0] or "")
         elif cmd == "user":

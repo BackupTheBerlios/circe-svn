@@ -135,16 +135,17 @@ class WindowChannel(WindowTextEdit):
             to    -- (Optional) target of the message
         """
 
-        import config, ConfigParser
+        import config_engine, ConfigParser
+        config=config_engine.Config()
         ts = ' '
         try:
             try:
-                display_tf = config.getboolean(config.section, "timestamp_show")
+                display_tf = config.getboolean("timestamp_show")
             except ValueError:
                 display_tf = False
             if display_tf:
                 try: 
-                    ts = config["time_format"]
+                    ts = config["time_format"]+" "
                 except ConfigParser.NoOptionError:
                     ts = '[%I:%M:%S] '
                     config["time_format"] = ts

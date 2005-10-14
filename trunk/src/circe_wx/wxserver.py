@@ -512,6 +512,11 @@ class WXServer(Server):
                             topic.append(text)
                         else:
                             window.server_event(text)
+                    else:
+                        args = " ".join(args)
+                        if etype == "topic":
+                            text = "Topic for %s is: %s" % (chan, args)
+                        self.server_event(text)
                 else:
                     window = self.get_channel_window(e.target())
                     if window:

@@ -43,6 +43,7 @@ if not os.path.exists(config_file):
     import circe_config as config
     sys.modules["config"] = config
 else:
+    import circe_wx.config_engine as config_engine
     config = config_engine.Config(configfile=config_file)
     sys.modules["config"] = config
     import config

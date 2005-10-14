@@ -57,15 +57,29 @@ class WindowChannel(WindowTextEdit):
         self.sizer_top.Add(self.sizer_buffer_andusers,1,wx.EXPAND)
         self.sizer_top.Add(self.txt_edit,0,wx.EXPAND)
 
+    def sort(self):
+        users = list(self._users.iterkeys())
+        def mysort(mylist):
+            nlist = range(97,123)
+            slist = [ ord(c) for c in mylist ]
+            slist.sort()
+            for x in mylist:
+                if not ord(x) in nlist:
+                    slist.insert(0,ord(x))
+            return map(chr,slist)
+        users = mysort(mylist)
+        self.users(users)
+
 
     def users(self, users=None):
         """Update the uers list and eventually add the given users."""
         if not users: users = []
+
         if users:
             for u in users:
                 if u not in self._users.keys():
                     self._users[u] = ""
-
+        
         self.lst_users.DeleteAllItems()
         for u in self._users.keys():
             self.lst_users.Append((u,))
@@ -98,7 +112,7 @@ class WindowChannel(WindowTextEdit):
 
         if user in self._users.keys():
             self.del_user(user)
-            msg = event.arguments()
+            msg = " ".join(event.arguments())
             self.server_event("%s has quit (%s)" % (user, msg))
 
     def nick_changed(self, event):
@@ -111,6 +125,7 @@ class WindowChannel(WindowTextEdit):
             self.del_user(old)
             self.users([new])
             self.server_event("%s is now known as %s" % (old, new))
+
     def add_message(self, text, from_, to=""):
         """Format a message in a pretty way with the given arguments.
 
@@ -120,9 +135,9 @@ class WindowChannel(WindowTextEdit):
             to    -- (Optional) target of the message
         """
 
-        import config
-        try: ts = config.time_format
-        except (AttributeError, KeyError): ts = '%I:%M:%S'
+        import config, ConfigParser
+        try: ts = config["time_format"]
+        except ConfigParser.NoOptionError: ts = '%I:%M:%S'; config["time_format"] = ts
         import time
         ts = time.strftime(ts)
         if to:

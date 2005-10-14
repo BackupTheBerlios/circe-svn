@@ -18,31 +18,45 @@
 
 # Some imports...here we go!
 import ConfigParser # we need some way to work with those damn INI config files ;)
+import circe_config
 import os
 
-class Config:
-    def __init__(self, configsection="Config", configfile="~/.circe/config"):
+class Config(object):
+    def __init__(self, configsection="Circe", configfile="~/.circe/config"):
         self.config = ConfigParser.ConfigParser()
-        if configfile is None:
-            raise ValueError, 'Config(section, file): You did not specify the file.'
         self.configfile = os.path.expanduser(configfile)
         self.config.readfp(open(self.configfile, "r"))
         self.section = configsection
+
     def __getitem__(self, k):
+        result = self.__dict__.get("initialized", False)
+        if not result:
+            if self.__dict__.has_key(k):
+                return self.__dict__[k]
+            
+        if k[0] == '_':
+            raise KeyError, k
         try:
             return self.config.get(self.section, k)
-        except:
+        except ConfigParser.NoSectionError:
             raise KeyError, k
     def __setitem__(self, k, v):
-        self.config.set(self.section, k, v)
-        self.config.write(open(self.configfile, "w"))
-    def __delitem__(self, k):
-        try:
-            self.config.remove_option(self.section, k)
-            self.config.write(open(self.configfile, "w"))
-        except:
+        if k[0] == '_' or k == '__dict__':
             raise KeyError, k
-   
-    __getattr__ = __getitem__
-    __setattr__ =  __setitem__
-    __delattr__ = __delitem__
+        if 'config' in k or 'section' in k:
+            return
+        self.config.set(self.section, k, v)
+        self.__dict__[k] = v
+        self.config.write(open(self.configfile, "w"))
+
+    def __delitem__(self, k):
+        self.config.remove_option(self.section, k)
+        self.config.write(open(self.configfile, "w"))
+
+    def __getattr__(self, k):
+        try: return object.__getattr__(self, k)
+        except AttributeError: pass
+        try:
+            return getattr(circe_config, k)
+        except AttributeError: pass
+        return self[k]

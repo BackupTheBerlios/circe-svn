@@ -136,13 +136,17 @@ class WindowChannel(WindowTextEdit):
         """
 
         import config, ConfigParser
-        try: ts = config["time_format"]
-        except ConfigParser.NoOptionError: ts = '%I:%M:%S'; config["time_format"] = ts
+        ts = ''
+        try:
+            if config["timestamp_show"]:
+                try: ts = config["time_format"]
+                except ConfigParser.NoOptionError: ts = '[%I:%M:%S] '; config["time_format"] = ts
+        except ConfigParser.NoOptionError: pass
         import time
         ts = time.strftime(ts)
         if to:
             to = " (to %s)" % to	
-        message = "[%s] <%s%s> %s" % (ts, from_, to, text)
+        message = "%s<%s%s> %s" % (ts, from_, to, text)
         self.server_event(message)
 
     # GUI events.

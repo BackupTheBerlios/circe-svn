@@ -62,3 +62,5 @@ class Config(object):
         try: return self[k]
         except KeyError: pass
         return getattr(self.config, k)
+    def getboolean(self, k):
+        return self.config.getboolean(self.section, k)

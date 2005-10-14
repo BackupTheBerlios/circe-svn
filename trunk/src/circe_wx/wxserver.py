@@ -601,6 +601,7 @@ class WXServer(Server):
                 self.statuswindow.server_event(text)
             elif etype == "nick":
                 for chan in self.channels:
+                    print e
                     chan.nick_changed(e)
 
             elif etype == "error":

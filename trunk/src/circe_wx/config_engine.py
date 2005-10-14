@@ -21,7 +21,7 @@ import ConfigParser # we need some way to work with those damn INI config files 
 import os
 
 class Config:
-    def __init__(self, configsection="Config", configfile=None):
+    def __init__(self, configsection="Config", configfile="~/.circe/config"):
         self.config = ConfigParser.ConfigParser()
         if configfile is None:
             raise ValueError, 'Config(section, file): You did not specify the file.'

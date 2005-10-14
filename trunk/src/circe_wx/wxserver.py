@@ -387,8 +387,6 @@ class WXServer(Server):
                         self.connection.topic(channel=params[0])
                 else:
                     self.connection.topic(channel=window.get_channelname(), new_topic=new_topic)
-                    window.server_event("%s has changed the topic of %s: %s" % (self.connection.get_nickname(), window.get_channelname(), new_topic))
-
             else:
                 self.connection.topic(channel=window.get_channelname())
         elif cmd == "trace":
@@ -498,21 +496,26 @@ class WXServer(Server):
             # Events to display in the channel windows.
             elif etype in ("topic", "nochanmodes"):
                 args = e.arguments()
-                chan = args.pop(0)  # Channel name where the message comes
-                                    # from.
-                topic = [] # store topic in here
-                # find out the corresponding window
-                window = self.get_channel_window(chan)
-                if window:
-                    args = " ".join(args)
-                    if etype == "topic":
-                        text = "Topic for %s is: %s" % (chan, args)
-                    else:
-                        text = "[%s] %s" % (etype, args)
-                    if etype == "topic":
-                        topic.append(text)
-                    else:
-                        window.server_event(text)
+                if len(args) > 1:
+                    chan = args.pop(0)  # Channel name where the message comes
+                                        # from.
+                    topic = [] # store topic in here
+                    # find out the corresponding window
+                    window = self.get_channel_window(chan)
+                    if window:
+                        args = " ".join(args)
+                        if etype == "topic":
+                            text = "Topic for %s is: %s" % (chan, args)
+                        else:
+                            text = "[%s] %s" % (etype, args)
+                        if etype == "topic":
+                            topic.append(text)
+                        else:
+                            window.server_event(text)
+                else:
+                    window = self.get_channel_window(e.target())
+                    if window:
+                        window.server_event("%s has changed the topic of %s to: %s" % (e.source(), e.target(), args))
 
             elif etype == "topicinfo":
                 sender = e.arguments()[1]

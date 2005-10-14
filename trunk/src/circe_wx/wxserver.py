@@ -428,6 +428,8 @@ class WXServer(Server):
             self.check_events()
 	elif cmd == "clear":
             window.txt_buffer_clr()
+	else:
+            window.server_event("%s: Invalid Command" % (cmd))
     def check_events(self):
         """Redirects all received events to the correct windows."""
         # Print events and display them in the rigth windows.

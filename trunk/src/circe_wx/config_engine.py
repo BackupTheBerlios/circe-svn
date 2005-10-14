@@ -59,4 +59,6 @@ class Config(object):
         try:
             return getattr(circe_config, k)
         except AttributeError: pass
-        return self[k]
+        try: return self[k]
+        except KeyError: pass
+        return getattr(self.config, k)

@@ -136,12 +136,19 @@ class WindowChannel(WindowTextEdit):
         """
 
         import config, ConfigParser
-        ts = ''
+        ts = ' '
         try:
-            if config["timestamp_show"]:
-                try: ts = config["time_format"]
-                except ConfigParser.NoOptionError: ts = '[%I:%M:%S] '; config["time_format"] = ts
-        except ConfigParser.NoOptionError: pass
+            try:
+                display_tf = config.getboolean(config.section, "timestamp_show")
+            except ValueError:
+                display_tf = False
+            if display_tf:
+                try: 
+                    ts = config["time_format"]
+                except ConfigParser.NoOptionError:
+                    ts = '[%I:%M:%S] '
+                    config["time_format"] = ts
+        except ConfigParser.NoOptionError: pass	
         import time
         ts = time.strftime(ts)
         if to:

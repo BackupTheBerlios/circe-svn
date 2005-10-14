@@ -94,9 +94,10 @@ class WXServer(Server):
             # if it is not a command send the message to the channel
             if hasattr(window, "get_channelname"):
                 target = window.get_channelname()
-                self.connection.privmsg(target, cmdstring)
-                mynick = self.connection.get_nickname()
-                window.add_message(cmdstring, mynick)
+                for line in cmdstring.split("\n"):
+                    self.connection.privmsg(target, line)
+                    mynick = self.connection.get_nickname()
+                    window.add_message(line, mynick)
             return
 
         # Create a list
@@ -194,7 +195,7 @@ class WXServer(Server):
 
         elif cmd == "join" or cmd == "j":
             self.connection.join(*params)
-
+            window.server_event("%s has joined %s." % (self.connection.get_nickname(), params[0]))
         elif cmd == "kick" or cmd == "k":
             try:
                 channel = params[0]

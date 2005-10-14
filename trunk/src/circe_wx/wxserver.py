@@ -515,7 +515,7 @@ class WXServer(Server):
                 else:
                     window = self.get_channel_window(e.target())
                     if window:
-                        window.server_event("%s has changed the topic of %s to: %s" % (e.source(), e.target(), args))
+                        window.server_event("%s has changed the topic of %s to: %s" % (e.source().split("!")[0], e.target(), args[0]))
 
             elif etype == "topicinfo":
                 sender = e.arguments()[1]

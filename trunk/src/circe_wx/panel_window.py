@@ -37,7 +37,7 @@ class PanelWindow(wx.Panel):
 
     # Events
     def evt_closed(self):
-        print "%s received evt_closed" % self.caption
+        pass
 
     def evt_caption(self):
         pass

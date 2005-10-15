@@ -33,19 +33,13 @@ config_dir = os.path.join(os.path.expanduser('~'), '.circe')
 if not os.path.exists(config_dir):
     os.mkdir(config_dir)
 
-sys.path.insert(0, config_dir)
-
 if platform.system() != "Windows":
     config_file = os.path.join(config_dir, 'config')
 else:
     config_file = os.path.join(config_dir, 'config.ini')
 
-if not os.path.exists(config_file):
-    import circe_wx.config_engine as config_engine
-    config = config_engine.Config(configfile="defaultconfig")
-else:
-    import circe_wx.config_engine as config_engine
-    config = config_engine.Config(configfile=config_file)
+import circe_wx.config_engine as config_engine
+config = config_engine.Config(configfile=config_file)
 
 from circe_wx.frame_main import frame_main, CheckVersion
 

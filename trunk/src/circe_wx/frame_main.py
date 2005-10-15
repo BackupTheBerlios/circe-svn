@@ -155,23 +155,6 @@ class frame_main(wx.Frame):
     def rebuild_tree(self):
         self.realize()
 
-    def evt_menu_About(self,event):
-        data = []
-        data.append("%s version %s\n" % (circe_globals.APPNAME, circe_globals.VERSION))
-        data.append("Site: %s\n" % (circe_globals.HOMEPAGE))
-        data.append(circe_globals.IMPORTANT_DATA)
-
-        dialog = ScrolledMessageDialog(self, ''.join(data), "About")
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.logo = wx.BitmapFromImage(wx.Image(os.path.join("images","circe.png"), wx.BITMAP_TYPE_PNG))
-        self.bitmap = wx.StaticBitmap(dialog, -1)
-        self.bitmap.SetBitmap(self.logo)
-
-        sizer.Add(self.bitmap)
-        sizer.Add(dialog)
-
-        dialog.Show()
-
     def evt_menu_Exit(self,event):
         self.Close()
 
@@ -205,19 +188,29 @@ class frame_main(wx.Frame):
 class About(wxPython.wx.wxDialog):
 	def __init__(self,event):
 		wxPython.wx.wxDialog.__init__ (self,None,-1, 'About Circe', size = (200,200))
+
 		self.panel = wxPython.wx.wxPanel(self, -1)
 	        self.logo = wx.BitmapFromImage(wx.Image(os.path.join("images","circe.png"), wx.BITMAP_TYPE_PNG))
+
 	        self.bitmap = wx.StaticBitmap(self.panel, -1)
 	        self.bitmap.SetBitmap(self.logo)
+
 		self.appname_label = wxPython.wx.wxStaticText(self.panel, -1, "%s %s\n" % (circe_globals.APPNAME, circe_globals.VERSION))
 		self.ok_button = wxPython.wx.wxButton(self.panel, 100,"Ok")
+
 		self.sizer = wx.BoxSizer(wx.HORIZONTAL)
+
 		self.sizer.Add(self.bitmap, 0, wxPython.wx.wxALIGN_CENTER)
 		self.sizer.Add(self.ok_button, 1, wxPython.wx.wxALIGN_CENTER)
+
 		self.panel.SetSizerAndFit(self.sizer)
+
 		self.sizer.Fit(self)
+
 		wxPython.wx.EVT_BUTTON(self.panel, 100, self.click)
+
 		self.ShowModal()
+
 	def click(self,event):
 		self.EndModal(wx.ID_OK)
 

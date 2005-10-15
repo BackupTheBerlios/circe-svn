@@ -61,6 +61,7 @@ class frame_main(wx.Frame):
     def create_menu(self):
         menu_file = wx.Menu()
         menu_file.Append(ID_MENU_FILE_NEWSERVER, "New &server", "Create a new server tab.")
+        menu_file.AppendSeparator()
         menu_file.Append(ID_MENU_FILE_EXIT, "E&xit", "Exit %s" % (circe_globals.APPNAME))
         menu_help = wx.Menu()
         menu_help.Append(ID_MENU_HELP_ABOUT, "&About", "About %s" % (circe_globals.APPNAME))

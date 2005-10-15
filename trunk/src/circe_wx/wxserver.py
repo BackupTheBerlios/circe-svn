@@ -21,11 +21,16 @@ import irclib
 
 from window_status import WindowStatus
 from window_channel import WindowChannel
+from circe_commands import circe_commands
+from circe_events import circe_events 
 from circelib.server import Server
-
-class WXServer(Server):
+from circelib.errors import *
+from circelib.dialogs import *
+class WXServer(Server, circe_commands, circe_events):
     def __init__(self,windowarea):
         Server.__init__(self)
+        circe_commands.__init__(self)
+        circe_events.__init__(self)
         c = self.connection
         self.host = c.connected and c.get_server_name() or None
         self.statuswindow = WindowStatus(windowarea,self)
@@ -96,7 +101,7 @@ class WXServer(Server):
                 target = window.get_channelname()
                 for line in cmdstring.split("\n"):
                     if line.strip().strip("\n"):
-                        self.connection.privmsg(target, line)
+                        self.connection.privmsg(target, line.encode('utf-8'))
                         mynick = self.connection.get_nickname()
                         window.add_message(line, mynick)
             return
@@ -108,6 +113,24 @@ class WXServer(Server):
             print params
         cmd = cmd.lower()
         # Find out what command is being executed
+        try:
+            m = getattr(self, 'do_%s' % (cmd,))
+            m(window, params)
+        except Help, msg:
+            window.server_event(str(msg))
+            return
+        except AttributeError:
+            pass
+        except:
+            import StringIO as SIO
+            try:
+                fh = SIO.StringIO()
+                traceback.print_exc(file=fh)
+                errormsg = ErrorDialogBox(None, fh.read())
+                errormsg.Show()
+            finally:
+                fh.close()
+            return
         if cmd == "server":
             # /server servername [nickname]
             if len(params) < 1:
@@ -122,7 +145,10 @@ class WXServer(Server):
             try:
                 nickname = d['nickname'] = params[2]
             except IndexError:
-                nickname = d['nickname'] = "circe"
+                ask_nickname = NicknameAskDialog(None, 2)
+                ask_nickname.ShowModal()
+                result = ask_nickname.GetValue() # don't need to check for '' ourselves as the dialog does it automatically
+                nickname = d['nickname'] = result
            
             # If we're already connected to a server, opens a new connection in
             # another status window.
@@ -144,8 +170,29 @@ class WXServer(Server):
             if not channels:
                 return
             self.connection.join(*channels)
+
         elif cmd == "newserver":
-            self.windowarea.new_server()
+            d = {}
+            server = d['server'] = params[0]
+            try:
+                port = d['port'] = int(params[1])
+            except (IndexError, ValueError):
+                port = d['port'] = 6667
+            try:
+                nickname = d['nickname'] = params[2]
+            except IndexError:
+                nickname = d['nickname'] = "circe"
+
+            s = self.new_status_window()
+            s.connect(cmd, window, **d)
+            self.host = server
+            s.statuswindow.enable_checking()
+            channels = params[3:]
+            if not channels:
+                return
+            self.connection.join(*channels)
+            return
+
         
         elif cmd == "echo":
             window.server_event(" " .join(params))
@@ -444,10 +491,24 @@ class WXServer(Server):
         for e in self.get_events():
 
             etype = e.eventtype()
-
             # Skip raw messages.
             if etype == "all_raw_messages": 
                 continue
+            try:
+                m = getattr(self, 'event_%s' % (etype,))
+                m(etype, e)
+            except AttributeError:
+                pass
+            except:
+                import StringIO as SIO
+                try:
+                    fh = SIO.StringIO()
+                    traceback.print_exc(file=fh)
+                    errormsg = ErrorDialogBox(None, fh.read())
+                    errormsg.Show()
+                finally:
+                    fh.close()
+                return
 
             if etype == "action":
                 target = e.target()

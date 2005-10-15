@@ -508,10 +508,11 @@ class WXServer(Server):
                         else:
                             window.server_event(text)
                     else:
+                        window = self.get_channel_window("CURRENT")
                         args = " ".join(args)
                         if etype == "topic":
                             text = "Topic for %s is: %s" % (chan, args)
-                        self.server_event(text)
+                        window.server_event(text)
                 else:
                     window = self.get_channel_window(e.target())
                     if window:
@@ -545,7 +546,8 @@ class WXServer(Server):
             elif etype == "privmsg":
                 source = e.source().split("!")[0]
                 target = e.target()
-                import config
+                import config_engine
+                config=config_engine.Config()
                 try: ts = config.time_format
                 except KeyError: ts = '%I:%M:%S'
                 
@@ -606,7 +608,6 @@ class WXServer(Server):
 
             elif etype == "nick":
                 for chan in self.channels:
-                    print e
                     chan.nick_changed(e)
 
             elif etype == "error":

@@ -277,12 +277,12 @@ class CheckVersion(wx.MessageDialog):
         if GCVout == 0:
             if a[0] != "frm_bin":
                 text = "You are currently running the latest version of %s." % (circe_globals.APPNAME)
-                wx.MessageDialog.__init__(self, None, text, style=wx.OK|wx.ICON_INFORMATION)
+                wx.MessageBox(text, "No Updates Available", wx.OK|wx.ICON_INFORMATION)
         else: 
-            text = "You are currently running an old version of %s. The currently available version is %s. You may download the latest version from %s. " % (circe_globals.APPNAME, GCVout, circe_globals.HOMEPAGE)
-            wx.MessageDialog.__init__(self, None, text, style=wx.OK|wx.ICON_EXCLAMATION)
-        if a[0] != "frm_bin" and GCVout == 0:
-            self.ShowModal()
+            text = "You are currently running an old version of %s. The currently available version is %s. Would you like to visit the %s homepage? " % (circe_globals.APPNAME, GCVout, circe_globals.APPNAME)
+            result = wx.MessageBox(text,"Updates Available!", wx.YES_NO|wx.ICON_EXCLAMATION)
+            if result == wx.YES:
+                import webbrowser; webbrowser.open(circe_globals.HOMEPAGE, new=1)
 
     def GetCurrentVersion(self):
         try:

@@ -249,7 +249,9 @@ class About(wxPython.wx.wxDialog):
         for VerStr in irclib.VERSION: irclib_version += str(VerStr)+"." 
         python_version = "%s.%s.%s %s" % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[3])
 
-        self.other_text = "%s Version: %s\nWxPython Version: %s\npython-irclib Version: %s\n" % (circe_globals.APPNAME, circe_globals.VERSION, python_version, irclib_version[:5])
+        self.other_text = "%s Version: %s\nPython Version: %s\nWxPython Version: %s\npython-irclib Version: %s\n" % (circe_globals.APPNAME, \
+                                                                                               circe_globals.VERSION, \
+                                                                                               python_version, wx.VERSION_STRING, irclib_version[:5])
         self.other_text_dlg = wx.TextCtrl(self.other_panel, -1,"",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE|wx.TE_CENTRE)
         self.other_text_dlg.AppendText(self.other_text)
         self.other_text_dlg.SetEditable(0)

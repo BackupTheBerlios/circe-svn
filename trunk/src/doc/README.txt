@@ -27,7 +27,7 @@ Starting Circe:
 These are the platforms Circe is known to work under:
  * Linux
  * Windows
- * Freebsd
+ * FreeBSD
 
 Known limitations:
  * Might not work on all IRC servers, see COMPATIBILTY.txt

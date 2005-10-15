@@ -16,6 +16,7 @@ New features:
 - Fixed bug #5099
 - Fixed quit messages.
 - Fixed view menu.
+
 Friday, October 14, 2005  - Released Circe 0.0.3 alpha 4
 New features:
 - Changed the File > About dialog box to be more professional. (Add logo, add scrolled message dialog)

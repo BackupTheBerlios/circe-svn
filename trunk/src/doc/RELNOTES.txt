@@ -15,7 +15,8 @@ Circe version 0.0.3 alpha 3:
 Circe version 0.0.3 alpha 4:
     Commands added: 
         /clear (clears the current window)
-    Commands fixed: None
+    Commands fixed: 
+        /topic
     Other changes:
         Desktop file added
         Removed view menu due to clutter
@@ -30,3 +31,8 @@ Circe version 0.0.3 alpha 4:
         Fixed bug #5354 (/TOPIC is broken)
         Created new about dialog box
 Circe version 0.0.3 alpha 5:
+    Commands added: None 
+    Commands fixed:
+    Other changes:
+        Fixed Versions in About window
+        Added LICENSE tab

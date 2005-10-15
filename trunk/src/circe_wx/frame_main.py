@@ -23,7 +23,7 @@ import os, sys
 
 # Circe
 import circe_globals
-import config as circe_config
+import circe_config
 import servermanager
 from panel_switchbar import PanelSwitchbar
 from panel_windowarea import PanelWindowarea
@@ -281,7 +281,7 @@ class CheckVersion(wx.MessageDialog):
         else: 
             text = "You are currently running an old version of %s. The currently available version is %s. You may download the latest version from %s. " % (circe_globals.APPNAME, GCVout, circe_globals.HOMEPAGE)
             wx.MessageDialog.__init__(self, None, text, style=wx.OK|wx.ICON_EXCLAMATION)
-        if a[0] != "frm_bin":
+        if a[0] != "frm_bin" and GCVout == 0:
             self.ShowModal()
 
     def GetCurrentVersion(self):

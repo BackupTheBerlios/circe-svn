@@ -35,22 +35,19 @@ if not os.path.exists(config_dir):
 
 sys.path.insert(0, config_dir)
 
-if platform.system() == "Linux":
+if platform.system() != "Windows":
     config_file = os.path.join(config_dir, 'config')
 else:
     config_file = os.path.join(config_dir, 'config.ini')
 
 if not os.path.exists(config_file):
-    import circe_config as config
-    sys.modules["config"] = config
+    import circe_wx.config_engine as config_engine
+    config = config_engine.Config(configfile="defaultconfig")
 else:
     import circe_wx.config_engine as config_engine
     config = config_engine.Config(configfile=config_file)
-    sys.modules["config"] = config
-    import config
-from circe_wx.frame_main import frame_main, CheckVersion
 
-import config
+from circe_wx.frame_main import frame_main, CheckVersion
 
 def handle_exc(message):
     print message
@@ -71,7 +68,10 @@ class CirceApp(wx.App):
               wx.YES_NO)
             if result == wx.NO:
                 return False # Exit
-        cv = CheckVersion("frm_bin")
+        try:
+            if config.getboolean("check_version"):
+                cv = CheckVersion("frm_bin")
+        except KeyError: pass
         try:
             self.mainFrame = frame_main()
             self.mainFrame.Show(True)

@@ -28,3 +28,11 @@ Filing bugs -- what must be specified
   1. Circe version (OR revision) that you found the bug in.
   2. Specific bug.
   3. How to duplicate the bug (step by step).
+
+~~~~~~~~~~~~~~~~~~~~~~~
+Code Editing guide
+~~~~~~~~~~~~~~~~~~~~~~~
+
+A few coding guidelines:
+  1. Use Spaces, NOT tabs.
+  2. After testing, remove your commented out code and any debugging things (including prints, etc)

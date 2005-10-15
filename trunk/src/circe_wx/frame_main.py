@@ -189,7 +189,7 @@ class frame_main(wx.Frame):
 class About(wxPython.wx.wxDialog):
     def __init__(self,event):
         windowname = "About "+circe_globals.APPNAME+" "+circe_globals.VERSION
-        wx.Dialog.__init__(self, None, -1, windowname, style=wx.DEFAULT_DIALOG_STYLE)
+        wx.Dialog.__init__(self, None, -1, windowname, style=wx.DEFAULT_DIALOG_STYLE, size=(370,205))
 
         self.notebook = wx.Notebook(self, -1, size=(100,110))
 

@@ -190,7 +190,7 @@ class About(wxPython.wx.wxDialog):
         windowname = "About "+circe_globals.APPNAME+" "+circe_globals.VERSION
         wx.Dialog.__init__(self, None, -1, windowname, style=wx.DEFAULT_DIALOG_STYLE)
 
-        self.notebook = wx.Notebook(self, -1, size=(300,200))
+        self.notebook = wx.Notebook(self, -1, size=(100,110))
         self.main_panel = wx.Panel(self.notebook)
         self.authors_panel = wx.Panel(self.notebook)
         self.other_panel = wx.Panel(self.notebook)
@@ -203,8 +203,30 @@ class About(wxPython.wx.wxDialog):
         self.dialog_sizer.Add(self.notebook, -1, wx.EXPAND, 5)
         self.SetSizer(self.dialog_sizer)
 
-        self.OK_button = wx.Button(self, -1, "Ok",(-1,-1), wx.DefaultSize)
+        self.OK_button = wx.Button(self, 100, "Ok",(-1,-1), wx.DefaultSize)
         self.dialog_sizer.Add(self.OK_button, 0, wx.CENTER)
 
-        self.ShowModal()
+        self.main_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.main_panel.SetSizer(self.main_sizer)
 
+        self.credits_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.authors_panel.SetSizer(self.credits_sizer)
+
+        self.about_text = "%s %s\nPython IRC Client\n%s\n" % (circe_globals.APPNAME, circe_globals.VERSION, circe_globals.HOMEPAGE)
+        self.about_text_dlg = wx.TextCtrl(self.main_panel, -1,"",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE|wx.TE_CENTRE)
+        self.about_text_dlg.AppendText(self.about_text)
+        self.about_text_dlg.SetEditable(0)
+        self.main_sizer.Add(self.about_text_dlg, 1, wx.CENTER|wx.EXPAND|wx.ALL)
+
+        self.credits_text = open("doc/CREDITS.txt").read()
+        self.credits_text_dlg = wx.TextCtrl(self.authors_panel, -1,"",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE|wx.TE_CENTRE)
+        self.credits_text_dlg.AppendText(self.credits_text)
+        self.credits_text_dlg.SetEditable(0)
+        self.credits_sizer.Add(self.credits_text_dlg, 1, wx.CENTER|wx.EXPAND|wx.ALL)
+
+        wxPython.wx.EVT_BUTTON(self,100,self.OnClick)        
+        
+        self.ShowModal()
+    
+    def OnClick(self, *a):
+        self.Destroy() 

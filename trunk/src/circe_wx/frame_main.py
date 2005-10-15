@@ -191,12 +191,15 @@ class About(wxPython.wx.wxDialog):
         wx.Dialog.__init__(self, None, -1, windowname, style=wx.DEFAULT_DIALOG_STYLE)
 
         self.notebook = wx.Notebook(self, -1, size=(100,110))
+
         self.main_panel = wx.Panel(self.notebook)
         self.credits_panel = wx.Panel(self.notebook)
+        self.license_panel = wx.Panel(self.notebook)
         self.other_panel = wx.Panel(self.notebook)
 
         self.notebook.AddPage(self.main_panel, "About "+circe_globals.APPNAME)
         self.notebook.AddPage(self.credits_panel, "Credits")
+        self.notebook.AddPage(self.license_panel, "License")
         self.notebook.AddPage(self.other_panel, "Other")
 
         self.dialog_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -211,6 +214,9 @@ class About(wxPython.wx.wxDialog):
 
         self.credits_sizer = wx.BoxSizer(wx.VERTICAL)
         self.credits_panel.SetSizer(self.credits_sizer)
+
+        self.license_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.license_panel.SetSizer(self.license_sizer)
 
         self.other_sizer = wx.BoxSizer(wx.VERTICAL)
         self.other_panel.SetSizer(self.other_sizer)
@@ -232,6 +238,12 @@ class About(wxPython.wx.wxDialog):
         self.credits_text_dlg.SetEditable(0)
         self.credits_sizer.Add(self.credits_text_dlg, 1, wx.CENTER|wx.EXPAND|wx.ALL)
       
+        self.license_text = open("doc/LICENSE_IMPORTED.txt").read()
+        self.license_text_dlg = wx.TextCtrl(self.license_panel, -1,"",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE|wx.TE_CENTRE)
+        self.license_text_dlg.AppendText(self.license_text)
+        self.license_text_dlg.SetEditable(0)
+        self.license_sizer.Add(self.license_text_dlg, 1, wx.CENTER|wx.EXPAND|wx.ALL)
+
         python_version = "%s.%s.%s %s" % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[3])
         self.other_text = "%s Version: %s\nWxPython Version: %s\npython-irclib Version: %s\n" % (circe_globals.APPNAME, circe_globals.VERSION, python_version, "1.4.2")
         self.other_text_dlg = wx.TextCtrl(self.other_panel, -1,"",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE|wx.TE_CENTRE)

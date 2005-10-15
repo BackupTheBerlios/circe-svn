@@ -18,11 +18,10 @@ Developer of python-irclib integration code and wxPython code.
 
 nick125
 nick125@developer.berlios.de
-Developer of a irclib which was eventually replaced by python-irclib.
+Developer.
 
 ivion
 ivion@developer.berlios.de
 Help with the Subversion server and the website. Testing and suggestions.
 
-And of course many thanks to the developers of Python and the various libraries used
-by Circe.
+And of course many thanks to the developers of Python and the various libraries used by Circe.

@@ -1,0 +1,11 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~ Circe IRCd Compatability ~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~ Known Working IRCds
+
+ - Hyperion (Freenode's IRCd) works fine in all of our testing.
+ - Charybdis (Atheme's IRCd) works mostly in the limited testing conducted, with
+   the following outstanding issues:
+    ! - When joining Channels, Charybdis sends the topic, and then Circe sends the 
+        topic command. This results in two topic headers when you join a channel.

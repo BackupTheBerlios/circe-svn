@@ -28,3 +28,4 @@ Circe version 0.0.3 alpha 4:
         Feature Request #1371 (More feedback in status window) partly fixed
         Fixed QUIT Messages
         Fixed bug #5354 (/TOPIC is broken)
+        Created new about dialog box

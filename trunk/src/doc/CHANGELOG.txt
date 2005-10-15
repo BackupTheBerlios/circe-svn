@@ -16,10 +16,19 @@ New features:
 - Fixed bug #5099
 - Fixed quit messages.
 - Fixed view menu.
-W X Y, Z - Released Circe 0.0.3 alpha 4
+Friday, October 14, 2005  - Released Circe 0.0.3 alpha 4
 New features:
 - Changed the File > About dialog box to be more professional. (Add logo, add scrolled message dialog)
 - Added desktop icon to Circe (Linux only)
+- Added /CLEAR
+- Fixed QUIT Messages
+- Fixed bug #5345
+- Fixed bug #5346
+- Fixed bug #5347
+- Fixed bug #5349
+- Fixed bug #5350
+- Feature Request #1366 libraries created
+- Feature Request #1371 partly fixed
 
 Removed features:
 - View menu

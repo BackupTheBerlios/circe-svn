@@ -1,2 +1,2 @@
 Known bugs:
-Image overlaps scrolled box in Help > About
+Charybdis shows topic twice

@@ -376,19 +376,14 @@ class WXServer(Server):
         elif cmd == "topic":
             new_topic = " ".join(params[0:])
             if new_topic:
-                if params[0] in self.channels:
+                if params[0] in self.channels or params[0].startswith("#"):
                     new_topic = " ".join(params[1:])
-                    if new_topic:
-                        self.connection.topic(channel=param[0], new_topic=" ".join(param[1:]))
-			window.sever_event("%s has changed the topic of %s: %s" % (self.connection.get_nickname(), param[0], " ".join(param[1:])))
+                    if new_topic: self.connection.topic(channel=param[0], new_topic=" ".join(param[1:]))
                     else:
-                        self.connection.topic(channel=window.get_channelname())
-                elif len(params) == 1 and params[0].startswith("#"):
-                        self.connection.topic(channel=params[0])
-                else:
-                    self.connection.topic(channel=window.get_channelname(), new_topic=new_topic)
-            else:
-                self.connection.topic(channel=window.get_channelname())
+                        if params[0].strip() != "": self.connection.topic(channel=params[0])
+                        else: self.connection.topic(channel=window.get_channelname())
+                else: self.connection.topic(channel=window.get_channelname(), new_topic=new_topic)
+            else: self.connection.topic(channel=window.get_channelname())
         elif cmd == "trace":
             self.connection.trace(params and params[0] or "")
         elif cmd == "user":
@@ -605,10 +600,11 @@ class WXServer(Server):
                 # Informs each channel that the user has quit.
                 for chan in self.channels:
                     chan.user_quit(e)
-                    print e
+
             elif etype == "nicknameinuse":
                 text = "%s: %s" % (e.arguments()[0], e.arguments()[1])
                 self.statuswindow.server_event(text)
+
             elif etype == "nick":
                 for chan in self.channels:
                     print e

@@ -153,8 +153,11 @@ class WindowChannel(WindowTextEdit):
         import time
         ts = time.strftime(ts)
         if to:
-            to = " (to %s)" % to	
-        message = "%s<%s%s> %s" % (ts, from_, to, text)
+            to = " (to %s)" % to
+        if display_tf:	
+            message = "%s<%s%s> %s" % (ts, from_, to, text)
+        else:
+            message = "<%s%s> %s" % (from_, to, text)
         self.server_event(message)
 
     # GUI events.

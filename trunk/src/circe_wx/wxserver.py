@@ -546,16 +546,10 @@ class WXServer(Server):
             elif etype == "privmsg":
                 source = e.source().split("!")[0]
                 target = e.target()
-                import config_engine
-                config=config_engine.Config()
-                try: ts = config.time_format
-                except KeyError: ts = '%I:%M:%S'
-                
-                text = "[%s] <%s> %s" % (ts, source, " ".join(e.arguments()))
                 if irclib.is_channel(target):
                     win = self.get_channel_window(target)
                     if win:
-                        win.server_event(text)
+                        win.add_message(text, source, target)
                 else:
                     self.statuswindow.server_event(text)
 

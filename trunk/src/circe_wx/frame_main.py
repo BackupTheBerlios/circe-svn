@@ -206,17 +206,20 @@ class About(wxPython.wx.wxDialog):
         self.OK_button = wx.Button(self, 100, "Ok",(-1,-1), wx.DefaultSize)
         self.dialog_sizer.Add(self.OK_button, 0, wx.CENTER)
 
-        self.main_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.main_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.main_panel.SetSizer(self.main_sizer)
 
         self.credits_sizer = wx.BoxSizer(wx.VERTICAL)
         self.authors_panel.SetSizer(self.credits_sizer)
 
         self.about_text = "%s %s\nPython IRC Client\n%s\n" % (circe_globals.APPNAME, circe_globals.VERSION, circe_globals.HOMEPAGE)
-        self.about_text_dlg = wx.TextCtrl(self.main_panel, -1,"",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE|wx.TE_CENTRE)
+        self.about_text_dlg = wx.TextCtrl(self.main_panel, -1,"",wx.DefaultPosition,(60,60),wx.TE_MULTILINE|wx.TE_CENTRE)
         self.about_text_dlg.AppendText(self.about_text)
         self.about_text_dlg.SetEditable(0)
-        self.main_sizer.Add(self.about_text_dlg, 1, wx.CENTER|wx.EXPAND|wx.ALL)
+        self.bitmap = wx.StaticBitmap(self.main_panel, -1)
+        self.bitmap.SetBitmap(wx.BitmapFromImage(wx.Image(os.path.join("images", "circe.png"), wx.BITMAP_TYPE_PNG)))
+        self.main_sizer.Add(self.bitmap,1,wx.CENTER)
+        self.main_sizer.Add(self.about_text_dlg, 2, wx.LEFT|wx.EXPAND|wx.ALL)
 
         self.credits_text = open("doc/CREDITS.txt").read()
         self.credits_text_dlg = wx.TextCtrl(self.authors_panel, -1,"",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE|wx.TE_CENTRE)

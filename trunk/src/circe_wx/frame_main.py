@@ -286,7 +286,7 @@ class CheckVersion(wx.MessageDialog):
     def GetCurrentVersion(self):
         try:
             curver = self.curver
-        except:
+        except AttributeError:
             import urllib2
             a = urllib2.urlopen("http://circe.berlios.de/version.php")
             curver2 = a.read()

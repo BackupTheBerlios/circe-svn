@@ -186,31 +186,17 @@ class frame_main(wx.Frame):
         sys.exit()
 
 class About(wxPython.wx.wxDialog):
-	def __init__(self,event):
-		wxPython.wx.wxDialog.__init__ (self,None,-1, 'About Circe', size = (200,200))
+    def __init__(self,event):
+        windowname = "About "+circe_globals.APPNAME+" "+circe_globals.VERSION
+        wx.Dialog.__init__(self, None, -1, windowname, style=wx.DEFAULT_DIALOG_STYLE)
 
-		self.panel = wxPython.wx.wxPanel(self, -1)
-	        self.logo = wx.BitmapFromImage(wx.Image(os.path.join("images","circe.png"), wx.BITMAP_TYPE_PNG))
+        self.notebook = wx.Notebook(self, -1, size=(300,200))
+        self.main_panel = wx.Panel(self.notebook)
+        self.authors_panel = wx.Panel(self.notebook)
+        self.other_panel = wx.Panel(self.notebook)
 
-	        self.bitmap = wx.StaticBitmap(self.panel, -1)
-	        self.bitmap.SetBitmap(self.logo)
+        self.notebook.AddPage(self.main_panel, "About "+circe_globals.APPNAME)
+        self.notebook.AddPage(self.authors_panel, "Credits")
+        self.notebook.AddPage(self.other_panel, "Other")
 
-		self.appname_label = wxPython.wx.wxStaticText(self.panel, -1, "%s %s\n" % (circe_globals.APPNAME, circe_globals.VERSION))
-		self.ok_button = wxPython.wx.wxButton(self.panel, 100,"Ok")
-
-		self.sizer = wx.BoxSizer(wx.HORIZONTAL)
-
-		self.sizer.Add(self.bitmap, 0, wxPython.wx.wxALIGN_CENTER)
-		self.sizer.Add(self.ok_button, 1, wxPython.wx.wxALIGN_CENTER)
-
-		self.panel.SetSizerAndFit(self.sizer)
-
-		self.sizer.Fit(self)
-
-		wxPython.wx.EVT_BUTTON(self.panel, 100, self.click)
-
-		self.ShowModal()
-
-	def click(self,event):
-		self.EndModal(wx.ID_OK)
-
+        self.ShowModal()

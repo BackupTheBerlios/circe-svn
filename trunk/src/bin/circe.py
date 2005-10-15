@@ -24,6 +24,7 @@ import traceback
 import sys, os
 import platform
 # Importing section
+
 currpath = os.path.join(os.getcwd(), __file__)
 currpath = os.path.abspath(os.path.join(currpath, '../..'))
 sys.path.insert(0, currpath)
@@ -47,7 +48,7 @@ else:
     config = config_engine.Config(configfile=config_file)
     sys.modules["config"] = config
     import config
-from circe_wx.frame_main import frame_main
+from circe_wx.frame_main import frame_main, CheckVersion
 
 import config
 
@@ -70,6 +71,7 @@ class CirceApp(wx.App):
               wx.YES_NO)
             if result == wx.NO:
                 return False # Exit
+        cv = CheckVersion("frm_bin")
         try:
             self.mainFrame = frame_main()
             self.mainFrame.Show(True)

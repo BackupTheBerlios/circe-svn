@@ -275,13 +275,14 @@ class CheckVersion(wx.MessageDialog):
         GCVout = self.GetCurrentVersion()    
     
         if GCVout == 0:
-            text = "You are currently running the latest version of %s." % (circe_globals.APPNAME)
-            wx.MessageDialog.__init__(self, None, text, style=wx.OK|wx.ICON_INFORMATION)
+            if a[0] != "frm_bin":
+                text = "You are currently running the latest version of %s." % (circe_globals.APPNAME)
+                wx.MessageDialog.__init__(self, None, text, style=wx.OK|wx.ICON_INFORMATION)
         else: 
             text = "You are currently running an old version of %s. The currently available version is %s. You may download the latest version from %s. " % (circe_globals.APPNAME, GCVout, circe_globals.HOMEPAGE)
             wx.MessageDialog.__init__(self, None, text, style=wx.OK|wx.ICON_EXCLAMATION)
-
-        self.ShowModal()
+        if a[0] != "frm_bin":
+            self.ShowModal()
 
     def GetCurrentVersion(self):
         try:

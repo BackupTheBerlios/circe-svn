@@ -33,18 +33,11 @@ class Config(object):
         if not result:
             if self.__dict__.has_key(k):
                 return self.__dict__[k]
-            
-        if k[0] == '_':
-            raise KeyError, k
         try:
             return self.config.get(self.section, k)
         except ConfigParser.NoSectionError:
             raise KeyError, k
     def __setitem__(self, k, v):
-        if k[0] == '_' or k == '__dict__':
-            raise KeyError, k
-        if 'config' in k or 'section' in k:
-            return
         self.config.set(self.section, k, v)
         self.__dict__[k] = v
         self.config.write(open(self.configfile, "w"))
@@ -62,5 +55,6 @@ class Config(object):
         try: return self[k]
         except KeyError: pass
         return getattr(self.config, k)
+
     def getboolean(self, k):
         return self.config.getboolean(self.section, k)

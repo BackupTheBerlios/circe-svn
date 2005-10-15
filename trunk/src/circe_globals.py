@@ -18,7 +18,7 @@ import wx
 
 APPNAME = "Circe"
 APPTAG = "Work In Progress"
-VERSION = "0.0.3a4"
+VERSION = "0.0.3a5"
 
 QUITMSG = "Circe: http://circe.berlios.de/"
 HOMEPAGE = "http://circe.berlios.de"

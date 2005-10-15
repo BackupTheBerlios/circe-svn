@@ -525,7 +525,6 @@ class WXServer(Server):
                 window = self.get_channel_window(e.arguments()[0])
                 if window:
                     text = "Topic for %s set by %s on %s" % (e.arguments()[0], sender, date)
-                    topic.append(text)
                     window.server_event("\n".join(topic))
                 topic = []
 

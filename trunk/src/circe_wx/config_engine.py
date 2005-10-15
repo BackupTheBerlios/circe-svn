@@ -57,4 +57,7 @@ class Config(object):
         return getattr(self.config, k)
 
     def getboolean(self, k):
-        return self.config.getboolean(self.section, k)
+        try:
+            return self.config.getboolean(self.section, k)
+        except ConfigParser.NoOptionError:
+            return False

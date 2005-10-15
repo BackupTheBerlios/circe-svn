@@ -199,4 +199,12 @@ class About(wxPython.wx.wxDialog):
         self.notebook.AddPage(self.authors_panel, "Credits")
         self.notebook.AddPage(self.other_panel, "Other")
 
+        self.dialog_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.dialog_sizer.Add(self.notebook, -1, wx.EXPAND, 5)
+        self.SetSizer(self.dialog_sizer)
+
+        self.OK_button = wx.Button(self, -1, "Ok",(-1,-1), wx.DefaultSize)
+        self.dialog_sizer.Add(self.OK_button, 0, wx.CENTER)
+
         self.ShowModal()
+

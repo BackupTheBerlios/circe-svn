@@ -1,0 +1,30 @@
+~~~~~~~~~~~~~~~~~~~~~~~
+Hacking guide for Circe
+~~~~~~~~~~~~~~~~~~~~~~~
+
+October 2005
+
+Author: Circe Development team
+
+In order to contribute code, please abide by the following 
+guidelines in order to make it easy on us:
+  1. Do not file a bug against a stable release without first checking out trunk and confirming that the bug isn't fixed.
+  2. Do not code against a stable release (i.e. one that is available for download and/or is tagged). Use the latest code
+     from the trunk, or use a later tagged release instead.
+  3. You must file a bug or feature request before you fix Circe or add to Circe (close the bug/feature request after).
+     This helps with tracking and will help you substanially when you commit.
+  4. You also must specify the bug/feature request number that you have done (if any) in the SVN commit message.
+
+~~~~~~~~~~~~~~~~~~~~~~~
+Bug filing guide
+~~~~~~~~~~~~~~~~~~~~~~~
+
+BEFORE you file a bug, please check the following:
+  1. Have you tried checking out trunk and confirming that the bug isn't fixed?
+  2. Is there a new stable release available? If so, did you download it?
+If ALL the conditions still give you the same bug, file a bug.
+
+Filing bugs -- what must be specified
+  1. Circe version (OR revision) that you found the bug in.
+  2. Specific bug.
+  3. How to duplicate the bug (step by step).

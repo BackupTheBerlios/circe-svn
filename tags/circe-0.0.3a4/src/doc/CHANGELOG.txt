@@ -1,0 +1,34 @@
+Wednesday September 7, 2005 - Released Circe 0.0.2
+New features:
+- Major change to circe_wx/wxserver.py to fix bug #4968.
+
+Saturday September 10, 2005 - Released Circe 0.0.3 alpha 1
+New features:
+- Added /me handling. Aliased to /action.
+
+Monday September 12, 2005 - Released Circe 0.0.3 alpha 2
+New features:
+- Added setup.py
+
+Wednesday September 21, 2005 - Released Circe 0.0.3 alpha 3
+New features:
+- Added /action, /echo
+- Fixed bug #5099
+- Fixed quit messages.
+- Fixed view menu.
+Friday, October 14, 2005  - Released Circe 0.0.3 alpha 4
+New features:
+- Changed the File > About dialog box to be more professional. (Add logo, add scrolled message dialog)
+- Added desktop icon to Circe (Linux only)
+- Added /CLEAR
+- Fixed QUIT Messages
+- Fixed bug #5345
+- Fixed bug #5346
+- Fixed bug #5347
+- Fixed bug #5349
+- Fixed bug #5350
+- Feature Request #1366 libraries created
+- Feature Request #1371 partly fixed
+
+Removed features:
+- View menu

@@ -34,6 +34,7 @@ from window_status import WindowStatus
 ID_MENU_FILE_NEWSERVER = wx.NewId()
 ID_MENU_HELP_ABOUT = wx.NewId()
 ID_MENU_FILE_EXIT = wx.NewId()
+ID_MENU_HELP_CHKVER = wx.NewId()
 
 ID_TOOLBAR_CHANNEL = 1401
 ID_TOOLBAR_TOOLS = 1401
@@ -64,6 +65,8 @@ class frame_main(wx.Frame):
         menu_file.AppendSeparator()
         menu_file.Append(ID_MENU_FILE_EXIT, "E&xit", "Exit %s" % (circe_globals.APPNAME))
         menu_help = wx.Menu()
+        menu_help.Append(ID_MENU_HELP_CHKVER, "&Check Version", "Check Version")
+        menu_help.AppendSeparator()
         menu_help.Append(ID_MENU_HELP_ABOUT, "&About", "About %s" % (circe_globals.APPNAME))
         
         menu_bar = wx.MenuBar() 
@@ -75,6 +78,7 @@ class frame_main(wx.Frame):
         wx.EVT_MENU(self, ID_MENU_HELP_ABOUT, About)
         wx.EVT_MENU(self, ID_MENU_FILE_EXIT, self.evt_menu_Exit)
         wx.EVT_MENU(self, ID_MENU_FILE_NEWSERVER, self.evt_menu_NewServer)
+        wx.EVT_MENU(self, ID_MENU_HELP_CHKVER, CheckVersion)
     def create_switchbar(self):
         sbsize = (circe_config.switchbar_hsize,circe_config.switchbar_vsize)
         if circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT:
@@ -253,6 +257,7 @@ class About(wxPython.wx.wxDialog):
         self.other_text = "%s Version: %s\nPython Version: %s\nWxPython Version: %s\npython-irclib Version: %s\n" % (circe_globals.APPNAME, \
                                                                                                circe_globals.VERSION, \
                                                                                                python_version, wx.VERSION_STRING, irclib_version[:5])
+
         self.other_text_dlg = wx.TextCtrl(self.other_panel, -1,"",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE|wx.TE_CENTRE)
         self.other_text_dlg.AppendText(self.other_text)
         self.other_text_dlg.SetEditable(0)
@@ -264,3 +269,37 @@ class About(wxPython.wx.wxDialog):
     
     def OnClick(self, *a):
         self.Destroy() 
+
+class CheckVersion(wx.MessageDialog):
+    def __init__(self, *a):
+        GCVout = self.GetCurrentVersion()    
+    
+        if GCVout == 0:
+            text = "You are currently running the latest version of %s." % (circe_globals.APPNAME)
+            wx.MessageDialog.__init__(self, None, text, style=wx.OK|wx.ICON_INFORMATION)
+        else: 
+            text = "You are currently running an old version of %s. The currently available version is %s. You may download the latest version from %s. " % (circe_globals.APPNAME, GCVout, circe_globals.HOMEPAGE)
+            wx.MessageDialog.__init__(self, None, text, style=wx.OK|wx.ICON_EXCLAMATION)
+
+        self.ShowModal()
+
+    def GetCurrentVersion(self):
+        try:
+            curver = self.curver
+        except:
+            import urllib2
+            a = urllib2.urlopen("http://circe.berlios.de/version.php")
+            curver2 = a.read()
+            curver = curver2.split(".")
+            self.curver = curver
+        runver = circe_globals.VERSION.split(".")
+
+        if curver[2] > runver[2]: # minor version difference:
+            return curver2 # OLD!!
+        elif curver[1] > runver[1]: # old middle version difference:
+            return curver2 # OLD!!
+        elif curver[0] > runver[0]: # major version difference:
+            return curver2
+        else:
+            return 0
+

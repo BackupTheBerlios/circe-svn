@@ -1,2 +1,0 @@
-Known bugs:
-Charybdis shows topic twice

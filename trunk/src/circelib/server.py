@@ -65,20 +65,17 @@ class Server:
             kwargs['nickname'] = "circe"
         self.connection.connect(**kwargs)
 
-    def get_connection(self):
-        return self.connection
-
-    def setdebug(self):
-        """Turn on the debug mode."""
-        self.debug = True
-        irclib.DEBUG = True
-        print "Debug mode on"
-
-    def nodebug(self):
-        """Turn off the debug mode."""
-        self.debug = False
-        irclib.DEBUG = False
-        print "Debug mode off"
+    def setdebug(self, boolean):
+        """Turn on/off the debug mode depending on the value of 'boolean'."""
+        self.debug = boolean
+        irclib.DEBUG = boolean
+        toggle = ["on", "off"]
+        map = {True: 0, False: 1}
+        msg = "Debug mode %s"
+        integer  = map[boolean]
+        string = toggle[integer]
+        msg = msg % string
+        print msg
 
     def get_events(self):
         """Get new events, store them in self._events and return them in a

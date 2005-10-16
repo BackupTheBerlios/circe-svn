@@ -21,16 +21,12 @@ import irclib
 
 from window_status import WindowStatus
 from window_channel import WindowChannel
-from circe_commands import circe_commands
-from circe_events import circe_events 
 from circelib.server import Server
 from circelib.errors import *
-from circelib.dialogs import *
-class WXServer(Server, circe_commands, circe_events):
+import circelib.dialogs as dialogs
+class WXServer(Server):
     def __init__(self,windowarea):
         Server.__init__(self)
-        circe_commands.__init__(self)
-        circe_events.__init__(self)
         c = self.connection
         self.host = c.connected and c.get_server_name() or None
         self.statuswindow = WindowStatus(windowarea,self)
@@ -56,7 +52,7 @@ class WXServer(Server, circe_commands, circe_events):
         self.windowarea.show_window(self, new)
         return new
 
-    def remove_channel_window(self, channelname):
+    def remove_channel_window(self, channelname):	
         """Remove the channel window if it exists."""
         win = self.get_channel_window(channelname)
         if not win:
@@ -68,6 +64,7 @@ class WXServer(Server, circe_commands, circe_events):
             del self.channels[self.channels.index(channel)]
         else:
             return
+
     def get_channel_window(self, channelname):
         """Return the WindowChannel object bound to channelname or False if
         it does not match.
@@ -113,24 +110,6 @@ class WXServer(Server, circe_commands, circe_events):
             print params
         cmd = cmd.lower()
         # Find out what command is being executed
-        try:
-            m = getattr(self, 'do_%s' % (cmd,))
-            m(window, params)
-        except Help, msg:
-            window.server_event(str(msg))
-            return
-        except AttributeError:
-            pass
-        except:
-            import StringIO as SIO
-            try:
-                fh = SIO.StringIO()
-                traceback.print_exc(file=fh)
-                errormsg = ErrorDialogBox(None, fh.read())
-                errormsg.Show()
-            finally:
-                fh.close()
-            return
         if cmd == "server":
             # /server servername [nickname]
             if len(params) < 1:
@@ -145,14 +124,11 @@ class WXServer(Server, circe_commands, circe_events):
             try:
                 nickname = d['nickname'] = params[2]
             except IndexError:
-                ask_nickname = NicknameAskDialog(None, 1)
-                ask_nickname.ShowModal()
-                result = ask_nickname.GetValue() # don't need a while loop, as the code does it automatically
-                if result == '':
+                result = dialogs.ask_nickname()
+                if result == "":
                     window.server_event("Nickname defaulting to 'irc'.")
-                    nickname = 'irc'
-                nickname = d['nickname'] = result
-           
+                    nickname = d['nickname'] = 'irc'
+
             # If we're already connected to a server, opens a new connection in
             # another status window.
             if self.is_connected():
@@ -424,26 +400,37 @@ class WXServer(Server, circe_commands, circe_events):
             self.connection.time(server)
             
         elif cmd == "topic":
-            new_topic = " ".join(params[0:])
+            try:
+                params[0]
+                if params[0] != "#":
+                    raise IndexError
+                if params[0] not in self.channels:
+                    del params[0]
+                    raise IndexError
+            except IndexError:
+                params.insert(0, window.get_channelname())
+            result = params[1:]
+            if result:
+                self.connection.topic(channel=params[0], new_topic=result)
+            else:
+                self.connection.topic(channel=params[0])
+
             if new_topic:
                 if params[0] in self.channels or params[0].startswith("#"):
                     new_topic = " ".join(params[1:])
-                    if new_topic: self.connection.topic(channel=param[0], new_topic=" ".join(param[1:]))
+                    if new_topic:
+                        self.connection.topic(channel=param[0], new_topic=" ".join(param[1:]))
                     else:
-                        if params[0].strip() != "": self.connection.topic(channel=params[0])
-                        else: self.connection.topic(channel=window.get_channelname())
-                else: self.connection.topic(channel=window.get_channelname(), new_topic=new_topic)
-            else: self.connection.topic(channel=window.get_channelname())
+                        if params[0].strip() != "":
+                              self.connection.topic(channel=params[0])
+                        else: 
+                              self.connection.topic(channel=window.get_channelname())
+                else: 
+                    self.connection.topic(channel=window.get_channelname(), new_topic=new_topic)
+            else:
+                self.connection.topic(channel=window.get_channelname())
         elif cmd == "trace":
             self.connection.trace(params and params[0] or "")
-        elif cmd == "user":
-            try:
-                username, realname = params[0], params[1]
-            except (ValueError,IndexError):
-                window.server_event("/user syntax: /user username realname")
-                return
-            self.connection.user(username=username, realname=realname)
-
         elif cmd == "userhost":
             if params:
                 if ',' in params[0]:
@@ -477,10 +464,10 @@ class WXServer(Server, circe_commands, circe_events):
 
         # commands used only for development purposes
         elif cmd == "debug":
-            self.setdebug()
+            self.setdebug(True)
 
         elif cmd == "nodebug":
-            self.nodebug()
+            self.setdebug(False)
 
         elif cmd == "check":
             self.check_events()
@@ -497,23 +484,8 @@ class WXServer(Server, circe_commands, circe_events):
             # Skip raw messages.
             if etype == "all_raw_messages": 
                 continue
-            try:
-                m = getattr(self, 'event_%s' % (etype,))
-                m(etype, e)
-            except AttributeError:
-                pass
-            except:
-                import StringIO as SIO
-                try:
-                    fh = SIO.StringIO()
-                    traceback.print_exc(file=fh)
-                    errormsg = ErrorDialogBox(None, fh.read())
-                    errormsg.Show()
-                finally:
-                    fh.close()
-                return
 
-            if etype == "action":
+            elif etype == "action":
                 target = e.target()
                 source = irclib.nm_to_n(e.source())
                 action = e.arguments()
@@ -661,7 +633,13 @@ class WXServer(Server, circe_commands, circe_events):
                     chan.user_quit(e)
 
             elif etype == "nicknameinuse":
-                text = "%s: %s" % (e.arguments()[0], e.arguments()[1])
+                nickname = e.arguments()[0]
+                result = dialogs.ask_nickname(nickname)
+                if result:
+                    self.connection.nick(result)
+                else:
+                    self.connection.nick(nickname+"_")
+                text = "%s: %s" % (nickname, e.arguments()[1])
                 self.statuswindow.server_event(text)
 
             elif etype == "nick":

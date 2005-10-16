@@ -19,7 +19,7 @@
 
 import ConfigParser # the internationalization files will be a INI format.
 
-class UnknownLanguageKey: pass
+class UnknownLanguageKey(Exception): pass
 
 class Text:
     def __init__(self, LANG="EN_GB"):

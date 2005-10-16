@@ -145,9 +145,12 @@ class WXServer(Server, circe_commands, circe_events):
             try:
                 nickname = d['nickname'] = params[2]
             except IndexError:
-                ask_nickname = NicknameAskDialog(None, 2)
+                ask_nickname = NicknameAskDialog(None, 1)
                 ask_nickname.ShowModal()
-                result = ask_nickname.GetValue() # don't need to check for '' ourselves as the dialog does it automatically
+                result = ask_nickname.GetValue() # don't need a while loop, as the code does it automatically
+                if result == '':
+                    window.server_event("Nickname defaulting to 'irc'.")
+                    nickname = 'irc'
                 nickname = d['nickname'] = result
            
             # If we're already connected to a server, opens a new connection in

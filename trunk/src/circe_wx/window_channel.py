@@ -58,18 +58,8 @@ class WindowChannel(WindowTextEdit):
         self.sizer_top.Add(self.txt_edit,0,wx.EXPAND)
 
     def sort(self):
-        users = list(self._users.iterkeys())
-        def mysort(mylist):
-            nlist = range(97,123)
-            slist = [ ord(c) for c in mylist ]
-            slist.sort()
-            for x in mylist:
-                if not ord(x) in nlist:
-                    slist.insert(0,ord(x))
-            return map(chr,slist)
-        users = mysort(mylist)
-        self.users(users)
-
+        users = list(self._users)
+        return users.sort()
 
     def users(self, users=None):
         """Update the uers list and eventually add the given users."""
@@ -81,6 +71,8 @@ class WindowChannel(WindowTextEdit):
                     self._users[u] = ""
         
         self.lst_users.DeleteAllItems()
+        self.sort()
+        print self._users
         for u in self._users.keys():
             self.lst_users.Append((u,))
 

@@ -18,6 +18,7 @@
 import wx
 from irclib import nm_to_n
 from window_base import WindowTextEdit
+import string
 
 ID_LST_USERS = wx.NewId()
 
@@ -59,7 +60,8 @@ class WindowChannel(WindowTextEdit):
 
     def sort(self):
         users = list(self._users)
-        return users.sort()
+        users.sort(lambda x, y: cmp(string.lower(x), string.lower(y)))
+        self._users = users
 
     def users(self, users=None):
         """Update the uers list and eventually add the given users."""
@@ -72,8 +74,7 @@ class WindowChannel(WindowTextEdit):
         
         self.lst_users.DeleteAllItems()
         self.sort()
-        print self._users
-        for u in self._users.keys():
+        for u in self._users:
             self.lst_users.Append((u,))
 
     def del_user(self, users):
@@ -87,7 +88,7 @@ class WindowChannel(WindowTextEdit):
             users = [users]
 
         # Deletes left users.
-        for u in self._users.keys():
+        for u in self._users:
             if u in users:
                 del self._users[u]
         self.users()

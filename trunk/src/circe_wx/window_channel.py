@@ -88,7 +88,7 @@ class WindowChannel(WindowTextEdit):
         # Deletes left users.
         for u in self._users:
             if u in users:
-                del self._users[u]
+                del self._users[self._users.index(u)]
         self.users()
 
 

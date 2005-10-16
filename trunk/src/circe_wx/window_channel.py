@@ -28,7 +28,7 @@ class WindowChannel(WindowTextEdit):
         self.windowarea = windowarea
         
         self.channelname = channelname
-        self._users = {} # Store info about users
+        self._users = [] # Store info about users
         
         self.create_controls()
         self.create_sizers()
@@ -68,10 +68,8 @@ class WindowChannel(WindowTextEdit):
         if not users: users = []
 
         if users:
-            for u in users:
-                if u not in self._users.keys():
-                    self._users[u] = ""
-        
+            for user in users: self._users.append(user)        
+
         self.lst_users.DeleteAllItems()
         self.sort()
         for u in self._users:
@@ -103,7 +101,7 @@ class WindowChannel(WindowTextEdit):
 
         user = nm_to_n(event.source())
 
-        if user in self._users.keys():
+        if user in self._users:
             self.del_user(user)
             msg = "".join(event.arguments())
             self.server_event("%s has quit (%s)" % (user, msg))

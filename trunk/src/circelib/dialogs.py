@@ -2,7 +2,7 @@ import wx
 class AskNicknameDialog(wx.TextEntryDialog):
     def __init__(self, *args, **kwargs):
         self.in_use = kwargs.get("in_use")
-        self.times = 5
+        self.times = 2
         try:
             if not self.in_use:
                 raise IndexError

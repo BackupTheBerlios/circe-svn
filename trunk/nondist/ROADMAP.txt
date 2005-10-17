@@ -1,17 +1,16 @@
 CIRCE DEVELOPMENT ROADMAP
 0.0.3 series:
     goals:
-        i18n support
-        themeing
+        i18n support  (added to circe trunk, got to implement it)
+        themeing (FR #XXXX)
         scripts (FR #1403)
         modular code base (FR #1400, FR #1402)
     features to implement:
         major:
-            * i18n support
-            * settings gui
-            * help browser
-            * mirc colors
-            * scripting
+            * i18n support (FR #XXXX)
+            * settings gui (FR #1392)
+            * help browser (FR #1389)
+            * mirc colors (FR #1404)
+            * scripting (FR #1403)
         minor:
-            * default nickname / secondary nickname
-            * basic textctrl theming
+            * default nickname / secondary nickname (FR #1390)

@@ -1,0 +1,16 @@
+CIRCE DEVELOPMENT ROADMAP
+0.0.3 series:
+    goals:
+        i18n support
+        themeing
+        scripts
+    features to implement:
+        major:
+            * i18n support
+            * settings gui
+            * help browser
+            * mirc colors
+            * scripting
+        minor:
+            * default nickname / secondary nickname
+            * basic textctrl theming

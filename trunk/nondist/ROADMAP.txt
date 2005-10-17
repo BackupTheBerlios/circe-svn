@@ -3,7 +3,7 @@ CIRCE DEVELOPMENT ROADMAP
     goals:
         i18n support
         themeing
-        scripts
+        scripts (FR #1403)
         modular code base (FR #1400, FR #1402)
     features to implement:
         major:

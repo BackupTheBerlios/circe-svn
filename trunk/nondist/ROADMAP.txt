@@ -4,6 +4,7 @@ CIRCE DEVELOPMENT ROADMAP
         i18n support
         themeing
         scripts
+        modular code base (FR #1400, FR #1402)
     features to implement:
         major:
             * i18n support

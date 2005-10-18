@@ -125,10 +125,11 @@ class WXServer(Server):
                 nickname = d['nickname'] = params[2]
             except IndexError:
                 result = dialogs.ask_nickname()
-                if result == "":
+                if not result:
                     window.server_event("Nickname defaulting to 'irc'.")
                     nickname = d['nickname'] = 'irc'
-
+                else:
+                    nickname = d['nickname'] = result
             # If we're already connected to a server, opens a new connection in
             # another status window.
             if self.is_connected():
@@ -160,7 +161,13 @@ class WXServer(Server):
             try:
                 nickname = d['nickname'] = params[2]
             except IndexError:
-                nickname = d['nickname'] = "circe"
+                result = dialogs.ask_nickname()
+                if not result:
+                    window.server_event("Nickname defaulting to 'irc'.")
+                    nickname = d['nickname'] = 'irc'
+                else:
+                    nickname = d['nickname'] = result
+
 
             s = self.new_status_window()
             s.connect(cmd, window, **d)

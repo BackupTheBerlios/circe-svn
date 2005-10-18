@@ -60,12 +60,40 @@ class WindowTextEdit(WindowServer):
     def txt_edit_evt_char(self, event):
         """Called when the user enter some text in the entry widget."""
         key = event.GetKeyCode()
-        if key == 13:
+        if key == 13: # enter
             # Enter pressed
             value = self.txt_edit.GetValue()
+            if not value: # ignore event if nothing typed
+                event.Skip()
+                return
             self.txt_edit.SetValue("")
             self.server.text_command(value,self)
             # Do nothing after this! We might be destroyed!
+        elif key == 9: # tab
+            value = self.txt_edit.GetValue()
+            if not value: # ignore if nothing typed
+                event.Skip()
+                return
+            get_channelname  = getattr(self, "get_channelname", None)
+            if not get_channelname: # ignore if cannot get channel name
+                event.Skip()
+                return
+            channel = get_channelname() # get the channel name
+            if not channel or channel == "debug": # is it none, or is it debug? ignore
+                event.Skip()
+                return
+
+            window = self.server.get_channel_window(channel)
+            users = window._users 
+
+            for user in users:
+                if user.startswith(value):
+                    self.txt_edit.SetValue(user)
+                    break
+            else:
+                if len(users) > 0:
+                    event.Skip()
+                return
         else:
             event.Skip()
 

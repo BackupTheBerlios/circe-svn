@@ -19,6 +19,7 @@
 # System
 import wx, wxPython
 from wx.lib.dialogs import ScrolledMessageDialog
+import wx.html
 import os, sys
 
 # Circe
@@ -39,6 +40,8 @@ ID_MENU_HELP_HELP = wx.NewId()
 
 ID_TOOLBAR_CHANNEL = 1401
 ID_TOOLBAR_TOOLS = 1401
+
+ID_SEARCH_CTRL = wx.NewId()
 
 class frame_main(wx.Frame):
     def __init__(self):
@@ -319,10 +322,23 @@ class Help(wx.Dialog):
         self.notebook.AddPage(self.index_tab, "Index")
         self.notebook.AddPage(self.search_tab, "Search")
 
-        self.index_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.index_sizer = wx.BoxSizer(wx.VERTICAL)
         self.index_tab.SetSizer(self.index_sizer)
 
-        self.search_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.search_sizer = wx.BoxSizer(wx.VERTICAL)
         self.search_tab.SetSizer(self.search_sizer)
  
+        self.index_tree = wx.ListCtrl(self.index_tab,ID_SEARCH_CTRL)
+        self.index_sizer.Add(self.index_tree,1)
+
+        text = "<b>Welcome To Circe Help Browser.</b><br />"
+        self.init_html_win(self.index_tab, self.index_sizer)
+        self.set_html_win(text)
+
         self.ShowModal()
+
+    def init_html_win(self, parent, sizer):
+        self.html = wx.html.HtmlWindow(self, -1)
+        sizer.Add(self.html)
+    def set_html_win(self, html):
+        self.html.SetPage(html)

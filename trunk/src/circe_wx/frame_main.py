@@ -35,6 +35,7 @@ ID_MENU_FILE_NEWSERVER = wx.NewId()
 ID_MENU_HELP_ABOUT = wx.NewId()
 ID_MENU_FILE_EXIT = wx.NewId()
 ID_MENU_HELP_CHKVER = wx.NewId()
+ID_MENU_HELP_HELP = wx.NewId()
 
 ID_TOOLBAR_CHANNEL = 1401
 ID_TOOLBAR_TOOLS = 1401
@@ -65,6 +66,7 @@ class frame_main(wx.Frame):
         menu_file.AppendSeparator()
         menu_file.Append(ID_MENU_FILE_EXIT, "E&xit", "Exit %s" % (circe_globals.APPNAME))
         menu_help = wx.Menu()
+        menu_help.Append(ID_MENU_HELP_HELP, "&Help", "Help")
         menu_help.Append(ID_MENU_HELP_CHKVER, "&Check Version", "Check Version")
         menu_help.AppendSeparator()
         menu_help.Append(ID_MENU_HELP_ABOUT, "&About", "About %s" % (circe_globals.APPNAME))
@@ -79,6 +81,7 @@ class frame_main(wx.Frame):
         wx.EVT_MENU(self, ID_MENU_FILE_EXIT, self.evt_menu_Exit)
         wx.EVT_MENU(self, ID_MENU_FILE_NEWSERVER, self.evt_menu_NewServer)
         wx.EVT_MENU(self, ID_MENU_HELP_CHKVER, CheckVersion)
+        wx.EVT_MENU(self, ID_MENU_HELP_HELP, Help)
     def create_switchbar(self):
         sbsize = (circe_config.switchbar_hsize,circe_config.switchbar_vsize)
         if circe_config.switchbar_position == wx.RIGHT or circe_config.switchbar_position == wx.LEFT:
@@ -302,5 +305,18 @@ class CheckVersion(wx.MessageDialog):
         elif curver[0] > runver[0]: # major version difference:
             return curver2
         else:
-            return 0
+            return 
 
+class Help(wx.Dialog):
+    def __init__(self, *topics):
+        wx.Dialog.__init__(self, None, -1, "%s Help Browser" % (circe_globals.APPNAME), wx.DefaultPosition, wx.DefaultSize)
+
+        self.notebook = wx.Notebook(self, -1, size=(100,110))
+
+        self.index_tab = wx.Panel(self.notebook)
+        self.search_tab = wx.Panel(self.notebook)                
+
+        self.notebook.AddPage(self.index_tab, "Index")
+        self.notebook.AddPage(self.search_tab, "Search")
+
+        self.ShowModal()

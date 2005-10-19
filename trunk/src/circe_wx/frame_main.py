@@ -322,14 +322,16 @@ class Help(wx.Dialog):
         self.notebook.AddPage(self.index_tab, "Index")
         self.notebook.AddPage(self.search_tab, "Search")
 
-        self.index_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.index_sizer = wx.FlexGridSizer(1,2)
         self.index_tab.SetSizer(self.index_sizer)
 
-        self.search_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.search_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.search_tab.SetSizer(self.search_sizer)
  
-        self.index_tree = wx.ListCtrl(self.index_tab,ID_SEARCH_CTRL)
+        self.index_tree = wx.ListCtrl(self.index_tab,ID_SEARCH_CTRL,size=(75, 220))
         self.index_sizer.Add(self.index_tree,1)
+        self.index_tree.InsertColumn(0, "Topics")
+        self.index_tree.Append(("Welcome To Circe",))
 
         text = "<b>Welcome To Circe Help Browser.</b><br />"
         self.init_html_win(self.index_tab, self.index_sizer)
@@ -338,7 +340,8 @@ class Help(wx.Dialog):
         self.ShowModal()
 
     def init_html_win(self, parent, sizer):
-        self.html = wx.html.HtmlWindow(self, -1)
-        sizer.Add(self.html)
+        self.html = wx.html.HtmlWindow(parent, -1, size=(320, 220))
+        sizer.Add(self.html, 2)
     def set_html_win(self, html):
         self.html.SetPage(html)
+

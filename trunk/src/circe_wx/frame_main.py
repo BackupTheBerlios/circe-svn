@@ -319,4 +319,10 @@ class Help(wx.Dialog):
         self.notebook.AddPage(self.index_tab, "Index")
         self.notebook.AddPage(self.search_tab, "Search")
 
+        self.index_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.index_tab.SetSizer(self.index_sizer)
+
+        self.search_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.search_tab.SetSizer(self.search_sizer)
+ 
         self.ShowModal()

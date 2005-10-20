@@ -35,8 +35,9 @@ class Config(object):
                 return self.__dict__[k]
         try:
             return self.config.get(self.section, k)
-        except ConfigParser.NoSectionError:
+        except:
             raise KeyError, k
+
     def __setitem__(self, k, v):
         self.config.set(self.section, k, v)
         self.__dict__[k] = v

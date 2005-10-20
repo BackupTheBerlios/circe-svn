@@ -24,6 +24,8 @@ from window_channel import WindowChannel
 from circelib.server import Server
 from circelib.errors import *
 import circelib.dialogs as dialogs
+import config_engine
+
 class WXServer(Server):
     def __init__(self,windowarea):
         Server.__init__(self)
@@ -32,7 +34,8 @@ class WXServer(Server):
         self.statuswindow = WindowStatus(windowarea,self)
         self.windowarea = windowarea
         self.channels = []
-
+        self.config = config_engine.Config()
+ 
     def get_hostname(self):
         """Return the host we are connected to."""
         return self.host
@@ -124,12 +127,15 @@ class WXServer(Server):
             try:
                 nickname = d['nickname'] = params[2]
             except IndexError:
-                result = dialogs.ask_nickname()
-                if not result:
-                    window.server_event("Nickname defaulting to 'irc'.")
-                    nickname = d['nickname'] = 'irc'
-                else:
-                    nickname = d['nickname'] = result
+                try:
+                    nickname = d['nickname'] = self.config["nickname"]
+                except KeyError:
+                    result = dialogs.ask_nickname()
+                    if not result:
+                        window.server_event("Nickname defaulting to 'irc'.")
+                        nickname = d['nickname'] = 'irc'
+                    else:
+                        nickname = d['nickname'] = result
             # If we're already connected to a server, opens a new connection in
             # another status window.
             if self.is_connected():
@@ -161,13 +167,15 @@ class WXServer(Server):
             try:
                 nickname = d['nickname'] = params[2]
             except IndexError:
-                result = dialogs.ask_nickname()
-                if not result:
-                    window.server_event("Nickname defaulting to 'irc'.")
-                    nickname = d['nickname'] = 'irc'
-                else:
-                    nickname = d['nickname'] = result
-
+                try:
+                    nickname = d['nickname'] = self.config["nickname"]
+                except KeyError:
+                    result = dialogs.ask_nickname()
+                    if not result:
+                        window.server_event("Nickname defaulting to 'irc'.")
+                        nickname = d['nickname'] = 'irc'
+                    else:
+                        nickname = d['nickname'] = result
 
             s = self.new_status_window()
             s.connect(cmd, window, **d)
@@ -641,11 +649,14 @@ class WXServer(Server):
 
             elif etype == "nicknameinuse":
                 nickname = e.arguments()[0]
-                result = dialogs.ask_nickname(nickname)
-                if result:
-                    self.connection.nick(result)
-                else:
-                    self.connection.nick(nickname+"_")
+                try:
+                    self.connection.nick(self.config["secondary_nickname"])
+                except KeyError:
+                    result = dialogs.ask_nickname(nickname)
+                    if result:
+                        self.connection.nick(result)
+                    else:
+                        self.connection.nick(nickname+"_")
                 text = "%s: %s" % (nickname, e.arguments()[1])
                 self.statuswindow.server_event(text)
 

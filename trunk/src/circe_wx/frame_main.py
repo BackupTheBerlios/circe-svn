@@ -276,7 +276,7 @@ class About(wxPython.wx.wxDialog):
     def OnClick(self, *a):
         self.Destroy() 
 
-class CheckVersion(wx.MessageDialog):
+class CheckVersion:
     def __init__(self, *a):
         GCVout = self.GetCurrentVersion()    
     

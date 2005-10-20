@@ -88,7 +88,8 @@ class WindowTextEdit(WindowServer):
 
             for user in users:
                 if user.startswith(value):
-                    self.txt_edit.SetValue(user)
+                    self.txt_edit.SetValue(user+": ")
+                    self.txt_edit.SetInsertionPointEnd()
                     break
             else:
                 if len(users) > 0:

@@ -13,4 +13,6 @@ CIRCE DEVELOPMENT ROADMAP
             * mirc colors (FR #1404)
             * scripting (FR #1403)
         minor:
-            * default nickname / secondary nickname (FR #1390)
+            * default nickname / secondary nickname (FR #1390) (DONE)
+            * tab complete (FR #1386) (DONE)
+            * up/down key functionality (FR #1416) (DONE)

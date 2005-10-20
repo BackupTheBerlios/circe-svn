@@ -35,7 +35,9 @@ class WXServer(Server):
         self.windowarea = windowarea
         self.channels = []
         self.config = config_engine.Config()
- 
+        self.help = {}
+        self.assign_help()
+
     def get_hostname(self):
         """Return the host we are connected to."""
         return self.host
@@ -82,6 +84,26 @@ class WXServer(Server):
         s = self.windowarea.add_server()
         self.windowarea.show_window(s.statuswindow.section_id, s.statuswindow)
         return s
+
+    def register_help(self, command, text):
+        self.help[command.lower()] = text
+
+    def get_help(self, window, command):
+        try: window.server_event(self.help[command.lower()])
+        except: window.server_event("%s: No Help Available." % (command))
+
+    def assign_help(self):
+        # /SERVER
+        text = "/server servername [port] [nick] [channels]\n\tThis command connects you to a IRC Server.\n"
+        self.register_help("server", text)
+
+        # NEWSERVER
+        text = "/newserver servername [port] [nick] [channels]\n\tThis command opens a new status window and connects you to a IRC Server.\n"
+        self.register_help("newserver", text)
+
+        # ECHO
+        text = "/echo [text]\n\tThis command echos text into your IRC Window, however, this text cannot be seen by others.\n"
+        self.register_help("echo", text)
 
     def text_command(self,cmdstring,window):
         if not cmdstring:
@@ -213,6 +235,8 @@ class WXServer(Server):
             self.connect(server, port, self.connection.get_nickname())
         elif cmd == "globops":
             self.connection.globops(params[0])
+        elif cmd == "help":
+            self.get_help(window, params[0])
         elif cmd == "info":
             self.connection.info(params and params[0] or "")
         elif cmd == "invite":

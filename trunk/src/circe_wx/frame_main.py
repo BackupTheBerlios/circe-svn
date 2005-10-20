@@ -308,7 +308,7 @@ class CheckVersion(wx.MessageDialog):
         elif curver[0] > runver[0]: # major version difference:
             return curver2
         else:
-            return 
+            return 0
 
 class Help(wx.Dialog):
     def __init__(self, *topics):

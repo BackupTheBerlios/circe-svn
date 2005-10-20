@@ -1,0 +1,2 @@
+server,(|/server servername [port] [nickname] [channels]\n\tConnects to a IRC Server:\n\t\tservername: the hostname/ip for the irc server\n\t\tport: the irc port to connect to (default: 6667)\n\t\tnickname: the nickname to connect as (default grabbed from config file)\n\t\tchannels: a list of channels to join (default: none)\n|)
+

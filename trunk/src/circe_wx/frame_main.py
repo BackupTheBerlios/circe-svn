@@ -363,8 +363,13 @@ class Settings(wx.Dialog):
 
         self.dialog_sizer = wx.BoxSizer(wx.VERTICAL)
         self.buttons_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.General_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.Servers_sizer = wx.BoxSizer(wx.VERTICAL)
 
         self.SetSizer(self.dialog_sizer)
+        self.General_tab.SetSizer(self.General_sizer)
+        self.Servers_tab.SetSizer(self.Servers_sizer)
+
         self.dialog_sizer.Add(self.notebook, -1, wx.EXPAND|wx.ALIGN_TOP, 5)
         self.dialog_sizer.Add(self.buttons_sizer, 0, flag=wx.ALIGN_RIGHT)
         self.buttons_sizer.Layout()
@@ -374,6 +379,7 @@ class Settings(wx.Dialog):
 
         self.buttons_sizer.Add(self.OK_button, proportion=0, flag=wx.ALIGN_RIGHT)
         self.buttons_sizer.Add(self.CANCEL_button, proportion=0, flag=wx.ALIGN_RIGHT)
+ 
 
         self.config = config_engine.Config()
 

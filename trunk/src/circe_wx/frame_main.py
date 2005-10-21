@@ -291,18 +291,13 @@ class CheckVersion:
         else: 
             text = "You are currently running an old version of %s. The currently available version is %s. Would you like to visit the %s homepage? " % (circe_globals.APPNAME, GCVout, circe_globals.APPNAME)
             result = wx.MessageBox(text,"Updates Available!", wx.YES_NO|wx.ICON_EXCLAMATION)
-            if result == wx.YES:
-                import webbrowser; webbrowser.open(circe_globals.HOMEPAGE, new=1)
+            if result == wx.YES: import webbrowser; webbrowser.open(circe_globals.HOMEPAGE, new=1)
 
     def GetCurrentVersion(self):
-        try:
-            curver = self.curver
-        except AttributeError:
-            import urllib2
-            a = urllib2.urlopen("http://circe.berlios.de/version.php")
-            curver2 = a.read()
-            curver = curver2.split(".")
-            self.curver = curver
+        import urllib2
+        a = urllib2.urlopen("http://circe.berlios.de/version.php")
+        curver2 = a.read()
+        curver = curver2.split(".")
         runver = circe_globals.VERSION.split(".")
 
         if curver[2] > runver[2]: # minor version difference:

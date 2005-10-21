@@ -219,7 +219,10 @@ class WXServer(Server):
         elif cmd == "globops":
             self.connection.globops(params[0])
         elif cmd == "help":
-            self.get_help(window, params[0])
+            if len(params) >= 1:
+                self.get_help(window, params[0])
+            else:
+                self.get_help(window, "")
         elif cmd == "info":
             self.connection.info(params and params[0] or "")
         elif cmd == "invite":

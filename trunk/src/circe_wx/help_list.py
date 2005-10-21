@@ -29,7 +29,19 @@ def parse_document(doc="doc/help_list"):
     a.close()
 
 def grab_value(value):
-    try:
-        return help_list[value].replace("\\n", "\n").replace("\\t", "\t")
-    except KeyError:
-        return "Error: Unknown Command \"%s\"" % (value)
+    if value.strip() != "":
+        try:
+            return help_list[value].replace("\\n", "\n").replace("\\t", "\t")
+        except KeyError:
+            return "Error: Unknown Command \"%s\"" % (value)
+    else:
+        a = grab_all_keys()
+        tmpb = ""
+        for obj in a:
+            tmpb += obj+"\n"
+        return tmpb
+def grab_all_keys():
+    lst = []
+    for obj in help_list:
+        lst.append(obj)
+    return lst

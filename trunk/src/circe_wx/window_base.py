@@ -60,6 +60,7 @@ class WindowTextEdit(WindowServer):
         self.current_area_up = 0
         self.current_area_down = 0
         self.tmp_buffer = ""
+
     def txt_edit_evt_char(self, event):
         """Called when the user enter some text in the entry widget."""
         key = event.GetKeyCode()
@@ -81,18 +82,26 @@ class WindowTextEdit(WindowServer):
             if self.tmp_buffer != "": # lets restore tmp_buffer, then restore it
                 self.txt_edit.SetValue(self.tmp_buffer)
                 self.tmp_buffer = ""
+
             else:
                 if self.txt_edit.GetValue().strip() != "":
                     self.tmp_buffer = self.txt_edit.GetValue()
 
                 if self.current_area_up == 0: # first time up was pressed
-                    self.txt_edit.SetValue(self.command_buffer[len(self.command_buffer)-1])
-                    self.current_area_up = len(self.command_buffer)-1
+                    try:
+                        self.txt_edit.SetValue(self.command_buffer[len(self.command_buffer)-1])
+                        self.current_area_up = len(self.command_buffer)-1
+                    except: 
+                        pass
 
                 else:
-                    self.current_area_up += 1
-                    self.txt_edit.SetValue(self.command_buffer[self.current_area_up])
+                    try:
+                        self.current_area_up += 1
+                        self.txt_edit.SetValue(self.command_buffer[self.current_area_up])
+                    except:
+                        pass
 
+            self.txt_edit.SetInsertionPointEnd()
         elif key == wx.WXK_DOWN: # down
             if self.tmp_buffer != "": # lets restore tmp_buffer, then restore it
                 self.txt_edit.SetValue(self.tmp_buffer)
@@ -102,13 +111,19 @@ class WindowTextEdit(WindowServer):
                     self.tmp_buffer = self.txt_edit.GetValue()
 
                 if self.current_area_down == 0: # first time down was pressed
-                    self.txt_edit.SetValue(self.command_buffer[len(self.command_buffer)-1])
-                    self.current_area_down = len(self.command_buffer)-1
+                    try:
+                        self.txt_edit.SetValue(self.command_buffer[len(self.command_buffer)-1])
+                        self.current_area_down = len(self.command_buffer)-1
+                    except:
+                        pass
 
                 else:
-                    self.current_area_down -= 1
-                    self.txt_edit.SetValue(self.command_buffer[self.current_area_down])
-
+                    try:
+                       self.current_area_down -= 1
+                       self.txt_edit.SetValue(self.command_buffer[self.current_area_down])
+                    except:
+                       pass
+            self.txt_edit.SetInsertionPointEnd()
    
         elif key == 9: # tab
             value = self.txt_edit.GetValue()

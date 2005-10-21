@@ -29,19 +29,19 @@ class Config(object):
         self.configfile = os.path.expanduser(configfile)
         try:
             self.config.readfp(open(self.configfile, "r"))
-        except:
+        except IOError:
             print "Config file does not exist. TODO: Create proper config structure here!"
         self.section = configsection
 
     def __getitem__(self, k):
         try:
             return self.config.get(self.section, k)
-        except:
+        except ConfigParser.NoOptionError:
             try:
                 v = DEFAULTS[k]
-                self.__setitem__(k,v)
+                self[k] = v
                 return v
-            except (ValueError, KeyError):
+            except KeyError:
                 raise KeyError, k
     def __setitem__(self, k, v):
         self.config.set(self.section, k, v)
@@ -51,7 +51,7 @@ class Config(object):
         try:
             self.config.remove_option(self.section, k)
             self.config.write(open(self.configfile, "w"))
-        except (ConfigParser.NoOptionError):
+        except ConfigParser.NoOptionError:
             raise KeyError,k
     def getboolean(self, k):
         try:

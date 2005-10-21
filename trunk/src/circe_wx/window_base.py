@@ -166,7 +166,7 @@ class WindowTextEdit(WindowServer):
         value_s = value.split(" ")[-1]
         try:
             self.complete_suffix = config["complete_suffix"]
-        except:
+        except KeyError:
             self.complete_suffix = ":"
         for user in users:
             if user.startswith(value_s):

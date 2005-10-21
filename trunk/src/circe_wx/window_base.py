@@ -92,6 +92,7 @@ class WindowTextEdit(WindowServer):
                 else:
                     self.current_area_up += 1
                     self.txt_edit.SetValue(self.command_buffer[self.current_area_up])
+
         elif key == wx.WXK_DOWN: # down
             if self.tmp_buffer != "": # lets restore tmp_buffer, then restore it
                 self.txt_edit.SetValue(self.tmp_buffer)
@@ -125,12 +126,19 @@ class WindowTextEdit(WindowServer):
 
             window = self.server.get_channel_window(channel)
             users = window._users 
-
+            value_s = value.split(" ")[-1]
             for user in users:
-                if user.startswith(value):
-                    self.txt_edit.SetValue(user+": ")
-                    self.txt_edit.SetInsertionPointEnd()
-                    break
+                if user.startswith(value_s):
+                    if len(value.split(" ")) <= 1:
+                        self.txt_edit.SetValue(user+": ")
+                        self.txt_edit.SetInsertionPointEnd()
+                        break
+                    else:
+                        txt = self.txt_edit.GetValue().split(" ")
+                        txt = " ".join(txt[:len(txt)-1])
+                        self.txt_edit.SetValue(txt+" "+user+" ")
+                        self.txt_edit.SetInsertionPointEnd()
+                        break
             else:
                 if len(users) > 0:
                     event.Skip()

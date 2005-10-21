@@ -51,7 +51,7 @@ class Config(object):
         try:
             self.config.remove_option(self.section, k)
             self.config.write(open(self.configfile, "w"))
-        except (ConfigParser.noOptionError):
+        except (ConfigParser.NoOptionError):
             raise KeyError,k
     def getboolean(self, k):
         try:

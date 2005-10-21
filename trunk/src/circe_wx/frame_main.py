@@ -17,9 +17,9 @@
 
 # Imports
 # System
-import wx, wxPython
+import wx
 from wx.lib.dialogs import ScrolledMessageDialog
-import wx.html
+import wx.html as html
 import os, sys
 
 # Circe
@@ -205,7 +205,7 @@ class frame_main(wx.Frame):
                 pass
         sys.exit()
 
-class About(wxPython.wx.wxDialog):
+class About(wx.Dialog):
     def __init__(self,event):
         windowname = "About %s %s" % (circe_globals.APPNAME, circe_globals.VERSION)
         wx.Dialog.__init__(self, None, -1, windowname, style=wx.DEFAULT_DIALOG_STYLE, size=(370,205))
@@ -265,9 +265,9 @@ class About(wxPython.wx.wxDialog):
         self.license_sizer.Add(self.license_text_dlg, 1, wx.CENTER|wx.EXPAND|wx.ALL)
 
         import irclib 
-        irclib_version = ""
-        for VerStr in irclib.VERSION: irclib_version += str(VerStr)+"." 
-        python_version = "%s.%s.%s %s" % (sys.version_info[0], sys.version_info[1], sys.version_info[2], sys.version_info[3])
+        irclib_version = ".".join(map(str, irclib.VERSION))
+        python_version = ".".join(map(str, sys.version_info[:3]))
+        python_version += (" " + sys.version_info[3])
 
         self.other_text = "%s Version: %s\nPython Version: %s\nWxPython Version: %s\npython-irclib Version: %s\n" % (circe_globals.APPNAME, \
                                                                                                circe_globals.VERSION, \
@@ -278,7 +278,7 @@ class About(wxPython.wx.wxDialog):
         self.other_text_dlg.SetEditable(0)
         self.other_sizer.Add(self.other_text_dlg, 1, wx.CENTER|wx.EXPAND|wx.ALL)
 
-        wxPython.wx.EVT_BUTTON(self,100,self.OnClick)        
+        wx.EVT_BUTTON(self,100,self.OnClick)        
         
         self.ShowModal()
     
@@ -344,7 +344,7 @@ class Help(wx.Dialog):
         self.ShowModal()
 
     def init_html_win(self, parent, sizer):
-        self.html = wx.html.HtmlWindow(parent, -1, size=(320, 220))
+        self.html = html.HtmlWindow(parent, -1, size=(320, 220))
         sizer.Add(self.html, 2)
     def set_html_win(self, html):
         self.html.SetPage(html)

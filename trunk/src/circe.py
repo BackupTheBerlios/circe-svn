@@ -47,7 +47,8 @@ if not os.path.exists(config_file):
 import circe_wx.config_engine as config_engine
 config = config_engine.Config(configfile=config_file)
 
-from circe_wx.frame_main import frame_main, CheckVersion
+from circe_wx.mainframe import MainFrame
+from circe_wx.versioncheck import VersionCheck
 
 def handle_exc(message):
     print message
@@ -73,7 +74,7 @@ class CirceApp(wx.App):
                 cv = CheckVersion("frm_bin")
         except KeyError: pass
         try:
-            self.mainFrame = frame_main()
+            self.mainFrame = MainFrame()
             self.mainFrame.Show(True)
             self.SetTopWindow(self.mainFrame)
         except:

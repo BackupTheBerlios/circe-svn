@@ -25,7 +25,10 @@ class Config(object):
     def __init__(self, configsection="Circe", configfile="~/.circe/config"):
         self.config = ConfigParser.ConfigParser()
         self.configfile = os.path.expanduser(configfile)
-        self.config.readfp(open(self.configfile, "r"))
+        try:
+            self.config.readfp(open(self.configfile, "r"))
+        except:
+            print "Config file does not exist. TODO: Create proper config structure here!"
         self.section = configsection
 
     def __getitem__(self, k):

@@ -397,8 +397,9 @@ class WXServer(Server):
 
         elif cmd == "quit":
             if not params:
-                import circe_globals
-                self.connection.quit(circe_globals.QUITMSG)
+                try: quitmsg = self.config["quitmsg"]
+                except: quitmsg = circe_globals.QUITMSG
+                self.connection.quit(quitmsg)
                 return
             else:
                 self.connection.quit(" ".join(params))

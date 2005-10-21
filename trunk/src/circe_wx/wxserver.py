@@ -721,14 +721,14 @@ class IRCCommands:
                 channels = params[3:]
                 if not channels:
                     return
-                self.connection.join(*channels)
+                server.connection.join(*channels)
                 return
-            self.connect(cmd, window, **d)
+            server.connect(cmd, window, **d)
             self.host = server
             # Ensures checking for new events is enabled.
-            self.statuswindow.enable_checking()
+            server.statuswindow.enable_checking()
             channels = params[3:]
             if not channels:
                 return
-            self.connection.join(*channels)
+            server.connection.join(*channels)
 

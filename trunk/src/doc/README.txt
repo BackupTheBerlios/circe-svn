@@ -22,7 +22,7 @@ Installing Circe:
 asked only under Linux systems).
 
 Starting Circe:
- * Simply run "python bin/circe.py" (or navigate to bin, double click on circe.py under Windows)
+ * Simply run "python circe.py" (or double click on circe.py under Windows)
 
 These are the platforms Circe is known to work under:
  * Linux

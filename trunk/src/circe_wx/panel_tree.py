@@ -22,11 +22,7 @@ class PanelTree(wx.Panel):
         self.treesize = (treesize,-1)
         wx.Panel.__init__(self,parent,panelID,wx.DefaultPosition,self.treesize)
         self.create_sizers()
-        self.add_controls()
         
     def create_sizers(self):
         self.sizer_top = wx.BoxSizer()
         self.SetSizer(self.sizer_top)
-    
-    def add_controls(self):
-        self.sizer_top.Add(self.test_area,1,wx.EXPAND)

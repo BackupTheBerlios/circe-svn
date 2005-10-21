@@ -30,9 +30,6 @@ class Config(object):
 
     def __getitem__(self, k):
         result = self.__dict__.get("initialized", False)
-        if not result:
-            if self.__dict__.has_key(k):
-                return self.__dict__[k]
         try:
             return self.config.get(self.section, k)
         except:
@@ -40,22 +37,11 @@ class Config(object):
 
     def __setitem__(self, k, v):
         self.config.set(self.section, k, v)
-        self.__dict__[k] = v
         self.config.write(open(self.configfile, "w"))
 
     def __delitem__(self, k):
         self.config.remove_option(self.section, k)
         self.config.write(open(self.configfile, "w"))
-
-    def __getattr__(self, k):
-        try: return object.__getattr__(self, k)
-        except AttributeError: pass
-        try:
-            return getattr(circe_config, k)
-        except AttributeError: pass
-        try: return self[k]
-        except KeyError: pass
-        return getattr(self.config, k)
 
     def getboolean(self, k):
         try:

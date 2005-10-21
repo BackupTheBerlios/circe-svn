@@ -48,9 +48,11 @@ class Config(object):
         self.config.write(open(self.configfile, "w"))
 
     def __delitem__(self, k):
-        self.config.remove_option(self.section, k)
-        self.config.write(open(self.configfile, "w"))
-
+        try:
+            self.config.remove_option(self.section, k)
+            self.config.write(open(self.configfile, "w"))
+        except (ConfigParser.noOptionError):
+            raise KeyError,k
     def getboolean(self, k):
         try:
             return self.config.getboolean(self.section, k)

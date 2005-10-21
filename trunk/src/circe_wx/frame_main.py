@@ -61,6 +61,8 @@ class frame_main(wx.Frame):
         self.bind_events()
         self.add_controls()
 
+        self.config = config_engine.Config()
+ 
         # Create a server + a status window
         s = servermanager.add_server(self.panel_windowarea)
         self.panel_windowarea.show_window(s.statuswindow.section_id,s.statuswindow)
@@ -195,14 +197,17 @@ class frame_main(wx.Frame):
     def evt_window_del(self,*a):
         for server in servermanager.servers: 
             try:    
-                server.connection.quit(circe_globals.QUITMSG)
+                try:
+                    server.connection.quit(self.config["quitmsg"])
+                except KeyError:
+                    server.connection.quit(circe_globals.QUITMSG)
             except:
                 pass
         sys.exit()
 
 class About(wxPython.wx.wxDialog):
     def __init__(self,event):
-        windowname = "About "+circe_globals.APPNAME+" "+circe_globals.VERSION
+        windowname = "About %s %s" % (circe_globals.APPNAME, circe_globals.VERSION)
         wx.Dialog.__init__(self, None, -1, windowname, style=wx.DEFAULT_DIALOG_STYLE, size=(370,205))
 
         self.notebook = wx.Notebook(self, -1, size=(100,110))
@@ -212,7 +217,7 @@ class About(wxPython.wx.wxDialog):
         self.license_panel = wx.Panel(self.notebook)
         self.other_panel = wx.Panel(self.notebook)
 
-        self.notebook.AddPage(self.main_panel, "About "+circe_globals.APPNAME)
+        self.notebook.AddPage(self.main_panel, "About %s" % circe_globals.APPNAME)
         self.notebook.AddPage(self.credits_panel, "Credits")
         self.notebook.AddPage(self.license_panel, "License")
         self.notebook.AddPage(self.other_panel, "Other")
@@ -289,7 +294,7 @@ class CheckVersion:
                 text = "You are currently running the latest version of %s." % (circe_globals.APPNAME)
                 wx.MessageBox(text, "No Updates Available", wx.OK|wx.ICON_INFORMATION)
         else: 
-            text = "You are currently running an old version of %s. The currently available version is %s. Would you like to visit the %s homepage? " % (circe_globals.APPNAME, GCVout, circe_globals.APPNAME)
+            text = "You are currently running an old version of %s. The currently available version is %s. \nWould you like to visit the %s homepage? " % (circe_globals.APPNAME, GCVout, circe_globals.APPNAME)
             result = wx.MessageBox(text,"Updates Available!", wx.YES_NO|wx.ICON_EXCLAMATION)
             if result == wx.YES: import webbrowser; webbrowser.open(circe_globals.HOMEPAGE, new=1)
 

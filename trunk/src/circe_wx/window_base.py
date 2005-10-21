@@ -134,8 +134,7 @@ class WindowTextEdit(WindowServer):
                         self.txt_edit.SetInsertionPointEnd()
                         break
                     else:
-                        txt = self.txt_edit.GetValue().split(" ")
-                        txt = " ".join(txt[:len(txt)-1])
+                        txt = " ".join(self.txt_edit.GetValue().split(" ")[:len(self.txt_edit.GetValue().split(" "))-1])
                         self.txt_edit.SetValue(txt+" "+user+" ")
                         self.txt_edit.SetInsertionPointEnd()
                         break

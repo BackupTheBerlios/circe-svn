@@ -17,6 +17,8 @@
 
 import wx
 from panel_window import PanelWindow
+import config_engine
+config = config_engine.Config()
 
 ID_TXT_EDIT = wx.NewId()
 
@@ -57,7 +59,10 @@ class WindowTextEdit(WindowServer):
         self.txt_edit.Bind(wx.EVT_CHAR, self.txt_edit_evt_char)
         
         # Command history
-        self.historysize = 10 # TODO: Get this from config
+        try:
+            self.historysize = config["history_size"]
+        except KeyError:
+            self.historysize = 10 # default
         self.history = [] # History buffer, first item is the last entered command
         self.currenthistory = -1 # -1 means we're not navigating the history
         self.currentcommand = "" # This is the text entered in the input box before navigating history

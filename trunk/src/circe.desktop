@@ -1,11 +1,9 @@
 [Desktop Entry]
+Version=1.0.0
 Encoding=UTF-8
-Version=1.0
-Type=Application
-Exec=/usr/bin/circe
-TryExec=
-X-GNOME-DocPath=
+Name=Circe
+Comment=IRC client
+Exec=/usr/bin/circe.py
 Terminal=false
-Name[en_GB]=Circe
-GenericName[en_GB]=
-Comment[en_GB]=IRC client written in Python
+Type=Application
+Categories=Application;Internet;

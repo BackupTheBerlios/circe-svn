@@ -29,7 +29,6 @@ class Config(object):
         self.section = configsection
 
     def __getitem__(self, k):
-        result = self.__dict__.get("initialized", False)
         try:
             return self.config.get(self.section, k)
         except:

@@ -457,7 +457,7 @@ class WXServer(Server):
         elif cmd == "check":
             self.check_events()
 	elif cmd == "clear":
-            window.txt_buffer_clr()
+            self.commands.cmd_clear(window,self,params)
 	else:
             window.server_event("%s: Invalid Command" % (cmd))
     def check_events(self):
@@ -696,3 +696,6 @@ class IRCCommands:
             return
         server.connection.join(*channels)
 
+    def cmd_clear(self,window,server,params):
+        window.txt_buffer_clr()
+        

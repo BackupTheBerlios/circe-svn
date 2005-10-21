@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-import irclib
+import circeirc as irclib
 
 
 
@@ -23,9 +23,6 @@ class Server:
     """IRC client inspired from SimpleIRCClient from python-irclib.
     It can handles several connections to multiple servers.
     """
-
-# Doesn't work well: some events are lost. Why?
-#    ircobj = irclib.IRC()
 
     def __init__(self):
 

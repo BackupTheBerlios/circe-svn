@@ -393,26 +393,27 @@ class WXServer(Server):
                     raise IndexError
             except IndexError:
                 params.insert(0, window.get_channelname())
-            result = params[1:]
+            result = " ".join(params[1:])
             if result:
                 self.connection.topic(channel=params[0], new_topic=result)
             else:
                 self.connection.topic(channel=params[0])
+            return
 
-            if new_topic:
-                if params[0] in self.channels or params[0].startswith("#"):
-                    new_topic = " ".join(params[1:])
-                    if new_topic:
-                        self.connection.topic(channel=param[0], new_topic=" ".join(param[1:]))
-                    else:
-                        if params[0].strip() != "":
-                              self.connection.topic(channel=params[0])
-                        else: 
-                              self.connection.topic(channel=window.get_channelname())
-                else: 
-                    self.connection.topic(channel=window.get_channelname(), new_topic=new_topic)
-            else:
-                self.connection.topic(channel=window.get_channelname())
+#            if new_topic:
+#                if params[0] in self.channels or params[0].startswith("#"):
+#                    new_topic = " ".join(params[1:])
+#                    if new_topic:
+#                        self.connection.topic(channel=param[0], new_topic=" ".join(param[1:]))
+#                    else:
+#                        if params[0].strip() != "":
+#                              self.connection.topic(channel=params[0])
+#                        else: 
+#                              self.connection.topic(channel=window.get_channelname())
+#                else: 
+#                    self.connection.topic(channel=window.get_channelname(), new_topic=new_topic)
+#            else:
+#                self.connection.topic(channel=window.get_channelname())
         elif cmd == "trace":
             self.connection.trace(params and params[0] or "")
         elif cmd == "userhost":
@@ -532,7 +533,9 @@ class WXServer(Server):
                         args = " ".join(args)
                         if etype == "topic":
                             text = "Topic for %s is: %s" % (chan, args)
-                        window.server_event(text)
+                        else:
+                            text = "[%s] %s" % (etype, args)
+                        topic.append(text)
                 else:
                     window = self.get_channel_window(e.target())
                     if window:
@@ -546,6 +549,7 @@ class WXServer(Server):
                 window = self.get_channel_window(e.arguments()[0])
                 if window:
                     text = "Topic for %s set by %s on %s" % (e.arguments()[0], sender, date)
+                    topic.append(text)
                     window.server_event("\n".join(topic))
                 topic = []
 

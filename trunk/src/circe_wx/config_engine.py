@@ -21,7 +21,13 @@ import ConfigParser # we need some way to work with those damn INI config files 
 import circe_config
 import os
 
-DEFAULTS = {"nickname":"irc", "secondary_nickname":"irc_", check_version=1,timestamp_show:1,time_format:"[%I:%M:%S]"}
+DEFAULTS = {
+    "nickname": "irc",
+    "secondary_nickname": "irc_",
+    "check_version": 1,
+    "timestamp_show": 1,
+    "time_format": "[%I:%M:%S]"
+}
 
 class Config(object):
     def __init__(self, configsection="Circe", configfile="~/.circe/config"):

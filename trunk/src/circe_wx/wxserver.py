@@ -682,3 +682,53 @@ class WXServer(Server):
                 text = "%s (%s)" % (e.arguments()[0], e.source())
                 self.statuswindow.server_event(text)
                 self.statuswindow.evt_disconnect()
+
+class IRCCommands:
+    def __init__(self):
+        self.config = config_engine.Config()
+        help_list.parse_document()
+    def cmd_kick(self,window,server,params):
+        if len(params) >= 1: 
+            window.server_event(help_list.grabvalue("server"))
+            d = {}
+            try:
+                d["server"] = str(param[0])
+            except:
+                window.server_event(help_list.grabvalue("server"))
+            try:
+                port = d['port'] = int(params[1])
+            except (IndexError, ValueError):
+                port = d['port'] = 6667
+            try:
+                nickname = d['nickname'] = params[2]
+            except IndexError:
+                try:
+                    nickname = d['nickname'] = self.config["nickname"]
+                except KeyError:
+                    result = dialogs.ask_nickname()
+                    if not result:
+                        window.server_event("Nickname defaulting to 'irc'.")
+                        nickname = d['nickname'] = 'irc'
+                    else:
+                        nickname = d['nickname'] = result
+            # If we're already connected to a server, opens a new connection in
+            # another status window.
+            if server.is_connected():
+                s = server.new_status_window()
+                s.connect(cmd, window, **d)
+                self.host = server
+                s.statuswindow.enable_checking()
+                channels = params[3:]
+                if not channels:
+                    return
+                self.connection.join(*channels)
+                return
+            self.connect(cmd, window, **d)
+            self.host = server
+            # Ensures checking for new events is enabled.
+            self.statuswindow.enable_checking()
+            channels = params[3:]
+            if not channels:
+                return
+            self.connection.join(*channels)
+

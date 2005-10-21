@@ -16,7 +16,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 # STANDARD HELP FORMAT: <command which searched for>,[-|<text here>|-]
-# Example: server,[-|\n/server server [port] [nickname] [channels]|-]
+# Example: server,(|\n/server server [port] [nickname] [channels]|)
 
 def parse_document(doc="doc/help_list"):
     global help_list

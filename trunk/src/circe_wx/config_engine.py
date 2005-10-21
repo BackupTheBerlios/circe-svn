@@ -21,6 +21,8 @@ import ConfigParser # we need some way to work with those damn INI config files 
 import circe_config
 import os
 
+DEFAULTS = {}
+
 class Config(object):
     def __init__(self, configsection="Circe", configfile="~/.circe/config"):
         self.config = ConfigParser.ConfigParser()
@@ -35,8 +37,10 @@ class Config(object):
         try:
             return self.config.get(self.section, k)
         except:
-            raise KeyError, k
-
+            try:
+                return DEFAULTS[k]
+            except:
+                raise KeyError, k
     def __setitem__(self, k, v):
         self.config.set(self.section, k, v)
         self.config.write(open(self.configfile, "w"))

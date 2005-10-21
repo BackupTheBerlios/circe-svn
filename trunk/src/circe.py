@@ -48,7 +48,7 @@ import circe_wx.config_engine as config_engine
 config = config_engine.Config(configfile=config_file)
 
 from circe_wx.mainframe import MainFrame
-from circe_wx.versioncheck import VersionCheck
+import circe_wx.version
 
 def handle_exc(message):
     print message
@@ -71,7 +71,7 @@ class CirceApp(wx.App):
                 return False # Exit
         try:
             if config.getboolean("check_version"):
-                cv = CheckVersion("frm_bin")
+                cv = circe_wx.version.CheckVersion(showcurrent=False)
         except KeyError: pass
         try:
             self.mainFrame = MainFrame()

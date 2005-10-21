@@ -2,13 +2,13 @@ import wx
 import circe_globals
 import urllib2
 
-def CheckVersion():
+def CheckVersion(showcurrent=True):
     GCVout = GetCurrentVersion()    
 
     if GCVout == 0:
-        #if a[0] != "frm_bin":
-        text = "You are currently running the latest version of %s." % (circe_globals.APPNAME)
-        wx.MessageBox(text, "No Updates Available", wx.OK|wx.ICON_INFORMATION)
+        if showcurrent:
+            text = "You are currently running the latest version of %s." % (circe_globals.APPNAME)
+            wx.MessageBox(text, "No Updates Available", wx.OK|wx.ICON_INFORMATION)
     else: 
         text = "You are currently running an old version of %s. The currently available version is %s. \nWould you like to visit the %s homepage? " % (circe_globals.APPNAME, GCVout, circe_globals.APPNAME)
         result = wx.MessageBox(text,"Updates Available!", wx.YES_NO|wx.ICON_EXCLAMATION)

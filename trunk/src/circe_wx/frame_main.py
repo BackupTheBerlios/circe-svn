@@ -379,7 +379,13 @@ class Settings(wx.Dialog):
 
         self.buttons_sizer.Add(self.OK_button, proportion=0, flag=wx.ALIGN_RIGHT)
         self.buttons_sizer.Add(self.CANCEL_button, proportion=0, flag=wx.ALIGN_RIGHT)
+
+        # START MASSIVE CONTROLS ADDITIONS (OMG!! ITS COMING!! HELLS FREEZING OVER!! :o)
  
+        self.General_DNickTxt = wx.StaticText(self.General_tab, -1, "Default Nickname: ")
+        self.General_DNickEnt = wx.TextCtrl(panel, -1, "")
+
+
 
         self.config = config_engine.Config()
 

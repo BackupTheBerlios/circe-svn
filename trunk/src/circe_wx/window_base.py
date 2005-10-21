@@ -55,114 +55,145 @@ class WindowTextEdit(WindowServer):
         self.txt_buffer.SetDefaultStyle(wx.TextAttr(wx.NullColour, wx.NullColour, f))
 
         self.txt_edit.Bind(wx.EVT_CHAR, self.txt_edit_evt_char)
-
-        self.command_buffer = []
+        
+        # Command history
+        self.historysize = 10 # TODO: Get this from config
+        self.history = [] # History buffer, first item is the last entered command
+        self.currenthistory = -1 # -1 means we're not navigating the history
+        self.currentcommand = "" # This is the text entered in the input box before navigating history
+    
+    def set_input(self,text):
+        """Sets input box to text"""
+        self.txt_edit.SetValue(text)
+        self.txt_edit.SetInsertionPointEnd()
+    
+    def get_input(self):
+        """Returns input box value"""
+        return self.txt_edit.GetValue()
+    
+    def enter(self):
+        """Executed when the user presses enter"""
+        value = self.txt_edit.GetValue()
+        if not value: # ignore event if nothing typed
+            return
+        self.history_add(value)
+        self.set_input("")
+        self.set_currentcommand("")
         self.current_area_up = 0
         self.current_area_down = 0
-        self.tmp_buffer = ""
+        self.server.text_command(value,self)
+        # Do nothing after this! We might be destroyed!
+    
+    def set_currentcommand(self,value):
+        """Sets the current command to a new value, resets history navigation"""
+        self.currentcommand = value
+        self.currenthistory = -1
+    
+    def return_to_currentcommand(self):
+        """Returns current input to before browsing the history"""
+        self.set_input(self.currentcommand)
+        self.currenthistory = -1
+    
+    def check_history_changed(self):
+        """Finds out if the user has changed the history item"""
+        if self.currenthistory < 0:
+            return False
+        old = self.history[self.currenthistory]
+        new = self.get_input()
+        if cmp(new,old) == 0:
+            # History unchanged
+            return False
+        else:
+            # History changed
+            self.set_currentcommand(self.get_input())
+            return True
+    
+    def history_add(self,text):
+        """Add history item"""
+        self.history.insert(0,text)
+        if len(self.history) > self.historysize:
+            # Exceeded max history length
+            self.history.pop()
 
-    def txt_edit_evt_char(self, event):
-        """Called when the user enter some text in the entry widget."""
-        key = event.GetKeyCode()
-        if key == wx.WXK_RETURN or key == wx.WXK_NUMPAD_ENTER: # enter
-            # Enter pressed
-            value = self.txt_edit.GetValue()
-            if not value: # ignore event if nothing typed
-                return
-            self.command_buffer.append(value)
-            self.txt_edit.SetValue("")
-            self.current_area_up = 0
-            self.current_area_down = 0 
-            self.tmp_buffer = ""
-            self.server.text_command(value,self)
-            # Do nothing after this! We might be destroyed!
-
-        elif key == wx.WXK_UP: # up
-            if self.tmp_buffer != "": # lets restore tmp_buffer, then restore it
-                self.txt_edit.SetValue(self.tmp_buffer)
-                self.tmp_buffer = ""
-
+    def history_back(self):
+        """Go back in time"""
+        if not self.check_history_changed():
+            if self.currenthistory == -1:
+                # We were at the beginning, store current command
+                self.set_currentcommand(self.get_input())
+            if self.currenthistory+1 == len(self.history):
+                # Last item, do nothing
+                pass
             else:
-                if self.txt_edit.GetValue().strip() != "":
-                    self.tmp_buffer = self.txt_edit.GetValue()
-
-                if self.current_area_up == 0: # first time up was pressed
-                    try:
-                        self.txt_edit.SetValue(self.command_buffer[len(self.command_buffer)-1])
-                        self.current_area_up = len(self.command_buffer)-1
-                    except: 
-                        pass
-
-                else:
-                    try:
-                        self.current_area_up += 1
-                        self.txt_edit.SetValue(self.command_buffer[self.current_area_up])
-                    except:
-                        pass
-
-            self.txt_edit.SetInsertionPointEnd()
-        elif key == wx.WXK_DOWN: # down
-            if self.tmp_buffer != "": # lets restore tmp_buffer, then restore it
-                self.txt_edit.SetValue(self.tmp_buffer)
-                self.tmp_buffer = ""
+                # Moving back in time
+                self.currenthistory += 1
+                self.set_input(self.history[self.currenthistory])
+    
+    def history_forward(self):
+        """Go forwards in time"""
+        if not self.check_history_changed():
+            if self.currenthistory < 0:
+                # We were at the beginning, store current command
+                self.set_currentcommand(self.get_input())
+                return
+            if self.currenthistory == 0:
+                # We have arrived at the beginning, show current command
+                self.return_to_currentcommand()
             else:
-                if self.txt_edit.GetValue().strip() != "":
-                    self.tmp_buffer = self.txt_edit.GetValue()
+                # Moving forwards in time
+                self.currenthistory -= 1
+                self.set_input(self.history[self.currenthistory])
+    
+    def autocomplete(self):
+        """Autocompletes the current input"""
+        value = self.txt_edit.GetValue()
+        if not value: # ignore if nothing typed
+            return
+        get_channelname  = getattr(self, "get_channelname", None)
+        if not get_channelname: # ignore if cannot get channel name
+            return
+        channel = get_channelname() # get the channel name
+        if not channel or channel == "debug": # is it none, or is it debug? ignore
+            return
 
-                if self.current_area_down == 0: # first time down was pressed
-                    try:
-                        self.txt_edit.SetValue(self.command_buffer[len(self.command_buffer)-1])
-                        self.current_area_down = len(self.command_buffer)-1
-                    except:
-                        pass
-
+        window = self.server.get_channel_window(channel)
+        users = window._users 
+        value_s = value.split(" ")[-1]
+        for user in users:
+            if user.startswith(value_s):
+                if len(value.split(" ")) <= 1:
+                    self.txt_edit.SetValue(user+": ")
+                    self.txt_edit.SetInsertionPointEnd()
+                    break
                 else:
-                    try:
-                       self.current_area_down -= 1
-                       self.txt_edit.SetValue(self.command_buffer[self.current_area_down])
-                    except:
-                       pass
-            self.txt_edit.SetInsertionPointEnd()
-   
-        elif key == wx.WXK_TAB: # tab
-            value = self.txt_edit.GetValue()
-            if not value: # ignore if nothing typed
-                return
-            get_channelname  = getattr(self, "get_channelname", None)
-            if not get_channelname: # ignore if cannot get channel name
-                return
-            channel = get_channelname() # get the channel name
-            if not channel or channel == "debug": # is it none, or is it debug? ignore
-                return
-
-            window = self.server.get_channel_window(channel)
-            users = window._users 
-            value_s = value.split(" ")[-1]
-            for user in users:
-                if user.startswith(value_s):
-                    if len(value.split(" ")) <= 1:
-                        self.txt_edit.SetValue(user+": ")
-                        self.txt_edit.SetInsertionPointEnd()
-                        break
-                    else:
-                        txt = self.txt_edit.GetValue().split(" ")
-                        txt = " ".join(txt[:len(txt)-1])
-                        self.txt_edit.SetValue(txt+" "+user+" ")
-                        self.txt_edit.SetInsertionPointEnd()
-                        break
-        else: # Process this key
-            event.Skip()
-
+                    txt = self.txt_edit.GetValue().split(" ")
+                    txt = " ".join(txt[:len(txt)-1])
+                    self.txt_edit.SetValue(txt+" "+user+" ")
+                    self.txt_edit.SetInsertionPointEnd()
+                    break
 
     def server_event(self, event):
         """Display an event in the text buffer."""
         self.txt_buffer.AppendText(event+"\n")
 
-
     # GUI events.
     def evt_focus(self):
         self.txt_edit.SetFocus()
 
+    def txt_edit_evt_char(self, event):
+        """Called when the user presses a key."""
+        key = event.GetKeyCode()
+        if key == wx.WXK_RETURN or key == wx.WXK_NUMPAD_ENTER: # enter
+            self.enter()
+        elif key == wx.WXK_UP: # up
+            self.history_back()
+        elif key == wx.WXK_DOWN: # down
+            self.history_forward()
+        elif key == wx.WXK_TAB: # tab
+            self.autocomplete()
+        else: # Process this key
+            event.Skip()
+
     def txt_buffer_clr(self, *a):
         """clear the text buffer"""
-	self.txt_buffer.SetValue("")
+        self.txt_buffer.SetValue("")

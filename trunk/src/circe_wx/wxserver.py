@@ -154,8 +154,7 @@ class WXServer(Server):
 
         
         elif cmd == "echo":
-            window.server_event(" " .join(params))
-
+            self.commands.cmd_echo(window,self,params)
         elif cmd == "action" or cmd == "me":
             try:
                 params[0]
@@ -206,8 +205,7 @@ class WXServer(Server):
             self.connection.ison(nicks)
 
         elif cmd == "join" or cmd == "j":
-            self.connection.join(*params)
-            window.server_event("%s has joined %s." % (self.connection.get_nickname(), params[0]))
+            self.commands.cmd_join(window,self,params)
         elif cmd == "kick" or cmd == "k":
             try:
                 channel = params[0]

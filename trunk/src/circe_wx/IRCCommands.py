@@ -67,4 +67,11 @@ class IRCCommands:
 
     def cmd_clear(self,window,server,params):
         window.txt_buffer_clr()
+     
+    def cmd_echo(self,window,server,params):
+        window.server_event(" " .join(params))
+
+    def cmd_join(self,window,server,params):
+         server.connection.join(*params)
+         window.server_event("%s has joined %s." % (server.connection.get_nickname(), params[0]))
 

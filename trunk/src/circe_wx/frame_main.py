@@ -26,6 +26,7 @@ import os, sys
 import circe_globals
 import circe_config
 import servermanager
+import config_engine
 from panel_switchbar import PanelSwitchbar
 from panel_windowarea import PanelWindowarea
 from panel_tree import PanelTree
@@ -33,6 +34,7 @@ from window_channel import WindowChannel
 from window_status import WindowStatus
 
 ID_MENU_FILE_NEWSERVER = wx.NewId()
+ID_MENU_FILE_SETTINGS = wx.NewId()
 ID_MENU_HELP_ABOUT = wx.NewId()
 ID_MENU_FILE_EXIT = wx.NewId()
 ID_MENU_HELP_CHKVER = wx.NewId()
@@ -66,6 +68,7 @@ class frame_main(wx.Frame):
     def create_menu(self):
         menu_file = wx.Menu()
         menu_file.Append(ID_MENU_FILE_NEWSERVER, "New &server", "Create a new server tab.")
+        menu_file.Append(ID_MENU_FILE_SETTINGS, "&Settings", "Opens the settings dialog.")
         menu_file.AppendSeparator()
         menu_file.Append(ID_MENU_FILE_EXIT, "E&xit", "Exit %s" % (circe_globals.APPNAME))
         menu_help = wx.Menu()
@@ -83,6 +86,7 @@ class frame_main(wx.Frame):
         wx.EVT_MENU(self, ID_MENU_HELP_ABOUT, About)
         wx.EVT_MENU(self, ID_MENU_FILE_EXIT, self.evt_menu_Exit)
         wx.EVT_MENU(self, ID_MENU_FILE_NEWSERVER, self.evt_menu_NewServer)
+        wx.EVT_MENU(self, ID_MENU_FILE_SETTINGS, Settings)
         wx.EVT_MENU(self, ID_MENU_HELP_CHKVER, CheckVersion)
         wx.EVT_MENU(self, ID_MENU_HELP_HELP, Help)
     def create_switchbar(self):
@@ -344,4 +348,34 @@ class Help(wx.Dialog):
         sizer.Add(self.html, 2)
     def set_html_win(self, html):
         self.html.SetPage(html)
+
+class Settings(wx.Dialog):
+    def __init__(self, *a): 
+        wx.Dialog.__init__(self, None, -1, "Settings", wx.DefaultPosition, wx.DefaultSize)
+
+        self.notebook = wx.Notebook(self, -1)
+  
+        self.General_tab = wx.Panel(self.notebook)
+        self.Servers_tab = wx.Panel(self.notebook)
+
+        self.notebook.AddPage(self.General_tab, "General")
+        self.notebook.AddPage(self.Servers_tab, "Servers")
+
+        self.dialog_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.buttons_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.SetSizer(self.dialog_sizer)
+        self.dialog_sizer.Add(self.notebook, -1, wx.EXPAND|wx.ALIGN_TOP, 5)
+        self.dialog_sizer.Add(self.buttons_sizer, 0, flag=wx.ALIGN_RIGHT)
+        self.buttons_sizer.Layout()
+
+        self.OK_button = wx.Button(self, 100, "Ok",(-1,-1), wx.DefaultSize)
+        self.CANCEL_button = wx.Button(self, 101, "Cancel", (-1,-1), wx.DefaultSize)
+
+        self.buttons_sizer.Add(self.OK_button, proportion=0, flag=wx.ALIGN_RIGHT)
+        self.buttons_sizer.Add(self.CANCEL_button, proportion=0, flag=wx.ALIGN_RIGHT)
+
+        self.config = config_engine.Config()
+
+        self.ShowModal()
 

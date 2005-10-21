@@ -33,3 +33,12 @@ New features:
 
 Removed features:
 - View menu
+
+d,m d, y - Released Circe 0.0.3 alpha 5
+New features:
+- Feature Request #1418 added
+- Auto/Tab complete added (FR #1386)
+- Up/Down key functionality (FR #1416)
+- Default nickname dialog
+- Nickname in usage dialog
+- Configurable nicknames 

@@ -36,3 +36,4 @@ Circe version 0.0.3 alpha 5:
     Other changes:
         Fixed Versions in About window
         Added LICENSE tab
+        Fixed Feature Request #1418 (configurable quit message)

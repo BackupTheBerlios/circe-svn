@@ -46,7 +46,7 @@ class WindowTextEdit(WindowServer):
 
         # Controls (not in a create_controls() method otherwise it is
         # overridden by subclasses.
-        self.txt_edit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize)
+        self.txt_edit = wx.TextCtrl(self,ID_TXT_EDIT,"",wx.DefaultPosition,wx.DefaultSize,wx.TE_PROCESS_TAB)
 
         self.txt_buffer = wx.TextCtrl(self,-1,"",wx.DefaultPosition,
                 wx.DefaultSize,wx.TE_MULTILINE)
@@ -64,11 +64,10 @@ class WindowTextEdit(WindowServer):
     def txt_edit_evt_char(self, event):
         """Called when the user enter some text in the entry widget."""
         key = event.GetKeyCode()
-        if key == 13: # enter
+        if key == wx.WXK_RETURN or key == wx.WXK_NUMPAD_ENTER: # enter
             # Enter pressed
             value = self.txt_edit.GetValue()
             if not value: # ignore event if nothing typed
-                event.Skip()
                 return
             self.command_buffer.append(value)
             self.txt_edit.SetValue("")
@@ -125,18 +124,15 @@ class WindowTextEdit(WindowServer):
                        pass
             self.txt_edit.SetInsertionPointEnd()
    
-        elif key == 9: # tab
+        elif key == wx.WXK_TAB: # tab
             value = self.txt_edit.GetValue()
             if not value: # ignore if nothing typed
-                event.Skip()
                 return
             get_channelname  = getattr(self, "get_channelname", None)
             if not get_channelname: # ignore if cannot get channel name
-                event.Skip()
                 return
             channel = get_channelname() # get the channel name
             if not channel or channel == "debug": # is it none, or is it debug? ignore
-                event.Skip()
                 return
 
             window = self.server.get_channel_window(channel)
@@ -154,11 +150,7 @@ class WindowTextEdit(WindowServer):
                         self.txt_edit.SetValue(txt+" "+user+" ")
                         self.txt_edit.SetInsertionPointEnd()
                         break
-            else:
-                if len(users) > 0:
-                    event.Skip()
-                return
-        else:
+        else: # Process this key
             event.Skip()
 
 

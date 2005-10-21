@@ -164,10 +164,14 @@ class WindowTextEdit(WindowServer):
         window = self.server.get_channel_window(channel)
         users = window._users 
         value_s = value.split(" ")[-1]
+        try:
+            self.complete_suffix = config["complete_suffix"]
+        except:
+            self.complete_suffix = ":"
         for user in users:
             if user.startswith(value_s):
                 if len(value.split(" ")) <= 1:
-                    self.txt_edit.SetValue(user+": ")
+                    self.txt_edit.SetValue("%s%s " % (user, self.complete_suffix))
                     self.txt_edit.SetInsertionPointEnd()
                     break
                 else:

@@ -41,7 +41,7 @@ class Config(object):
                 v = DEFAULTS[k]
                 self.__setitem__(k,v)
                 return v
-            except:
+            except (ValueError, KeyError):
                 raise KeyError, k
     def __setitem__(self, k, v):
         self.config.set(self.section, k, v)

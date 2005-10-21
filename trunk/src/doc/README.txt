@@ -12,7 +12,6 @@ have some spare time please consider joining the team.
 Requirements:
  * Python 2.3 or newer           http://www.python.org
  * wxPython 2.6 or newer         http://www.wxpython.org
- * python-irclib 0.4.4 or newer  http://python-irclib.sourceforge.net
 
 We currently do not prioritize backwards compatibility. Should we break
 backwards compatibility somewhere please inform us about it.

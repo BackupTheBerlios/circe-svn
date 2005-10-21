@@ -24,12 +24,6 @@ import traceback
 import sys, os
 import platform
 
-# Importing section (so that it finds files in src/)
-
-currpath = os.path.join(os.getcwd(), __file__)
-currpath = os.path.abspath(os.path.join(currpath, '../..'))
-sys.path.insert(0, currpath)
-
 config_dir = os.path.join(os.path.expanduser('~'), '.circe')
 if not os.path.exists(config_dir):
     os.mkdir(config_dir)

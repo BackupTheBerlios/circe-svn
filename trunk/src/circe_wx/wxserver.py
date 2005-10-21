@@ -37,7 +37,7 @@ class WXServer(Server):
         self.channels = []
         self.config = config_engine.Config()
         help_list.parse_document()
-
+        self.commands = IRCCommands()
     def get_hostname(self):
         """Return the host we are connected to."""
         return self.host
@@ -119,48 +119,7 @@ class WXServer(Server):
         cmd = cmd.lower()
         # Find out what command is being executed
         if cmd == "server":
-            # /server servername [nickname]
-            if len(params) < 1:
-                window.server_event("/server syntax: /server servername [port] [nick] [channels]")
-                return
-            d = {}
-            server = d['server'] = params[0]
-            try:
-                port = d['port'] = int(params[1])
-            except (IndexError, ValueError):
-                port = d['port'] = 6667
-            try:
-                nickname = d['nickname'] = params[2]
-            except IndexError:
-                try:
-                    nickname = d['nickname'] = self.config["nickname"]
-                except KeyError:
-                    result = dialogs.ask_nickname()
-                    if not result:
-                        window.server_event("Nickname defaulting to 'irc'.")
-                        nickname = d['nickname'] = 'irc'
-                    else:
-                        nickname = d['nickname'] = result
-            # If we're already connected to a server, opens a new connection in
-            # another status window.
-            if self.is_connected():
-                s = self.new_status_window()
-                s.connect(cmd, window, **d)
-                self.host = server
-                s.statuswindow.enable_checking()
-                channels = params[3:]
-                if not channels:
-                    return
-                self.connection.join(*channels)
-                return
-            self.connect(cmd, window, **d)
-            self.host = server
-            # Ensures checking for new events is enabled.
-            self.statuswindow.enable_checking()
-            channels = params[3:]
-            if not channels:
-                return
-            self.connection.join(*channels)
+            self.commands.cmd_server(window,self,params)
 
         elif cmd == "newserver":
             d = {}
@@ -687,48 +646,53 @@ class IRCCommands:
     def __init__(self):
         self.config = config_engine.Config()
         help_list.parse_document()
-    def cmd_kick(self,window,server,params):
-        if len(params) >= 1: 
-            window.server_event(help_list.grabvalue("server"))
-            d = {}
+    def cmd_server(self,window,server,params):
+        if len(params) <= 0: 
+            window.server_event(help_list.grab_value("server"))
+            return
+
+        d = {}
+        d["server"] = params[0]
+
+        try:
+            port = d['port'] = int(params[1])
+        except (IndexError, ValueError):
+            port = d['port'] = 6667
+
+        try:
+            nickname = d['nickname'] = params[2]
+        except IndexError:
+
             try:
-                d["server"] = str(param[0])
-            except:
-                window.server_event(help_list.grabvalue("server"))
-            try:
-                port = d['port'] = int(params[1])
-            except (IndexError, ValueError):
-                port = d['port'] = 6667
-            try:
-                nickname = d['nickname'] = params[2]
-            except IndexError:
-                try:
-                    nickname = d['nickname'] = self.config["nickname"]
-                except KeyError:
-                    result = dialogs.ask_nickname()
-                    if not result:
-                        window.server_event("Nickname defaulting to 'irc'.")
-                        nickname = d['nickname'] = 'irc'
-                    else:
-                        nickname = d['nickname'] = result
-            # If we're already connected to a server, opens a new connection in
-            # another status window.
-            if server.is_connected():
-                s = server.new_status_window()
-                s.connect(cmd, window, **d)
-                self.host = server
-                s.statuswindow.enable_checking()
-                channels = params[3:]
-                if not channels:
-                    return
-                server.connection.join(*channels)
-                return
-            server.connect(cmd, window, **d)
+                nickname = d['nickname'] = self.config["nickname"]
+
+            except KeyError:
+                result = dialogs.ask_nickname()
+                if not result:
+                    window.server_event("Nickname defaulting to 'irc'.")
+                    nickname = d['nickname'] = 'irc'
+                else:
+                    nickname = d['nickname'] = result
+
+        # If we're already connected to a server, opens a new connection in
+        # another status window.
+        if server.is_connected():
+            s = server.new_status_window()
+            s.connect(cmd, window, **d)
             self.host = server
-            # Ensures checking for new events is enabled.
-            server.statuswindow.enable_checking()
+            s.statuswindow.enable_checking()
             channels = params[3:]
             if not channels:
                 return
             server.connection.join(*channels)
+            return
+ 
+        server.connect("server", window, **d)
+        self.host = server
+        # Ensures checking for new events is enabled.
+        server.statuswindow.enable_checking()
+        channels = params[3:]
+        if not channels:
+            return
+        server.connection.join(*channels)
 

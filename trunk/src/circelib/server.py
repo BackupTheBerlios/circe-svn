@@ -46,11 +46,7 @@ class Server:
 
     def connect(self, cmd, window, **kwargs):
         """Connect/reconnect to a server."""
-        try:
-            kwargs['server']
-        except KeyError:
-            window.server_event('/%s syntax: /%s servername [port] [nickname]' % cmd)
-            return
+        kwargs['server']
         try:
             kwargs['port']
             try: 

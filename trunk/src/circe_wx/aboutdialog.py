@@ -62,14 +62,12 @@ class AboutDialog(wx.Dialog):
         self.license_text_dlg.SetEditable(0)
         self.license_sizer.Add(self.license_text_dlg, 1, wx.CENTER|wx.EXPAND|wx.ALL)
 
-        import irclib 
-        irclib_version = ".".join(map(str, irclib.VERSION))
         python_version = ".".join(map(str, sys.version_info[:3]))
         python_version += (" " + sys.version_info[3])
 
-        self.other_text = "%s Version: %s\nPython Version: %s\nWxPython Version: %s\npython-irclib Version: %s\n" % (circe_globals.APPNAME, \
+        self.other_text = "%s Version: %s\nPython Version: %s\nWxPython Version: %s\n" % (circe_globals.APPNAME, \
                                                                                                circe_globals.VERSION, \
-                                                                                               python_version, wx.VERSION_STRING, irclib_version[:5])
+                                                                                               python_version, wx.VERSION_STRING)
 
         self.other_text_dlg = wx.TextCtrl(self.other_panel, -1,"",wx.DefaultPosition,wx.DefaultSize,wx.TE_MULTILINE|wx.TE_CENTRE)
         self.other_text_dlg.AppendText(self.other_text)

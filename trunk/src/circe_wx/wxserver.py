@@ -130,60 +130,26 @@ class WXServer(Server):
             self.commands.cmd_server(window,self,params)
 
         elif cmd == "newserver":
-            d = {}
-            server = d['server'] = params[0]
-            try:
-                port = d['port'] = int(params[1])
-            except (IndexError, ValueError):
-                port = d['port'] = 6667
-            try:
-                nickname = d['nickname'] = params[2]
-            except IndexError:
-                try:
-                    nickname = d['nickname'] = self.config["nickname"]
-                except KeyError:
-                    result = dialogs.ask_nickname()
-                    if not result:
-                        window.server_event("Nickname defaulting to 'irc'.")
-                        nickname = d['nickname'] = 'irc'
-                    else:
-                        nickname = d['nickname'] = result
-
-            s = self.new_status_window()
-            s.connect(cmd, window, **d)
-            self.host = server
-            s.statuswindow.enable_checking()
-            channels = params[3:]
-            if not channels:
-                return
-            self.connection.join(*channels)
-            return
-
+            self.commands.cmd_server(window,self,params)
         
         elif cmd == "echo":
             self.commands.cmd_echo(window,self,params)
+
         elif cmd == "action" or cmd == "me":
             self.commands.cmd_action(window,self,params)
-        elif cmd == "connect":
-            if not self.connection.is_connected():
-                window.server_event("You are not connected to a server. Please use /server instead.")
-                return
-            server = params[0]
-            try:
-                port = int(params[1])
-            except (IndexError,ValueError):
-                port = 6667
 
-            self.connect(server, port, self.connection.get_nickname())
+        elif cmd == "connect":
+            self.commands.cmd_server(window,self,params)
+
         elif cmd == "globops":
-            self.connection.globops(params[0])
+            self.commands.cmd_globops(window,self,params)
+
         elif cmd == "help":
-            if len(params) >= 1:
-                self.get_help(window, params[0])
-            else:
-                self.get_help(window, "")
+            self.commands.cmd_help(window,self,params)
+
         elif cmd == "info":
             self.connection.info(params and params[0] or "")
+
         elif cmd == "invite":
             try:
                 params[0], params[1]

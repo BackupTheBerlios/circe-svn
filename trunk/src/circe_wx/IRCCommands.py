@@ -81,14 +81,22 @@ class IRCCommands:
              window.server_event('* %s %s' % (server.connection.get_nickname(), ' '.join(params[0:])))
 
     def cmd_topic(self,window,server,params):
-            if len(params) <= 0:
-                server.connection.topic(channel=window.get_channelname())
-            else:
-                if params[0][0] == "#" and params[0] in server.get_channels(): # got a channel
-                    if len(params) >= 2: # got a topic too!
-                        server.connection.topic(channel=params[0], new_topic=" ".join(params[1:]))
-                    else: # just got a channel
-                        server.connection.topic(channel=params[0])
-                else:
-                    server.connection.topic(channel=window.get_channelname(), new_topic=" ".join(params[0:]))
+         if len(params) <= 0:
+             server.connection.topic(channel=window.get_channelname())
+         else:
+             if params[0][0] == "#" and params[0] in server.get_channels(): # got a channel
+                 if len(params) >= 2: # got a topic too!
+                     server.connection.topic(channel=params[0], new_topic=" ".join(params[1:]))
+                 else: # just got a channel
+                     server.connection.topic(channel=params[0])
+             else:
+                  server.connection.topic(channel=window.get_channelname(), new_topic=" ".join(params[0:]))
 
+    def cmd_globops(self,window,server,params):
+         server.connection.globops(params[0])
+
+    def cmd_help(self,window,server,params):
+         if len(params) > 0:
+             help_list.grab_value(window, params[0])
+         else:
+             help_list.grab_value(window, "")

@@ -40,6 +40,7 @@ def grab_value(value):
         for obj in a:
             tmpb += obj+"\n"
         return tmpb
+
 def grab_all_keys():
     lst = []
     for obj in help_list:

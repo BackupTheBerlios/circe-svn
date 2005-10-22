@@ -17,7 +17,7 @@
 
 import time
 
-import irclib
+import circelib.circeirc as irclib
 
 from window_status import WindowStatus
 from window_channel import WindowChannel

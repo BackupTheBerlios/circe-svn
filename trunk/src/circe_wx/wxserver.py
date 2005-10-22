@@ -107,7 +107,19 @@ class WXServer(Server):
 
         # Strip /
         if cmdstring[0] == "/":
-            cmdstring = cmdstring[1:]
+            if cmdstring[1] == "/": # user escaping
+                cmdstring = cmdstring[1:]
+                if hasattr(window, "get_channelname"):
+                    target = window.get_channelname()
+                    for line in cmdstring.split("\n"):
+                        if line.strip().strip("\n"):
+                            self.connection.privmsg(target, line.encode('utf-8'))
+                            mynick = self.connection.get_nickname()
+                            window.add_message(line, mynick)
+                return
+            else:
+                cmdstring = cmdstring[1:]
+
         else:
             # if it is not a command send the message to the channel
             if hasattr(window, "get_channelname"):

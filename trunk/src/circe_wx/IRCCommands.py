@@ -49,21 +49,20 @@ class IRCCommands:
         # another status window.
         if server.is_connected():
             s = server.new_status_window()
-            s.connect(cmd, window, **d)
-            self.host = server
+            s.connect("server", window, **d)
+            server.host = server
             s.statuswindow.enable_checking()
             channels = params[3:]
             if not channels: return
             server.connection.join(*channels)
-            return
-
-        server.connect("server", window, **d)
-        self.host = server
-        # Ensures checking for new events is enabled.
-        server.statuswindow.enable_checking()
-        channels = params[3:]
-        if not channels: return
-        server.connection.join(*channels)
+        else:
+            server.connect("server", window, **d)
+            server.host = server
+            # Ensures checking for new events is enabled.
+            server.statuswindow.enable_checking()
+            channels = params[3:]
+            if not channels: return
+            server.connection.join(*channels)
 
     def cmd_clear(self,window,server,params):
         window.txt_buffer_clr()
@@ -161,3 +160,10 @@ class IRCCommands:
         elif len(params) == 2:
             server.connection.links(params[0], params[1])
  
+    def cmd_list(self,window,server,params):
+        if len(params) <= 0:
+            server.connection.list(None, "")
+        elif len(params) == 1:
+            server.connection.list(params[0], "")
+        elif len(params) == 2:
+            server.connection.list(params[0], params[1])

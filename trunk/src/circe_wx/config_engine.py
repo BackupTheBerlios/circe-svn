@@ -22,12 +22,10 @@ import circe_config
 import os
 
 DEFAULTS = {
-    "nickname": "irc",
-    "secondary_nickname": "irc_",
     "check_version": 1,
     "timestamp_show": 1,
-    "time_format": "[%I:%M:%S]"
-    "quitmsg": "Circe: http://circe.berlios.de/"
+    "time_format": "[%I:%M:%S]",
+    "quitmsg": "Circe: http://circe.berlios.de/",
     "complete_suffix": ":"
 }
 

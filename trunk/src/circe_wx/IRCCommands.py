@@ -167,3 +167,10 @@ class IRCCommands:
             server.connection.list(params[0], "")
         elif len(params) == 2:
             server.connection.list(params[0], params[1])
+    
+    def cmd_lusers(self,window,server,params):
+        if len(params) <= 0:
+            server.connection.lusers("")
+        else:
+            server.connection.lusers(params[0])
+

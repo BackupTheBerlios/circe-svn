@@ -181,7 +181,7 @@ class WXServer(Server):
             self.commands.cmd_list(window,self,params)
 
         elif cmd == "lusers":
-            self.connection.lusers(params and params[0] or "")
+            self.commands.cmd_lusers(window,self,params)
 
         elif cmd == "mode":
             target = params[0]

@@ -175,16 +175,10 @@ class WXServer(Server):
             self.commands.cmd_kick(window,self,params)
 
         elif cmd == "links":
-            self.commands.cmd_list(window,self,params)
+            self.commands.cmd_links(window,self,params)
  
         elif cmd == "list":
-            channels = None
-            server = ""
-            if len(params) > 0:
-                channels = params[0]
-                if len(params) > 1:
-                    server = params[1]
-            self.connection.list(channels, server)
+            self.commands.cmd_list(window,self,params)
 
         elif cmd == "lusers":
             self.connection.lusers(params and params[0] or "")

@@ -197,8 +197,8 @@ class IRCCommands:
            server.connection.motd(params[0])
 
     def cmd_names(self,window,server,params):
-       if len(params) >= 0:
-           if "," in params[0]:
+       if len(params) > 0:
+           if params[0].find(",") != -1:
                server.connection.names(params[0].split(","))
            else:
                server.connection.names(params)

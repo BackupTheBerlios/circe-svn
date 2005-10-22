@@ -163,15 +163,8 @@ class WXServer(Server):
             self.commands.cmd_kick(window,self,params)
 
         elif cmd == "links":
-            remote_server = ""
-            server_mask = ""
-            if len(params) > 0:
-                remote_server = params[0]
-                if len(params) > 1:
-                    server_mask = params[1]
-
-            self.connection.links(remote_server, server_mask)
-
+            self.commands.cmd_list(window,self,params)
+ 
         elif cmd == "list":
             channels = None
             server = ""

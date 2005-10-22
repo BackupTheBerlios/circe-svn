@@ -152,3 +152,12 @@ class IRCCommands:
             elif params[0] not in server.get_channels() and params[1] not in server.get_channels():
                 server.connection.kick(window.get_channelname(), params[0], " ".join(params[1:]))
 
+    
+    def cmd_links(self,window,server,params):
+        if len(params) <= 0:
+            server.connection.links("", "")
+        elif len(params) == 1:
+            server.connection.links(params[0], "")
+        elif len(params) == 2:
+            server.connection.links(params[0], params[1])
+ 

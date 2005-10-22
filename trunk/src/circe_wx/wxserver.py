@@ -187,7 +187,7 @@ class WXServer(Server):
             self.commands.cmd_mode(window,self,params)
 
         elif cmd == "motd":
-            self.connection.motd(params and params[0] or "")
+            self.commands.cmd_motd(window,self,params)
 
         elif cmd == "names":
             if params[0]:

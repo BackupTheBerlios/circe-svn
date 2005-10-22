@@ -190,3 +190,8 @@ class IRCCommands:
        elif len(params) >= 3 and params[0] not in server.get_channels():
             server.connection.mode(target=window.get_channelname(), command=" ".join(params[0:]))
 
+    def cmd_motd(self,window,server,params):
+       if len(params) <= 0:
+           server.connection.motd("")
+       elif len(params) >= 0:
+           server.connection.motd(params[0])

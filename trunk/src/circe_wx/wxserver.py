@@ -148,15 +148,10 @@ class WXServer(Server):
             self.commands.cmd_help(window,self,params)
 
         elif cmd == "info":
-            self.connection.info(params and params[0] or "")
+            self.commands.cmd_info(window,self,params)
 
         elif cmd == "invite":
-            try:
-                params[0], params[1]
-            except IndexError:
-                window.server_event('/invite syntax: /invite nick channel')
-                return
-            self.connection.invite(nick=params[0], channel=params[1])
+            self.commands.cmd_invite(window,self,params)
 
         elif cmd == "ison":
             if not params:

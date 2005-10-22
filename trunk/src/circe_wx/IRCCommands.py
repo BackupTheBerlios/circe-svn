@@ -100,3 +100,19 @@ class IRCCommands:
              help_list.grab_value(window, params[0])
          else:
              help_list.grab_value(window, "")
+
+    def cmd_invite(self,window,server,params):
+         if len(params) <= 0:
+             help_list.grab_value(window, "invite")
+         elif len(params) == 1 and params[0] not in server.get_channels():
+             server.connection.invite(nick=params[0], channel=window.get_channelname())
+         elif len(params) == 1 and params[0] in server.get_channels():
+             help_list.grab_value(window, "invite")
+         elif len(params) == 2 and params[0] in server.get_channels() and params[1] not in server.get_channels():
+             server.connection.invite(nick=params[0], channel=params[1])
+
+    def cmd_info(self,window,server,params):
+        if len(params) <= 0 :
+            server.connection.info("")
+        else:
+            server.connection.info(params[0])

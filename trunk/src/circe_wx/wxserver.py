@@ -36,9 +36,15 @@ class WXServer(Server):
         self.statuswindow = WindowStatus(windowarea,self)
         self.windowarea = windowarea
         self.channels = []
+        self.channels_s = []
         self.config = config_engine.Config()
         help_list.parse_document()
         self.commands = IRCCommands()
+
+    def get_channels(self):
+        """Returns the list of channels connected to"""
+        return self.channels_s
+  
     def get_hostname(self):
         """Return the host we are connected to."""
         return self.host
@@ -55,6 +61,7 @@ class WXServer(Server):
 
         new = WindowChannel(self.windowarea,self,channelname)
         self.channels.append(new)
+        self.channels_s.append(channelname)
         self.windowarea.show_window(self, new)
         return new
 
@@ -377,36 +384,8 @@ class WXServer(Server):
             self.connection.time(server)
             
         elif cmd == "topic":
-            try:
-                params[0]
-                if params[0] != "#":
-                    raise IndexError
-                if params[0] not in self.channels:
-                    del params[0]
-                    raise IndexError
-            except IndexError:
-                params.insert(0, window.get_channelname())
-            result = " ".join(params[1:])
-            if result:
-                self.connection.topic(channel=params[0], new_topic=result)
-            else:
-                self.connection.topic(channel=params[0])
-            return
+            self.commands.cmd_topic(window,self,params)
 
-#            if new_topic:
-#                if params[0] in self.channels or params[0].startswith("#"):
-#                    new_topic = " ".join(params[1:])
-#                    if new_topic:
-#                        self.connection.topic(channel=param[0], new_topic=" ".join(param[1:]))
-#                    else:
-#                        if params[0].strip() != "":
-#                              self.connection.topic(channel=params[0])
-#                        else: 
-#                              self.connection.topic(channel=window.get_channelname())
-#                else: 
-#                    self.connection.topic(channel=window.get_channelname(), new_topic=new_topic)
-#            else:
-#                self.connection.topic(channel=window.get_channelname())
         elif cmd == "trace":
             self.connection.trace(params and params[0] or "")
         elif cmd == "userhost":

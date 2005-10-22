@@ -213,11 +213,5 @@ class MainFrame(wx.Frame):
 
     def evt_window_del(self,*a):
         for server in servermanager.servers: 
-            try:    
-                try:
-                    server.connection.quit(self.config["quitmsg"])
-                except KeyError:
-                    server.connection.quit(circe_globals.QUITMSG)
-            except:
-                pass
+            server.connection.quit(self.config["quitmsg"])
         sys.exit()

@@ -133,12 +133,12 @@ class IRCCommands:
             if params[0] in server.get_channels():
                 help_list.grab_value(window, "kick")
             elif params[0] not in server.get_channels():
-                server.connection.kick(window.get_channelname(), params[0], server.get_nickname())
+                server.connection.kick(window.get_channelname(), params[0], server.connection.get_nickname())
         elif len(params) == 2:
             if params[0] in server.get_channels():
                 help_list.grab_value(window, "kick")
             elif params[0] not in server.get_channels() and params[1] in server.get_channels():
-                server.connection.kick(params[1], params[0], server.get_nickname())
+                server.connection.kick(params[1], params[0], server.connection.get_nickname())
             elif params[0] not in server.get_channels() and params[1] not in server.get_channels():
                 server.connection.kick(window.get_channelname(), params[0], " ".join(params[1:]))
         elif len(params) >= 3:

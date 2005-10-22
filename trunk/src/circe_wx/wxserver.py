@@ -154,19 +154,11 @@ class WXServer(Server):
             self.commands.cmd_invite(window,self,params)
 
         elif cmd == "ison":
-            if not params:
-                window.server_event('/ison syntax: /ison nick [...]')
-                return
-            # The user separated the parameters by a comma
-            if ',' in params[0]:
-                nicks = params[0].split(',')
-            # The parameters have been split in a list
-            else:
-                nicks = params
-            self.connection.ison(nicks)
+            self.commands.cmd_ison(window,self,params)
 
         elif cmd == "join" or cmd == "j":
             self.commands.cmd_join(window,self,params)
+
         elif cmd == "kick" or cmd == "k":
             try:
                 channel = params[0]

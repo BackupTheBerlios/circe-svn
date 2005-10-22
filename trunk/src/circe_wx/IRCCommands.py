@@ -116,3 +116,13 @@ class IRCCommands:
             server.connection.info("")
         else:
             server.connection.info(params[0])
+
+    def cmd_ison(self,window,server,params):
+        if len(params) <= 0:
+                window.server_event('/ison syntax: /ison nick [...]')
+                return
+        if ',' in params[0]:
+            server.connection.ison(params[0].split(','))
+        else:
+            server.connection.ison(params)
+

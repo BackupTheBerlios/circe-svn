@@ -160,20 +160,7 @@ class WXServer(Server):
             self.commands.cmd_join(window,self,params)
 
         elif cmd == "kick" or cmd == "k":
-            try:
-                channel = params[0]
-            except IndexError:
-                channel = window.get_channelname()
-            try:
-                nick = params[1]
-            except IndexError:
-                window.server_event("/kick syntax: /kick [channel] nickname [comment]")
-                return
-            try:
-                comment = params[2]
-            except IndexError:
-                comment = ""
-            self.connection.kick(channel, nick, comment)
+            self.commands.cmd_kick(window,self,params)
 
         elif cmd == "links":
             remote_server = ""

@@ -27,6 +27,8 @@ DEFAULTS = {
     "check_version": 1,
     "timestamp_show": 1,
     "time_format": "[%I:%M:%S]"
+    "quitmsg": "Circe: http://circe.berlios.de/"
+    "complete_suffix": ":"
 }
 
 class Config(object):

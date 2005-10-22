@@ -195,3 +195,38 @@ class IRCCommands:
            server.connection.motd("")
        elif len(params) >= 0:
            server.connection.motd(params[0])
+
+    def cmd_names(self,window,server,params):
+       if len(params) >= 0:
+           if "," in params[0]:
+               server.connection.names(params[0].split(","))
+           else:
+               server.connection.names(params)
+       else:
+           server.connection.names(window.get_channelname())
+
+    def cmd_nick(self,window,server,params):
+       oldnick=server.connection.get_nickname()
+       if len(params) <= 0:
+           help_list.grab_value(window, "nick")
+       else:
+           server.connection.nick(newnick=params[0])
+           window.server_event("%s is now known as %s" % (oldnick, params[0]))
+
+    def cmd_notice(self,window,server,params):
+       if len(params) <= 0:
+           help_list.grab_value(window, "notice")
+       elif len(params) == 1 and params[0] not in server.get_channels():
+           server.connection.notice(target=window.get_channelname(), text=" ".join(params[0:]))
+       elif len(params) == 1 and params[0] in server.get_channels():
+           help_list.grab_value(window, "notice")
+       elif len(params) >= 2 and params[0] not in server.get_channels():
+           server.connection.notice(target=window.get_channelname(), text=" ".join(params[0:]))
+       elif len(params) >= 2 and params[0] in server.get_channels():
+           server.connection.notice(target=params[0], text=" ".join(params[1:]))
+
+    def cmd_oper(self,window,server,params):
+       if len(params) <= 1:
+           help_list.grab_value(window, "oper")
+       elif len(params) >= 2:
+           server.connection.oper(oper=params[0], password=params[1]) 

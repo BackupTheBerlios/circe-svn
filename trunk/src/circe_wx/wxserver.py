@@ -190,39 +190,16 @@ class WXServer(Server):
             self.commands.cmd_motd(window,self,params)
 
         elif cmd == "names":
-            if params[0]:
-                if "," in params[0]:
-                    # Assumes channels are in comma separated list.
-                    channels = params[0].split(",")
-                elif ' ' in params[0]:
-                    # Channels given as multiple args "#chan1 #chan2 #chan3"
-                    channels = params[0].split()
-
-                self.connection.names(channels)
+            self.commands.cmd_names(window,self,params)
 
         elif cmd == "nick":
-            oldnick=self.connection.get_nickname()
-            try:
-                nick = params
-            except IndexError:
-                window.server_event("/nick syntax: /nick newnick")
-                return
-            self.connection.nick(newnick=params[0])
-            window.server_event("%s is now known as %s" % (oldnick, params[0]))
+            self.commands.cmd_nick(window,self,params)
+ 
         elif cmd == "notice":
-            try:
-                target, text = params
-            except ValueError:
-                window.server_event("/notice syntax: /notice target message")
-                return
-            self.connection.notice(target=params[0], text=params[1])
+            self.commands.cmd_notice(window,self,params)
+
         elif cmd == "oper":
-            try:
-                oper, password = params
-            except IndexError:
-                window.server_event("/oper syntax: /oper oper pass")
-                return
-            self.connection.oper(oper=params[0], password=params[1])
+            self.commands.cmd_oper(window,self,params)
 
         elif cmd == "part":
             try:

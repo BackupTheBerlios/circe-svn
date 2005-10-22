@@ -75,3 +75,8 @@ class IRCCommands:
          server.connection.join(*params)
          window.server_event("%s has joined %s." % (server.connection.get_nickname(), params[0]))
 
+    def cmd_action(self,window,server,params):
+         if len(params) >= 1:
+             server.connection.action(target=window.get_channelname(), action=' '.join(params[0:]))
+             window.server_event('* %s %s' % (server.connection.get_nickname(), ' '.join(params[0:])))
+

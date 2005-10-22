@@ -156,14 +156,7 @@ class WXServer(Server):
         elif cmd == "echo":
             self.commands.cmd_echo(window,self,params)
         elif cmd == "action" or cmd == "me":
-            try:
-                params[0]
-                if params[0][0] != '#':
-                    raise IndexError
-            except IndexError:
-                params.insert(0, window.get_channelname())
-            self.connection.action(target=params[0], action=' '.join(params[1:]))
-            window.server_event('* %s %s' % (self.connection.get_nickname(), ' '.join(params[1:])))
+            self.commands.cmd_action(window,self,params)
         elif cmd == "connect":
             if not self.connection.is_connected():
                 window.server_event("You are not connected to a server. Please use /server instead.")

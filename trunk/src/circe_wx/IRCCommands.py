@@ -174,3 +174,19 @@ class IRCCommands:
         else:
             server.connection.lusers(params[0])
 
+    def cmd_mode(self,window,server,params):
+       if len(params) <= 0:
+            help_list.grab_value(window, "mode")
+       elif len(params) == 1 and params[0] in server.get_channels():
+            help_list.grab_value(window, "mode")
+       elif len(params) == 1 and params[0] not in server.get_channels():
+            server.connection.mode(target=window.get_channelname(), command=" ".join(params[0:]))
+       elif len(params) == 2 and params[0] in server.get_channels() and params[1] not in server.get_channels():
+            server.connection.mode(target=params[0], command=" ".join(params[1:]))
+       elif len(params) == 2 and params[0] not in server.get_channels():
+            server.connection.mode(target=window.get_channelname(), command=" ".join(params[0:]))
+       elif len(params) >= 3 and params[0] in server.get_channels() and params[1] not in server.get_channels():
+            server.connection.mode(target=params[0], command=" ".join(params[1:]))
+       elif len(params) >= 3 and params[0] not in server.get_channels():
+            server.connection.mode(target=window.get_channelname(), command=" ".join(params[0:]))
+

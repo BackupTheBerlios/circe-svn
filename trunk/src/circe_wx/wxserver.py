@@ -184,12 +184,7 @@ class WXServer(Server):
             self.commands.cmd_lusers(window,self,params)
 
         elif cmd == "mode":
-            target = params[0]
-            command = " ".join(params[1:])
-            if not target or not command:
-                window.server_event('/mode target command(s)')
-                return
-            self.connection.mode(target=target, command=command)
+            self.commands.cmd_mode(window,self,params)
 
         elif cmd == "motd":
             self.connection.motd(params and params[0] or "")

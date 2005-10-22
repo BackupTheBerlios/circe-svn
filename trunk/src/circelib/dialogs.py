@@ -2,7 +2,10 @@ import wx
 class AskNicknameDialog(wx.TextEntryDialog):
     def __init__(self, *args, **kwargs):
         self.in_use = kwargs.get("in_use")
-        self.times = 2
+        try:
+            self.times = args[1]
+        except IndexError:
+            self.times = 2
         if self.in_use:
             return super(AskNicknameDialog, self).__init__(None, "Nickname (%s) is in use. Please select a different one:" % args[0])
         else:
@@ -28,9 +31,9 @@ class AskNicknameDialog(wx.TextEntryDialog):
         else:
             return result
 
-def ask_nickname(nickname=None):
+def ask_nickname(nickname=None, times=2):
     if nickname:
-        ask_nickname = AskNicknameDialog(nickname, in_use=1)
+        ask_nickname = AskNicknameDialog(nickname, times, in_use=1)
     else:
         ask_nickname = AskNicknameDialog()
     ask_nickname.ShowModal()

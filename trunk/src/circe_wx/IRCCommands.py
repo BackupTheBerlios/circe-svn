@@ -25,28 +25,28 @@ class IRCCommands:
         help_list.parse_document()
     def cmd_server(self,window,server,params):
         if len(params) <= 0:
-            window.server_event(help_list.grab_value("server"))
-            return
-
-        d = {}; d["server"] = params[0]
-        try:
-            port = d['port'] = int(params[1])
-        except (IndexError, ValueError):
-            port = d['port'] = 6667
-        try:
-            nickname = d['nickname'] = params[2]
-        except IndexError:
-            try: nickname = d['nickname'] = self.config["nickname"]
-            except KeyError:
-                result = dialogs.ask_nickname()
-                if not result:
-                    window.server_event("Nickname defaulting to 'irc'.")
-                    nickname = d['nickname'] = 'irc'
-                else:
-                    nickname = d['nickname'] = result
-
-        # If we're already connected to a server, opens a new connection in
-        # another status window.
+            help_list.grab_value("server")
+        d = {}
+        if len(params) == 1: 
+            d["server"] = params[0]
+        if len(params) == 2:
+            d["server"] = params[0]
+            if type(params[1]) == int:
+                d["port"] = params[1]
+            elif type(params[1]) == str: 
+                try:
+                    d["port"] = int(params[1])
+                    try: nickname = d['nickname'] = self.config["nickname"]
+                    except KeyError:
+                        result = dialogs.ask_nickname()
+                        if not result:
+                            window.server_event("Nickname defaulting to 'irc'.")
+                            nickname = d['nickname'] = 'irc'
+                        else:
+                            nickname = d['nickname'] = result
+                except ValueError:
+                    nickname = d["nickname"] = params[1]
+                    d["port"] = 6667
         if server.is_connected():
             s = server.new_status_window()
             s.connect("server", window, **d)
@@ -107,7 +107,7 @@ class IRCCommands:
              server.connection.invite(nick=params[0], channel=window.get_channelname())
          elif len(params) == 1 and params[0] in server.get_channels():
              help_list.grab_value(window, "invite")
-         elif len(params) == 2 and params[0] in server.get_channels() and params[1] not in server.get_channels():
+         elif len(params) >= 2 and params[0] in server.get_channels() and params[1] not in server.get_channels():
              server.connection.invite(nick=params[0], channel=params[1])
 
     def cmd_info(self,window,server,params):
